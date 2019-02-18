@@ -36,6 +36,8 @@
             android:id="@+id/frameLayout"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:paddingTop="2dp"
+            android:paddingBottom="2dp"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent">
 
@@ -43,7 +45,7 @@
                 android:id="@+id/profilePic"
                 android:layout_width="90dp"
                 android:layout_height="90dp"
-                tools:srcCompat="@tools:sample/avatars[1]" />
+                app:srcCompat="@drawable/default_profile" />
 
             <ImageView
                 android:id="@+id/rounded_corner1"
