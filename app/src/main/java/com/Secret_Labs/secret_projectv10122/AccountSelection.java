@@ -2,10 +2,20 @@ package com.Secret_Labs.secret_projectv10122;
 
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.LinearLayoutManager;
+import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 
+import java.util.ArrayList;
+import java.util.List;
+
 public class AccountSelection extends AppCompatActivity {
+
+    //Class variables
+    RecyclerView recyclerView;
+    RecyclerAdapter_AccSelection adapter_accSelection;
+    List<Obj_AccountInfo> acc_list;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -16,6 +26,25 @@ public class AccountSelection extends AppCompatActivity {
         Toolbar mainAcToolbar = (Toolbar) findViewById(R.id.acToolbar);
         mainAcToolbar.setTitle(getString(R.string.toolbar_title_account_selection));
         setSupportActionBar(mainAcToolbar);
+
+        //Recyclerview area
+        //Declaration of the list to import into the recyclerview adapter
+        acc_list = new ArrayList<>();
+
+        //Defining the recyclerview
+        recyclerView = (RecyclerView) findViewById(R.id.Acc_Recyclerview);
+
+        //Setting the layoutmanager (whaterver that may be) XD
+        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+
+        //Defining a temporary list
+        acc_list.add(new Obj_AccountInfo(1, "Test_User1", "1234", false, "12-01-2019, 12:30"));
+
+        //Importing the acquired list in the adapter
+        adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list);
+
+        //Coupling the adapter to the already present recyclerview
+        recyclerView.setAdapter(adapter_accSelection);
     }
 
     //These functions are for the toolbar and the toolbar menu
