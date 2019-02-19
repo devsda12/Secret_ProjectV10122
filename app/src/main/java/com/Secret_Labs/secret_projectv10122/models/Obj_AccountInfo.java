@@ -1,4 +1,4 @@
-package com.Secret_Labs.secret_projectv10122;
+package com.Secret_Labs.secret_projectv10122.models;
 
 public class Obj_AccountInfo {
 

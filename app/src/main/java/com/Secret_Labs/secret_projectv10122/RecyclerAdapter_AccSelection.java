@@ -7,6 +7,8 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
+
 import java.util.List;
 
 public class RecyclerAdapter_AccSelection extends RecyclerView.Adapter<RecyclerAdapter_AccSelection.RecyclerviewHolder> {
