@@ -1,5 +1,7 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.Intent;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
@@ -7,6 +9,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
+import android.view.View;
 
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 
@@ -50,6 +53,11 @@ public class AccountSelection extends AppCompatActivity {
 
         //Coupling the adapter to the already present recyclerview
         recyclerView.setAdapter(adapter_accSelection);
+    }
+
+    //This function is for the expandable fab menu
+    private void initializeFabMenu(){
+        FloatingActionButton plusFab = (FloatingActionButton) findViewById(R.id.plusFab);
     }
 
     //These functions are for the toolbar and the toolbar menu

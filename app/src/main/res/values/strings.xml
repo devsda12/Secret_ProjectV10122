@@ -5,13 +5,14 @@
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
     <string name="checkbox_name">Remember Me</string>
-    <string name="login_button">Login</string>
+    <string name="login">Login</string>
     <!-- LOGIN ACTIVITY ENDS HERE -->
 
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
     <string name="toolbar_title_account_selection">Account Selection</string>
+    <string name="toolbar_title_login">Login</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>
