@@ -1,6 +1,11 @@
 <resources>
     <string name="app_name">Sapp</string>
 
+    <!-- ACCOUNT SELECTION ACTIVITY STARTS HERE -->
+    <string name="acc_new">Create new account</string>
+    <string name="acc_existing">Add existing account</string>
+    <!-- ACCOUNT SELECTION ACTIVITY ENDS HERE -->
+
     <!-- LOGIN ACTIVITY STARTS HERE -->
     <string name="username_hint">Username</string>
     <string name="password_hint">Password</string>
