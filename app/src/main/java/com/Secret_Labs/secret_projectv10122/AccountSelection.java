@@ -8,6 +8,7 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -84,19 +85,49 @@ public class AccountSelection extends AppCompatActivity {
             public void onClick(View v) {
                 if(!isFabOpen){
                     isFabOpen = true;
+
+                    //Animating the menu
                     plusFab.animate().rotationBy(135);
                     existingAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_upper));
                     newAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_middle));
+
+                    //Making text visible
                     existingAccTv.setVisibility(View.VISIBLE);
                     newAccTv.setVisibility(View.VISIBLE);
+
+                    //Making fab's focusable and clickable
+                    //existingAccFab.setClickable(true);
+                    //existingAccFab.setFocusable(true);
+                    //newAccFab.setClickable(true);
+                    //newAccFab.setFocusable(true);
                 } else {
                     isFabOpen = false;
                     plusFab.animate().rotation(0);
+
+                    //Making fab's not focusable and clickable
+                    //existingAccFab.setClickable(false);
+                    //existingAccFab.setFocusable(false);
+                    //newAccFab.setClickable(false);
+                    //newAccFab.setFocusable(false);
+
+                    //Making text invisible
                     existingAccTv.setVisibility(View.INVISIBLE);
                     newAccTv.setVisibility(View.INVISIBLE);
+
+                    //Animating fab's back into place
                     existingAccCL.animate().translationY(0);
                     newAccCL.animate().translationY(0);
                 }
+            }
+        });
+
+        //Setting listener on the two small fab's
+        existingAccFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Log.d("Lol", "Heya loggin");
+                Intent goToLogin = new Intent(AccountSelection.this, LoginActivity.class);
+                startActivity(goToLogin);
             }
         });
     }
