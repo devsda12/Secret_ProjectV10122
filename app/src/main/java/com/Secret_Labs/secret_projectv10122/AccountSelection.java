@@ -26,6 +26,7 @@ public class AccountSelection extends AppCompatActivity {
     RecyclerAdapter_AccSelection adapter_accSelection;
     List<Obj_AccountInfo> acc_list;
 
+    FloatingActionButton plusFab;
     ConstraintLayout existingAccCL;
     FloatingActionButton existingAccFab;
     TextView existingAccTv;
@@ -34,10 +35,13 @@ public class AccountSelection extends AppCompatActivity {
     TextView newAccTv;
     Boolean isFabOpen = false;
 
+    Common common;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountselection);
+        common = new Common();
 
         //Setting the custom toolbar for our main activity
         Toolbar mainAcToolbar = (Toolbar) findViewById(R.id.acToolbar);
@@ -71,7 +75,7 @@ public class AccountSelection extends AppCompatActivity {
 
     //This function is for the expandable fab menu
     private void initializeFabMenu(){
-        final FloatingActionButton plusFab = (FloatingActionButton) findViewById(R.id.plusFab);
+        plusFab = (FloatingActionButton) findViewById(R.id.plusFab);
         existingAccCL = (ConstraintLayout) findViewById(R.id.addExistingAccCL);
         existingAccFab = (FloatingActionButton) findViewById(R.id.addExistingAccFab);
         existingAccTv = (TextView) findViewById(R.id.addExistingAccTV);
@@ -84,52 +88,62 @@ public class AccountSelection extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 if(!isFabOpen){
-                    isFabOpen = true;
-
-                    //Animating the menu
-                    plusFab.animate().rotationBy(135);
-                    existingAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_upper));
-                    newAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_middle));
-
-                    //Making text visible
-                    existingAccTv.setVisibility(View.VISIBLE);
-                    newAccTv.setVisibility(View.VISIBLE);
-
-                    //Making fab's focusable and clickable
-                    //existingAccFab.setClickable(true);
-                    //existingAccFab.setFocusable(true);
-                    //newAccFab.setClickable(true);
-                    //newAccFab.setFocusable(true);
+                    openFab();
                 } else {
-                    isFabOpen = false;
-                    plusFab.animate().rotation(0);
-
-                    //Making fab's not focusable and clickable
-                    //existingAccFab.setClickable(false);
-                    //existingAccFab.setFocusable(false);
-                    //newAccFab.setClickable(false);
-                    //newAccFab.setFocusable(false);
-
-                    //Making text invisible
-                    existingAccTv.setVisibility(View.INVISIBLE);
-                    newAccTv.setVisibility(View.INVISIBLE);
-
-                    //Animating fab's back into place
-                    existingAccCL.animate().translationY(0);
-                    newAccCL.animate().translationY(0);
+                    closeFab();
                 }
             }
         });
 
-        //Setting listener on the two small fab's
+        //Click listeners of the sub fab's
         existingAccFab.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                Log.d("Lol", "Heya loggin");
+                closeFab();
                 Intent goToLogin = new Intent(AccountSelection.this, LoginActivity.class);
                 startActivity(goToLogin);
             }
         });
+    }
+
+    //Function to open fab
+    private void openFab(){
+        isFabOpen = true;
+
+        //Animating the menu
+        plusFab.animate().rotationBy(135);
+        existingAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_upper));
+        newAccCL.animate().translationY(-getResources().getDimension(R.dimen.fab_menu_middle));
+
+        //Making text visible
+        existingAccTv.setVisibility(View.VISIBLE);
+        newAccTv.setVisibility(View.VISIBLE);
+
+        //Making fab's focusable and clickable
+        existingAccFab.setClickable(true);
+        existingAccFab.setFocusable(true);
+        newAccFab.setClickable(true);
+        newAccFab.setFocusable(true);
+    }
+
+    //Function to close fab
+    private void closeFab(){
+        isFabOpen = false;
+        plusFab.animate().rotation(0);
+
+        //Making fab's not focusable and clickable
+        existingAccFab.setClickable(false);
+        existingAccFab.setFocusable(false);
+        newAccFab.setClickable(false);
+        newAccFab.setFocusable(false);
+
+        //Making text invisible
+        existingAccTv.setVisibility(View.INVISIBLE);
+        newAccTv.setVisibility(View.INVISIBLE);
+
+        //Animating fab's back into place
+        existingAccCL.animate().translationY(0);
+        newAccCL.animate().translationY(0);
     }
 
     //These functions are for the toolbar and the toolbar menu

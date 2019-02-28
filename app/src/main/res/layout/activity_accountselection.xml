@@ -6,72 +6,6 @@
     android:layout_height="match_parent"
     tools:context=".AccountSelection">
 
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/addExistingAccCL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="39dp"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/addExistingAccTV"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@string/acc_existing"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addExistingAccFab"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addExistingAccFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            app:backgroundTint="@color/colorPrimary"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/plus_white" />
-    </android.support.constraint.ConstraintLayout>
-
-    <android.support.constraint.ConstraintLayout
-        android:id="@+id/addNewAccCL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="39dp"
-        android:layout_marginBottom="36dp"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent">
-
-        <TextView
-            android:id="@+id/addNewAccTv"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="4dp"
-            android:text="@string/acc_new"
-            android:visibility="invisible"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addNewAccFab"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <android.support.design.widget.FloatingActionButton
-            android:id="@+id/addNewAccFab"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:clickable="false"
-            app:backgroundTint="@color/colorPrimary"
-            app:fabSize="mini"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/addNewAccTv"
-            app:layout_constraintTop_toTopOf="parent"
-            app:srcCompat="@drawable/plus_white" />
-    </android.support.constraint.ConstraintLayout>
-
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/plusFab"
         android:layout_width="wrap_content"
@@ -103,4 +37,77 @@
             tools:layout_editor_absoluteX="8dp"
             tools:layout_editor_absoluteY="8dp" />
     </android.support.v4.widget.SwipeRefreshLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/addExistingAccCL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/addExistingAccTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@string/acc_existing"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addExistingAccFab"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addExistingAccFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/plus_white" />
+    </android.support.constraint.ConstraintLayout>
+
+    <android.support.constraint.ConstraintLayout
+        android:id="@+id/addNewAccCL"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginEnd="29dp"
+        android:layout_marginBottom="28dp"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent">
+
+        <TextView
+            android:id="@+id/addNewAccTv"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginEnd="4dp"
+            android:text="@string/acc_new"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toStartOf="@+id/addNewAccFab"
+            app:layout_constraintTop_toTopOf="parent" />
+
+        <android.support.design.widget.FloatingActionButton
+            android:id="@+id/addNewAccFab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="10dp"
+            android:layout_marginEnd="10dp"
+            android:layout_marginBottom="10dp"
+            android:clickable="false"
+            app:backgroundTint="@color/colorPrimary"
+            app:fabSize="mini"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:srcCompat="@drawable/plus_white" />
+    </android.support.constraint.ConstraintLayout>
+
 </android.support.constraint.ConstraintLayout>
