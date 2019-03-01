@@ -15,6 +15,12 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
+import com.android.volley.Request;
+import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.StringRequest;
+import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -37,6 +43,9 @@ public class AccountSelection extends AppCompatActivity {
 
     Common common;
 
+    RequestQueue requestQueue;
+    Boolean connected;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -50,6 +59,10 @@ public class AccountSelection extends AppCompatActivity {
 
         //Fab Button initialisation
         initializeFabMenu();
+
+        //Testing the Api connection
+        requestQueue = Volley.newRequestQueue(this);
+        common.testApiConnection(this, requestQueue);
 
         //Recyclerview area
         //Declaration of the list to import into the recyclerview adapter
@@ -72,6 +85,9 @@ public class AccountSelection extends AppCompatActivity {
         //Coupling the adapter to the already present recyclerview
         recyclerView.setAdapter(adapter_accSelection);
     }
+
+    //These functions are for the volley api requests
+
 
     //This function is for the expandable fab menu
     private void initializeFabMenu(){
@@ -145,6 +161,7 @@ public class AccountSelection extends AppCompatActivity {
         existingAccCL.animate().translationY(0);
         newAccCL.animate().translationY(0);
     }
+    //End of the expandable fab menu
 
     //These functions are for the toolbar and the toolbar menu
     @Override
@@ -166,4 +183,5 @@ public class AccountSelection extends AppCompatActivity {
                 return super.onOptionsItemSelected(item);
         }
     }
+    //End of the toolbar menu
 }

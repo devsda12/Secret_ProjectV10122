@@ -1,6 +1,10 @@
 <resources>
     <string name="app_name">Sapp</string>
 
+    <!-- TOAST MESSAGES STARTS HERE -->
+    <string name="toast_no_connection">Could not reach SAPP API :(</string>
+    <!-- TOAST MESSAGES ENDS HERE -->
+
     <!-- ACCOUNT SELECTION ACTIVITY STARTS HERE -->
     <string name="acc_new">Create new account</string>
     <string name="acc_existing">Add existing account</string>
