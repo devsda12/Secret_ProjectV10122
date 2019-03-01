@@ -6,6 +6,7 @@
     <!-- TOAST MESSAGES ENDS HERE -->
 
     <!-- ACCOUNT SELECTION ACTIVITY STARTS HERE -->
+    <string name="acc_no_accounts">Nothing to show, no accounts connected yet..</string>
     <string name="acc_new">Create new account</string>
     <string name="acc_existing">Add existing account</string>
     <!-- ACCOUNT SELECTION ACTIVITY ENDS HERE -->

@@ -6,6 +6,19 @@
     android:layout_height="match_parent"
     tools:context=".AccountSelection">
 
+    <TextView
+        android:id="@+id/noAccountsTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="25dp"
+        android:layout_marginEnd="8dp"
+        android:text="@string/acc_no_accounts"
+        android:visibility="invisible"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/acToolbar" />
+
     <android.support.design.widget.FloatingActionButton
         android:id="@+id/plusFab"
         android:layout_width="wrap_content"

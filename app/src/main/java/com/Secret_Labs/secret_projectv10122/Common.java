@@ -10,11 +10,19 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
+import java.util.Random;
+
 public class Common {
 
     //Common variables
     String apiUrl = "http://54.36.98.223:5000";
     Boolean apiConnection = false;
+
+    //Method to generate random int
+    public int getRandomNumberInRange(int min, int max){
+        Random random = new Random();
+        return random.nextInt((max - min) + 1) + min;
+    }
 
     //Method to display toasts
     public void displayToast(Context context, String message){

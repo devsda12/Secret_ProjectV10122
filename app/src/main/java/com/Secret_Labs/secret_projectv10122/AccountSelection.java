@@ -79,11 +79,17 @@ public class AccountSelection extends AppCompatActivity {
         acc_list.add(new Obj_AccountInfo(2, "Test_User2", "1234", false, "12-01-2019, 12:30"));
         acc_list.add(new Obj_AccountInfo(3, "Test_User3", "1234", false, "12-01-2019, 12:30"));
 
-        //Importing the acquired list in the adapter
-        adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list);
 
-        //Coupling the adapter to the already present recyclerview
-        recyclerView.setAdapter(adapter_accSelection);
+        if(acc_list.isEmpty()){
+            TextView noAccTV = (TextView) findViewById(R.id.noAccountsTextView);
+            noAccTV.setVisibility(View.VISIBLE);
+        } else{
+            //Importing the acquired list in the adapter
+            adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list);
+
+            //Coupling the adapter to the already present recyclerview
+            recyclerView.setAdapter(adapter_accSelection);
+        }
     }
 
     //These functions are for the volley api requests
