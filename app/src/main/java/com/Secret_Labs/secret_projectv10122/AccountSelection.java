@@ -1,6 +1,7 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
@@ -63,6 +64,7 @@ public class AccountSelection extends AppCompatActivity {
         //Testing the Api connection
         requestQueue = Volley.newRequestQueue(this);
         common.testApiConnection(this, requestQueue);
+        common.startUpConnect(this, requestQueue);
 
         //Recyclerview area
         //Declaration of the list to import into the recyclerview adapter
