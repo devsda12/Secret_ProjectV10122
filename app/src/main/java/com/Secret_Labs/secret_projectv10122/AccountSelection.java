@@ -63,7 +63,6 @@ public class AccountSelection extends AppCompatActivity {
 
         //Testing the Api connection
         requestQueue = Volley.newRequestQueue(this);
-        common.testApiConnection(this, requestQueue);
         common.startUpConnect(this, requestQueue);
 
         //Recyclerview area

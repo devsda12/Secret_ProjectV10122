@@ -23,7 +23,9 @@ public class Common {
     //Common variables
     String apiUrl = "http://54.36.98.223:5000";
     Boolean apiConnection = false;
+
     String mainPrefsName = "mainPrefs";
+    SharedPreferences mainPrefs;
 
     //Method to generate random int
     public int getRandomNumberInRange(int min, int max){
@@ -73,10 +75,10 @@ public class Common {
 
     //Method to identify with the api
     public void identifyToApi(final Context context, RequestQueue queue){
-        SharedPreferences tempMainPrefs = context.getSharedPreferences(mainPrefsName, 0);
-        final SharedPreferences.Editor tempEditor = tempMainPrefs.edit();
+        mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
+        final SharedPreferences.Editor tempEditor = mainPrefs.edit();
 
-        if(!tempMainPrefs.contains("device_Id")){
+        if(!mainPrefs.contains("device_Id")){
             tempEditor.putString("device_Id", "0");
             tempEditor.apply();
         }
@@ -84,7 +86,7 @@ public class Common {
         //Creating the temporary json object to store the id in
         JSONObject tempIdJson = new JSONObject();
         try{
-            tempIdJson.put("device_Id", tempMainPrefs.getString("device_Id", "0"));
+            tempIdJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
         } catch (JSONException e) {
             e.printStackTrace();
         }
