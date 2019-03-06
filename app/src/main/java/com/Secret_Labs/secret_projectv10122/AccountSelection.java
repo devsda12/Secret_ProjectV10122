@@ -45,7 +45,6 @@ public class AccountSelection extends AppCompatActivity {
     Common common;
 
     RequestQueue requestQueue;
-    Boolean connected;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {

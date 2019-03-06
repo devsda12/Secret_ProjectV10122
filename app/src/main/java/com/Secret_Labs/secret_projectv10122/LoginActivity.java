@@ -1,5 +1,6 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
@@ -23,11 +24,14 @@ public class LoginActivity extends AppCompatActivity {
     Common common;
     Button loginButton;
 
+    SharedPreferences mainPrefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         common = new Common();
+        mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
 
         //Setting custom toolbar for the login activity
         Toolbar loginToolbar = (Toolbar) findViewById(R.id.loginToolbar);
@@ -54,8 +58,8 @@ public class LoginActivity extends AppCompatActivity {
     //Method that runs when the login button is pressed
     public void login(RequestQueue queue){
         //Checking whether the connection is true
-        if(!common.apiConnection){
-            common.displayToast(LoginActivity.this, "Login Failed");
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            common.displayToast(LoginActivity.this, "Login Failed1");
             return;
         }
 
@@ -65,14 +69,14 @@ public class LoginActivity extends AppCompatActivity {
 
         //Checking whether the fields are empty
         if(username.getText().toString().equals("") || password.getText().toString().equals("")){
-            common.displayToast(LoginActivity.this, "Login Failed");
+            common.displayToast(LoginActivity.this, "Login Failed2");
             return;
         }
 
         //If not empty making a JSON object with the values
         JSONObject tempAuthJson = new JSONObject();
         try{
-            tempAuthJson.put("device_Id", common.mainPrefs.getString("device_Id", "0"));
+            tempAuthJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
             tempAuthJson.put("acc_Username", username.getText().toString());
             tempAuthJson.put("acc_Password", password.getText().toString());
         } catch (JSONException e) {
@@ -94,7 +98,7 @@ public class LoginActivity extends AppCompatActivity {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        common.displayToast(LoginActivity.this, "Login Failed");
+                        common.displayToast(LoginActivity.this, "Login Failed3");
                     }
                 });
         //Adding request to queue

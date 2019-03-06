@@ -22,7 +22,6 @@ public class Common {
 
     //Common variables
     String apiUrl = "http://54.36.98.223:5000";
-    Boolean apiConnection = false;
 
     String mainPrefsName = "mainPrefs";
     SharedPreferences mainPrefs;
@@ -43,11 +42,6 @@ public class Common {
         //First test the connection to the api
         testApiConnection(context, queue);
 
-        //Now if the connection is true go on with the identification process
-        //if(!apiConnection){
-        //    return false;
-        //}
-
         //Now executing the function with identifying to the api
         identifyToApi(context, queue);
         return true;
@@ -55,13 +49,15 @@ public class Common {
     }
     //Method to test the api connection
     public void testApiConnection(final Context context, RequestQueue queue){
-        apiConnection = false;
+        mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
+        final SharedPreferences.Editor tempEditor = mainPrefs.edit();
         StringRequest stringRequest = new StringRequest(Request.Method.GET, apiUrl + "/testshake",
                 new Response.Listener<String>() {
                     @Override
                     public void onResponse(String response) {
                         // Here the response String is handled
-                        apiConnection = true;
+                        tempEditor.putBoolean("apiConnection", true);
+                        tempEditor.apply();
                         displayToast(context, "Connected to API");
                     }
                 }, new Response.ErrorListener() {
