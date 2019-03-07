@@ -1,26 +1,22 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
-import android.content.SharedPreferences;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
-import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
-import com.android.volley.Request;
+import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_AccSelection;
 import com.android.volley.RequestQueue;
-import com.android.volley.Response;
-import com.android.volley.VolleyError;
-import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
@@ -72,7 +68,11 @@ public class AccountSelection extends AppCompatActivity {
         recyclerView = (RecyclerView) findViewById(R.id.Acc_Recyclerview);
 
         //Setting the layoutmanager (whaterver that may be) XD
-        recyclerView.setLayoutManager(new LinearLayoutManager(this));
+        LinearLayoutManager recyclerLayoutManager = new LinearLayoutManager(this);
+        recyclerView.setLayoutManager(recyclerLayoutManager);
+
+        //Adding the devider class object to the recyclerview
+        recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), recyclerLayoutManager.getOrientation()));
 
         //Defining a temporary list
         acc_list.add(new Obj_AccountInfo(1, "Test_User1", "1234", false, "12-01-2019, 12:30"));
