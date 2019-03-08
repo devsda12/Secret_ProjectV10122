@@ -59,7 +59,7 @@ public class LoginActivity extends AppCompatActivity {
     public void login(RequestQueue queue){
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
-            common.displayToast(LoginActivity.this, "Login Failed1");
+            common.displayToast(LoginActivity.this, "Login Failed: No connection to API");
             return;
         }
 
@@ -69,7 +69,7 @@ public class LoginActivity extends AppCompatActivity {
 
         //Checking whether the fields are empty
         if(username.getText().toString().equals("") || password.getText().toString().equals("")){
-            common.displayToast(LoginActivity.this, "Login Failed2");
+            common.displayToast(LoginActivity.this, "Login Failed: Fields may not be empty");
             return;
         }
 
@@ -80,7 +80,8 @@ public class LoginActivity extends AppCompatActivity {
             tempAuthJson.put("acc_Username", username.getText().toString());
             tempAuthJson.put("acc_Password", password.getText().toString());
         } catch (JSONException e) {
-            e.printStackTrace();
+            common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
+            return;
         }
 
         //Creating the request
@@ -92,13 +93,13 @@ public class LoginActivity extends AppCompatActivity {
                             String responseAccId = response.getString("acc_Id");
                             common.displayToast(LoginActivity.this, responseAccId);
                         } catch (JSONException e){
-                            e.printStackTrace();
+                            common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
                         }
                     }
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        common.displayToast(LoginActivity.this, "Login Failed3");
+                        common.displayToast(LoginActivity.this, "Login Failed: Username or Password is incorrect");
                     }
                 });
         //Adding request to queue

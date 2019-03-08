@@ -18,11 +18,17 @@
     <string name="login">Login</string>
     <!-- LOGIN ACTIVITY ENDS HERE -->
 
+    <!-- ACC CREATION ACTIVITY STARTS HERE -->
+    <string name="password2_hint">Repeat Password</string>
+    <string name="create_button">Create My Account</string>
+    <!-- ACC CREATION ACTIVITY ENDS HERE -->
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
     <string name="toolbar_title_account_selection">Account Selection</string>
     <string name="toolbar_title_login">Login</string>
+    <string name="toolbar_title_account_creation">Create Account</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>

@@ -171,6 +171,15 @@ public class AccountSelection extends AppCompatActivity {
                 startActivity(goToLogin);
             }
         });
+
+        newAccFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                closeFab();
+                Intent goToCreateAcc = new Intent(AccountSelection.this, CreateAccActivity.class);
+                startActivity(goToCreateAcc);
+            }
+        });
     }
 
     //Function to open fab
