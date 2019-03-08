@@ -3,6 +3,7 @@ package com.Secret_Labs.secret_projectv10122;
 import android.content.Intent;
 import android.support.constraint.ConstraintLayout;
 import android.support.design.widget.FloatingActionButton;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.DividerItemDecoration;
@@ -43,11 +44,15 @@ public class AccountSelection extends AppCompatActivity {
 
     RequestQueue requestQueue;
 
+    SwipeRefreshLayout sRLayout;
+    TextView noAccTV;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountselection);
         common = new Common();
+        noAccTV = (TextView) findViewById(R.id.noAccountsTextView);
 
         //Setting the custom toolbar for our main activity
         Toolbar mainAcToolbar = (Toolbar) findViewById(R.id.acToolbar);
@@ -56,6 +61,16 @@ public class AccountSelection extends AppCompatActivity {
 
         //Fab Button initialisation
         initializeFabMenu();
+
+        //Swipe to refresh implementation
+        sRLayout = findViewById(R.id.acc_SwipeRefresh);
+        sRLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                refreshAccList();
+                sRLayout.setRefreshing(false);
+            }
+        });
 
         //Testing the Api connection
         requestQueue = Volley.newRequestQueue(this);
@@ -80,9 +95,8 @@ public class AccountSelection extends AppCompatActivity {
         acc_list.add(new Obj_AccountInfo(2, "Test_User2", "1234", false, "12-01-2019, 12:30"));
         acc_list.add(new Obj_AccountInfo(3, "Test_User3", "1234", false, "12-01-2019, 12:30"));
 
-
+        //Initial coupling of the adapter, future reloads should use the function refreshAccList
         if(acc_list.isEmpty()){
-            TextView noAccTV = (TextView) findViewById(R.id.noAccountsTextView);
             noAccTV.setVisibility(View.VISIBLE);
         } else{
             //Importing the acquired list in the adapter
@@ -97,6 +111,7 @@ public class AccountSelection extends AppCompatActivity {
                     acc_list.remove(position);
                     adapter_accSelection.notifyItemRemoved(position);
                     adapter_accSelection.notifyItemRangeChanged(position, adapter_accSelection.getItemCount() - position);
+                    showNoAccTV();
                 }
             });
 
@@ -105,7 +120,27 @@ public class AccountSelection extends AppCompatActivity {
         }
     }
 
-    //This function is for the expandable fab menu
+    //These functions are for the refresh of the acc list
+    private void refreshAccList(){
+        //First update the list under here
+
+        //Notifying the adapter the dataset has changed so it updates the index and inserts new items where possible
+        adapter_accSelection.notifyDataSetChanged();
+
+        //Checking if the text for no accounts should be shown
+        showNoAccTV();
+    }
+
+    private void showNoAccTV(){
+        if(acc_list.isEmpty() && noAccTV.getVisibility() == View.INVISIBLE){
+            noAccTV.setVisibility(View.VISIBLE);
+        } else if(!acc_list.isEmpty() && noAccTV.getVisibility() == View.VISIBLE){
+            noAccTV.setVisibility(View.INVISIBLE);
+        }
+    }
+    //End of the acc List refresh
+
+    //These functions are for the expandable fab menu
     private void initializeFabMenu(){
         plusFab = (FloatingActionButton) findViewById(R.id.plusFab);
         existingAccCL = (ConstraintLayout) findViewById(R.id.addExistingAccCL);
@@ -192,6 +227,7 @@ public class AccountSelection extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_refresh:
+                refreshAccList();
                 return true;
             case R.id.action_about:
                 return true;
