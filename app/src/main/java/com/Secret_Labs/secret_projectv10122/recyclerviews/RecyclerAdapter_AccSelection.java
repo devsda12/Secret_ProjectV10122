@@ -5,6 +5,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.R;
@@ -18,9 +19,13 @@ public class RecyclerAdapter_AccSelection extends RecyclerView.Adapter<RecyclerA
     private Context mCtx;
     private List<Obj_AccountInfo> acc_List;
 
-    public RecyclerAdapter_AccSelection (Context mCtx, List<Obj_AccountInfo> acc_List){
+    //Defining the interface for the onclicklistener
+    public OnclickListener_AccSelection mListener;
+
+    public RecyclerAdapter_AccSelection (Context mCtx, List<Obj_AccountInfo> acc_List, OnclickListener_AccSelection mListener){
         this.mCtx = mCtx;
         this.acc_List = acc_List;
+        this.mListener = mListener;
     }
 
     @Override
@@ -31,11 +36,19 @@ public class RecyclerAdapter_AccSelection extends RecyclerView.Adapter<RecyclerA
     }
 
     @Override
-    public void onBindViewHolder(RecyclerviewHolder holder, int position){
+    public void onBindViewHolder(RecyclerviewHolder holder, final int position){
         Obj_AccountInfo acc_item = acc_List.get(position);
 
         holder.acc_name.setText(acc_item.getAcc_Username());
         holder.acc_last_login.setText(acc_item.getAcc_Last_Login());
+
+        //Setting the onclicklistener for the remove button
+        holder.acc_Remove.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemRemoveClicked(position);
+            }
+        });
     }
 
     @Override
@@ -47,12 +60,14 @@ public class RecyclerAdapter_AccSelection extends RecyclerView.Adapter<RecyclerA
 
         //Put the to fill layout items over here
         TextView acc_name, acc_last_login;
+        ImageView acc_Remove;
 
         public RecyclerviewHolder(View itemView){
             super(itemView);
 
             acc_name = itemView.findViewById(R.id.acc_name);
             acc_last_login = itemView.findViewById(R.id.acc_last_login);
+            acc_Remove = itemView.findViewById(R.id.acc_Remove);
         }
     }
 }

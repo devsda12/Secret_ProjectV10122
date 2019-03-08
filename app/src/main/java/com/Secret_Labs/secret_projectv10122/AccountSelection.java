@@ -15,6 +15,7 @@ import android.view.View;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
+import com.Secret_Labs.secret_projectv10122.recyclerviews.OnclickListener_AccSelection;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_AccSelection;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.Volley;
@@ -85,15 +86,24 @@ public class AccountSelection extends AppCompatActivity {
             noAccTV.setVisibility(View.VISIBLE);
         } else{
             //Importing the acquired list in the adapter
-            adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list);
+            adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list, new OnclickListener_AccSelection() {
+                @Override
+                public void onItemClicked(int position) {
+
+                }
+
+                @Override
+                public void onItemRemoveClicked(int position) {
+                    acc_list.remove(position);
+                    adapter_accSelection.notifyItemRemoved(position);
+                    adapter_accSelection.notifyItemRangeChanged(position, adapter_accSelection.getItemCount() - position);
+                }
+            });
 
             //Coupling the adapter to the already present recyclerview
             recyclerView.setAdapter(adapter_accSelection);
         }
     }
-
-    //These functions are for the volley api requests
-
 
     //This function is for the expandable fab menu
     private void initializeFabMenu(){
