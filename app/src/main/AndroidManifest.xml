@@ -11,7 +11,8 @@
         android:roundIcon="@mipmap/sapp_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".CreateAccActivity"></activity>
+        <activity android:name=".ConvSelection"></activity>
+        <activity android:name=".CreateAccActivity" />
         <activity android:name=".LoginActivity" />
         <activity
             android:name=".SplashActivity"

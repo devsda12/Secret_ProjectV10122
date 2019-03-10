@@ -23,16 +23,24 @@
     <string name="create_button">Create My Account</string>
     <!-- ACC CREATION ACTIVITY ENDS HERE -->
 
+    <!-- CONV SELECTION ACTIVITY STARTS HERE -->
+    <string name="convsel_no_conv">Nothing to show, no conversations started yet..</string>
+    <!-- CONV SELECTION ACTIVITY ENDS HERE -->
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
     <string name="toolbar_title_account_selection">Account Selection</string>
     <string name="toolbar_title_login">Login</string>
     <string name="toolbar_title_account_creation">Create Account</string>
+    <string name="toolbar_title_conv_selection">SAPP\'s</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>
     <string name="account_selection_about">About</string>
+    <string name="conv_selection_refresh">Refresh</string>
+    <string name="conv_selection_about">About</string>
+    <string name="conv_selection_settings">Settings</string>
 
     <!-- TOOLBAR SECTION ENDS HERE -->
 </resources>

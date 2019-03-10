@@ -235,10 +235,10 @@ public class AccountSelection extends AppCompatActivity {
     public boolean onOptionsItemSelected(MenuItem item) {
         // Handle item selection
         switch (item.getItemId()) {
-            case R.id.action_refresh:
+            case R.id.action_accountselection_refresh:
                 refreshAccList();
                 return true;
-            case R.id.action_about:
+            case R.id.action_accountselection_about:
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
