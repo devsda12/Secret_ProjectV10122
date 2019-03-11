@@ -3,14 +3,14 @@ package com.Secret_Labs.secret_projectv10122.models;
 public class Obj_AccountInfo {
 
     //Defining the data fields of the account info object
-    private int acc_Id;
+    private String acc_Id;
     private String acc_Username;
     private String acc_Password;
     private Boolean acc_RememberLogin;
     private String acc_Last_Login;
 
     //The constructor
-    public Obj_AccountInfo(int acc_Id, String acc_Username, String acc_Password, Boolean acc_RememberLogin, String acc_Last_Login){
+    public Obj_AccountInfo(String acc_Id, String acc_Username, String acc_Password, Boolean acc_RememberLogin, String acc_Last_Login){
         this.acc_Id = acc_Id;
         this.acc_Username = acc_Username;
         this.acc_Password = acc_Password;
@@ -18,11 +18,11 @@ public class Obj_AccountInfo {
         this.acc_Last_Login = acc_Last_Login;
     }
 
-    public int getAcc_Id() {
+    public String getAcc_Id() {
         return acc_Id;
     }
 
-    public void setAcc_Id(int acc_Id) {
+    public void setAcc_Id(String acc_Id) {
         this.acc_Id = acc_Id;
     }
 

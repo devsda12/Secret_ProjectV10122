@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122.databases;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
 import android.support.annotation.Nullable;
@@ -9,19 +10,22 @@ import android.support.annotation.Nullable;
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.android.volley.toolbox.StringRequest;
 
-public class Account_DatabaseHelper extends SQLiteOpenHelper {
+import java.util.ArrayList;
+import java.util.List;
+
+public class DatabaseHelper extends SQLiteOpenHelper {
 
 
     //Default constructor
-    public Account_DatabaseHelper(@Nullable Context context) {
+    public DatabaseHelper(@Nullable Context context) {
         super(context, DatabaseInfo.DBNAME, null, DatabaseInfo.DBVERSION);
     }
 
-    //Oncreate will be called when there will be an object created of the Account_DatabaseHelper. When the database already exists this code will not be executed
+    //Oncreate will be called when there will be an object created of the DatabaseHelper. When the database already exists this code will not be executed
     @Override
     public void onCreate(SQLiteDatabase db){
         String createAccTable = "CREATE TABLE " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + "("
-                + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " INTEGER PRIMARY KEY,"
+                + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " TEXT PRIMARY KEY,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN + " INTEGER,"
@@ -30,8 +34,8 @@ public class Account_DatabaseHelper extends SQLiteOpenHelper {
         db.execSQL(createAccTable);
 
         String createConvTable = "CREATE TABLE " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + "("
-                + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " INTEGER PRIMARY KEY,"
-                + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " INTEGER,"
+                + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " TEXT PRIMARY KEY,"
+                + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_USERNAME_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN + " TEXT,"
@@ -73,5 +77,30 @@ public class Account_DatabaseHelper extends SQLiteOpenHelper {
         } else{
             return true;
         }
+    }
+
+    //Method to return a list of accounts for a recyclerview
+    public List<Obj_AccountInfo> fetchAllStoredAccounts(){
+        //Get a reference to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Executing the query on the database
+        Cursor result = db.rawQuery("SELECT * FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, null);
+
+        //Putthing the individual rows in a list of acc info objects
+        List<Obj_AccountInfo> accList = new ArrayList<>();
+        while(result.moveToNext()){
+            //Converting int to boolean
+            boolean tempRememberlogin = false;
+            if(result.getInt(3) == 1){
+                tempRememberlogin = true;
+            }
+            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(4)));
+        }
+
+        //Closing and returning
+        result.close();
+        return accList;
+
     }
 }

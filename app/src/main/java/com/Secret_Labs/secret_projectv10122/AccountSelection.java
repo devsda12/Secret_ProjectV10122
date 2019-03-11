@@ -91,9 +91,9 @@ public class AccountSelection extends AppCompatActivity {
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), recyclerLayoutManager.getOrientation()));
 
         //Defining a temporary list
-        acc_list.add(new Obj_AccountInfo(1, "Test_User1", "1234", false, "12-01-2019, 12:30"));
-        acc_list.add(new Obj_AccountInfo(2, "Test_User2", "1234", false, "12-01-2019, 12:30"));
-        acc_list.add(new Obj_AccountInfo(3, "Test_User3", "1234", false, "12-01-2019, 12:30"));
+        acc_list.add(new Obj_AccountInfo("1", "Test_User1", "1234", false, "12-01-2019, 12:30"));
+        acc_list.add(new Obj_AccountInfo("2", "Test_User2", "1234", false, "12-01-2019, 12:30"));
+        acc_list.add(new Obj_AccountInfo("3", "Test_User3", "1234", false, "12-01-2019, 12:30"));
 
         //Initial coupling of the adapter, future reloads should use the function refreshAccList
         if(acc_list.isEmpty()){
