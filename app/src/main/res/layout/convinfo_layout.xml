@@ -63,10 +63,10 @@
 
         <ImageView
             android:id="@+id/grey_arrow_right"
-            android:layout_width="25dp"
-            android:layout_height="50dp"
-            android:layout_marginTop="9dp"
-            android:layout_marginBottom="10dp"
+            android:layout_width="18dp"
+            android:layout_height="36dp"
+            android:layout_marginTop="16dp"
+            android:layout_marginBottom="17dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent"
