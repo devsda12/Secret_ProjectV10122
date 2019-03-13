@@ -17,8 +17,16 @@ import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.OnclickListener_ConvSelection;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_AccSelection;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_ConvSelection;
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONArray;
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -100,15 +108,57 @@ public class ConvSelection extends AppCompatActivity {
     }
 
     //The function to update the conversations that are presented to the user
-    public List<Obj_ConvInfo> updateConvList(RequestQueue queue){
+    public void updateConvList(RequestQueue queue){
         //First checking if the connection to the api is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
-            common.displayToast(ConvSelection.this, "Refresh failed! No connection to API");
-            return new ArrayList<>();
+            common.displayToast(ConvSelection.this, "Refresh Failed! No connection to API");
+            return;
         }
 
-        //Now checking whether the
-        return new ArrayList<>();
+        //Now checking whether a value is present as acc_Id in sharedpreferences
+        if(mainPrefs.getString("activeAccId", "none").equals("none")){
+            common.displayToast(ConvSelection.this, "Refresh Failed! No account logged in");
+            return;
+        }
+
+        //Now making the json object
+        JSONArray tempRequestJsonArray = new JSONArray();
+        JSONObject tempRequestJson = new JSONObject();
+        try{
+            tempRequestJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            tempRequestJson.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            tempRequestJsonArray.put(tempRequestJson);
+        } catch (JSONException e) {
+            common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
+            return;
+        }
+
+        //Now making a request to the api to request the conversation list
+        JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getChats", tempRequestJsonArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                //Looping through JSONArray to insert it all into a list
+                for(int i = 0; i < response.length(); i++){
+                    try {
+                        JSONObject tempJsonObject = response.getJSONObject(i);
+                        String tempConvId = tempJsonObject.getString("table_Name");
+                        String tempConvAccId = mainPrefs.getString("activeAccId", "none");
+                        String tempConvPartnerId = tempJsonObject.getString("partner_Username");
+                        convSelList.add(new Obj_ConvInfo());
+                    } catch (JSONException e){
+                        common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
+                    }
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.displayToast(ConvSelection.this, "Refresh Failed: Request exception occurred");
+            }
+        });
+
+        //Adding request to the queue
+        queue.add(jsonArrayRequest);
     }
 
     //These functions are for the toolbar and the toolbar menu

@@ -122,7 +122,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Setting in the sharedpreferences which acc_Id is now active
                             SharedPreferences.Editor tempEditor = mainPrefs.edit();
-                            tempEditor.putString("activeUserId", responseAccId);
+                            tempEditor.putString("activeAccId", responseAccId);
                             tempEditor.commit();
 
                             //Making Intent for the conv activity
