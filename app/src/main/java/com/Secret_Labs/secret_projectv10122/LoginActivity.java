@@ -1,13 +1,17 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
+import android.widget.CheckBox;
 import android.widget.EditText;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
+import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -18,6 +22,9 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
+
 public class LoginActivity extends AppCompatActivity {
 
     RequestQueue loginQueue;
@@ -26,11 +33,14 @@ public class LoginActivity extends AppCompatActivity {
 
     SharedPreferences mainPrefs;
 
+    DatabaseHelper dbHelper;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_login);
         common = new Common();
+        dbHelper = new DatabaseHelper(this);
         mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
 
         //Setting custom toolbar for the login activity
@@ -64,8 +74,9 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         //First getting references to the username and password from the fields
-        EditText username = (EditText) findViewById(R.id.usernameEditText);
-        EditText password = (EditText) findViewById(R.id.passwordEditText);
+        final EditText username = (EditText) findViewById(R.id.usernameEditText);
+        final EditText password = (EditText) findViewById(R.id.passwordEditText);
+        final CheckBox rememberCheckbox = (CheckBox) findViewById(R.id.rememberCheckBox);
 
         //Checking whether the fields are empty
         if(username.getText().toString().equals("") || password.getText().toString().equals("")){
@@ -92,6 +103,31 @@ public class LoginActivity extends AppCompatActivity {
                         try {
                             String responseAccId = response.getString("acc_Id");
                             common.displayToast(LoginActivity.this, responseAccId);
+
+                            //Adding account details to the database after getting the current time
+                            boolean insertResult = false;
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String currentDT = sdf.format(new Date());
+                            if(rememberCheckbox.isChecked()){
+                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username.getText().toString(), password.getText().toString(), true, currentDT));
+                            } else {
+                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username.getText().toString(), null, false, currentDT));
+                            }
+
+                            //Checking if the insert was successful
+                            if(!insertResult){
+                                common.displayToast(LoginActivity.this, "Login Failed: Account insertion into database failed");
+                                return;
+                            }
+
+                            //Setting in the sharedpreferences which acc_Id is now active
+                            SharedPreferences.Editor tempEditor = mainPrefs.edit();
+                            tempEditor.putString("activeUserId", responseAccId);
+                            tempEditor.commit();
+
+                            //Making Intent for the conv activity
+                            Intent goToConvSelection = new Intent(LoginActivity.this, ConvSelection.class);
+                            startActivity(goToConvSelection);
                         } catch (JSONException e){
                             common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
                         }

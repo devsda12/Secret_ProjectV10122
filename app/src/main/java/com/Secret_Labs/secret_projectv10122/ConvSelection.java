@@ -1,5 +1,6 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.SharedPreferences;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -21,6 +22,7 @@ import com.android.volley.toolbox.Volley;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.ListIterator;
 
 public class ConvSelection extends AppCompatActivity {
 
@@ -34,12 +36,14 @@ public class ConvSelection extends AppCompatActivity {
     RequestQueue requestQueue;
 
     Common common;
+    SharedPreferences mainPrefs;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conv_selection);
         common = new Common();
+        mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
         noConvTV = (TextView) findViewById(R.id.noConvSel_Textview);
 
         //Setting the custom toolbar for the activity
@@ -93,6 +97,18 @@ public class ConvSelection extends AppCompatActivity {
             //Coupling the adapter to the already present recyclerview
             recyclerView.setAdapter(adapter_convSelection);
         }
+    }
+
+    //The function to update the conversations that are presented to the user
+    public List<Obj_ConvInfo> updateConvList(RequestQueue queue){
+        //First checking if the connection to the api is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            common.displayToast(ConvSelection.this, "Refresh failed! No connection to API");
+            return new ArrayList<>();
+        }
+
+        //Now checking whether the
+        return new ArrayList<>();
     }
 
     //These functions are for the toolbar and the toolbar menu

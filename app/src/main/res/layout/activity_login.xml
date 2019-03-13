@@ -52,7 +52,7 @@
     </android.support.design.widget.TextInputLayout>
 
     <CheckBox
-        android:id="@+id/checkBox"
+        android:id="@+id/rememberCheckBox"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="11dp"
@@ -72,6 +72,6 @@
         android:text="@string/login"
         android:textColor="@color/colorBackground"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/checkBox" />
+        app:layout_constraintTop_toBottomOf="@+id/rememberCheckBox" />
 
 </android.support.constraint.ConstraintLayout>
