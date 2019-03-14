@@ -146,23 +146,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //First checking if entry already exists
         for(int j = 0; j < convInfoList.size(); j++){
-            Cursor tempSelectResult = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = " + convInfoList.get(j).getConv_Id(), null);
+            Cursor tempSelectResult = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
             if(tempSelectResult.getCount() > 0){
                 ContentValues tempContentValues = new ContentValues();
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN, convInfoList.get(j).getConvLast_Message());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(j).getConvLast_MessageDate());
-                long tempResult = dbWrite.update(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, tempContentValues, DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = " + convInfoList.get(j).getConv_Id(), null);
+                long tempResult = dbWrite.update(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, tempContentValues, DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
                 if(tempResult == -1){
                     tempSelectResult.close();
                     dbRead.close();
                     dbWrite.close();
                     return false;
                 }
+
+                //Removing the item which was updated
+                convInfoList.remove(j);
             }
         }
-
-        //Closing items no longer needed
-        dbRead.close();
 
         //Now looping through the list and adding every conversation to the database
         for(int i = 0; i < convInfoList.size(); i++){
@@ -175,12 +175,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(i).getConvLast_MessageDate());
             long tempResult = dbWrite.insert(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, null, tempContentValues);
             if(tempResult == -1){
+                dbRead.close();
                 dbWrite.close();
                 return false;
             }
         }
 
         //Returning true to sign the insertion was successful
+        dbRead.close();
         dbWrite.close();
         return true;
     }
@@ -191,7 +193,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase db = this.getReadableDatabase();
 
         //Executing query on the database
-        Cursor result = db.rawQuery("SELECT * FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " = " + acc_Id, null);
+        Cursor result = db.rawQuery("SELECT * FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
 
         //Putting results in new list
         List<Obj_ConvInfo> convInfoList = new ArrayList<>();
