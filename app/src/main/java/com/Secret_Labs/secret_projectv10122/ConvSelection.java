@@ -55,6 +55,7 @@ public class ConvSelection extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conv_selection);
         common = new Common();
+        dbHelper = new DatabaseHelper(this);
         mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
         noConvTV = (TextView) findViewById(R.id.noConvSel_Textview);
 
@@ -165,9 +166,7 @@ public class ConvSelection extends AppCompatActivity {
                 }
 
                 //Inserting the new list into the database
-                boolean insertResult = false;
-                Log.d("logding", Boolean.toString(insertResult));
-                insertResult = dbHelper.addConvThumbnails(updateConvSelList);
+                boolean insertResult = dbHelper.addConvThumbnails(updateConvSelList);
 
                 if(!insertResult){
                     common.displayToast(ConvSelection.this,"Refresh Failed: Database insertion failed");
