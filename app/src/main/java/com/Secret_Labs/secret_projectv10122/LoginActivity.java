@@ -116,7 +116,7 @@ public class LoginActivity extends AppCompatActivity {
 
                             //Checking if the insert was successful
                             if(!insertResult){
-                                common.displayToast(LoginActivity.this, "Login Failed: Account insertion into database failed");
+                                common.displayToast(LoginActivity.this, "Login Failed: Account already exists");
                                 return;
                             }
 

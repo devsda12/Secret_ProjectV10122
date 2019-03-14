@@ -15,6 +15,7 @@ import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.OnclickListener_AccSelection;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_AccSelection;
@@ -30,6 +31,7 @@ public class AccountSelection extends AppCompatActivity {
     RecyclerView recyclerView;
     RecyclerAdapter_AccSelection adapter_accSelection;
     List<Obj_AccountInfo> acc_list;
+    DatabaseHelper dbHelper;
 
     FloatingActionButton plusFab;
     ConstraintLayout existingAccCL;
@@ -52,6 +54,7 @@ public class AccountSelection extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountselection);
         common = new Common();
+        dbHelper = new DatabaseHelper(this);
         noAccTV = (TextView) findViewById(R.id.noAccountsTextView);
 
         //Setting the custom toolbar for our main activity
@@ -90,39 +93,42 @@ public class AccountSelection extends AppCompatActivity {
         //Adding the devider class object to the recyclerview
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), recyclerLayoutManager.getOrientation()));
 
-        //Defining a temporary list
-        acc_list.add(new Obj_AccountInfo("1", "Test_User1", "1234", false, "12-01-2019, 12:30"));
-        acc_list.add(new Obj_AccountInfo("2", "Test_User2", "1234", false, "12-01-2019, 12:30"));
-        acc_list.add(new Obj_AccountInfo("3", "Test_User3", "1234", false, "12-01-2019, 12:30"));
+        //Filling the list with the accounts
+        acc_list = dbHelper.fetchAllStoredAccounts();
 
-        //Initial coupling of the adapter, future reloads should use the function refreshAccList
-        if(acc_list.isEmpty()){
-            noAccTV.setVisibility(View.VISIBLE);
-        } else{
-            //Importing the acquired list in the adapter
-            adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list, new OnclickListener_AccSelection() {
-                @Override
-                public void onItemClicked(int position) {
+        //Importing the acquired list in the adapter
+        adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list, new OnclickListener_AccSelection() {
+            @Override
+            public void onItemClicked(int position) {
 
-                }
+            }
 
-                @Override
-                public void onItemRemoveClicked(int position) {
+            @Override
+            public void onItemRemoveClicked(int position) {
+                boolean removeResult = dbHelper.removeAccount(acc_list.get(position).getAcc_Id());
+                if(removeResult) {
                     acc_list.remove(position);
                     adapter_accSelection.notifyItemRemoved(position);
                     adapter_accSelection.notifyItemRangeChanged(position, adapter_accSelection.getItemCount() - position);
                     showNoAccTV();
                 }
-            });
+            }
+        });
 
-            //Coupling the adapter to the already present recyclerview
-            recyclerView.setAdapter(adapter_accSelection);
+        //Coupling the adapter to the already present recyclerview
+        recyclerView.setAdapter(adapter_accSelection);
+
+        //Initial coupling of the adapter, future reloads should use the function refreshAccList
+        if(acc_list.isEmpty()){
+            noAccTV.setVisibility(View.VISIBLE);
         }
     }
 
     //These functions are for the refresh of the acc list
     private void refreshAccList(){
         //First update the list under here
+        acc_list.clear();
+        acc_list.addAll(dbHelper.fetchAllStoredAccounts());
 
         //Notifying the adapter the dataset has changed so it updates the index and inserts new items where possible
         adapter_accSelection.notifyDataSetChanged();

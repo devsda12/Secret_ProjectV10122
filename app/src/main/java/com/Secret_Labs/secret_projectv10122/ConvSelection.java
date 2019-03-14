@@ -8,11 +8,13 @@ import android.support.v7.widget.DividerItemDecoration;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.TextView;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.OnclickListener_ConvSelection;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_AccSelection;
@@ -36,8 +38,10 @@ public class ConvSelection extends AppCompatActivity {
 
     RecyclerView recyclerView;
     List<Obj_ConvInfo> convSelList;
+    List<Obj_ConvInfo> updateConvSelList;
     RecyclerAdapter_ConvSelection adapter_convSelection;
     TextView noConvTV;
+    DatabaseHelper dbHelper;
 
     SwipeRefreshLayout sRLayout;
 
@@ -79,6 +83,7 @@ public class ConvSelection extends AppCompatActivity {
         //Recyclerview area here
         //Defining the list over here
         convSelList = new ArrayList<>();
+        updateConvSelList = new ArrayList<>();
 
         //Defining the recyclerview
         recyclerView = (RecyclerView) findViewById(R.id.convSel_Recyclerview);
@@ -90,20 +95,22 @@ public class ConvSelection extends AppCompatActivity {
         //Adding the devider class object to the recyclerview
         recyclerView.addItemDecoration(new DividerItemDecoration(recyclerView.getContext(), recyclerLayoutManager.getOrientation()));
 
+        //Importing the acquired list in the adapter
+        adapter_convSelection = new RecyclerAdapter_ConvSelection(this, convSelList, new OnclickListener_ConvSelection() {
+            @Override
+            public void onItemClicked(int position) {
+
+            }
+        });
+
+        //Coupling the adapter to the already present recyclerview
+        recyclerView.setAdapter(adapter_convSelection);
+
+        updateConvList(requestQueue);
+
         //Initial coupling of the adapter, future reloads should use the function refreshAccList
         if(convSelList.isEmpty()){
             noConvTV.setVisibility(View.VISIBLE);
-        } else{
-            //Importing the acquired list in the adapter
-            adapter_convSelection = new RecyclerAdapter_ConvSelection(this, convSelList, new OnclickListener_ConvSelection() {
-                @Override
-                public void onItemClicked(int position) {
-
-                }
-            });
-
-            //Coupling the adapter to the already present recyclerview
-            recyclerView.setAdapter(adapter_convSelection);
         }
     }
 
@@ -137,18 +144,37 @@ public class ConvSelection extends AppCompatActivity {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getChats", tempRequestJsonArray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                //Clearing the old update list
+                updateConvSelList.clear();
+
                 //Looping through JSONArray to insert it all into a list
                 for(int i = 0; i < response.length(); i++){
                     try {
                         JSONObject tempJsonObject = response.getJSONObject(i);
                         String tempConvId = tempJsonObject.getString("table_Name");
                         String tempConvAccId = mainPrefs.getString("activeAccId", "none");
-                        String tempConvPartnerId = tempJsonObject.getString("partner_Username");
-                        convSelList.add(new Obj_ConvInfo());
+                        String tempConvPartnerId = tempJsonObject.getString("partner_Id");
+                        String tempConvPartnerUsername = tempJsonObject.getString("partner_Username");
+                        String tempConvLastMessage = tempJsonObject.getString("last_Message");
+                        String tempConvLastMessageDate = tempJsonObject.getString("message_Date");
+                        updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, tempConvLastMessage, tempConvLastMessageDate));
                     } catch (JSONException e){
                         common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
+                        return;
                     }
                 }
+
+                //Inserting the new list into the database
+                boolean insertResult = false;
+                Log.d("logding", Boolean.toString(insertResult));
+                insertResult = dbHelper.addConvThumbnails(updateConvSelList);
+
+                if(!insertResult){
+                    common.displayToast(ConvSelection.this,"Refresh Failed: Database insertion failed");
+                }
+
+                //For testing refreshing the adapter here
+                refreshAdapter();
             }
         }, new Response.ErrorListener() {
             @Override
@@ -159,6 +185,28 @@ public class ConvSelection extends AppCompatActivity {
 
         //Adding request to the queue
         queue.add(jsonArrayRequest);
+    }
+
+    //Function to refresh the adapter
+    private void refreshAdapter(){
+        //Clearing the list and adding all values from db
+        convSelList.clear();
+        convSelList.addAll(dbHelper.fetchAllConvThumbnails(mainPrefs.getString("activeAccId", "none")));
+
+        //Telling adapter the dataset has changed
+        adapter_convSelection.notifyDataSetChanged();
+
+        //Checking if the tv should be displayed
+        showNoConvTV();
+    }
+
+    //Function to show or not show the noConvTV
+    private void showNoConvTV(){
+        if(convSelList.isEmpty() && noConvTV.getVisibility() == View.INVISIBLE){
+            noConvTV.setVisibility(View.VISIBLE);
+        } else if(!convSelList.isEmpty() && noConvTV.getVisibility() == View.VISIBLE){
+            noConvTV.setVisibility(View.INVISIBLE);
+        }
     }
 
     //These functions are for the toolbar and the toolbar menu
