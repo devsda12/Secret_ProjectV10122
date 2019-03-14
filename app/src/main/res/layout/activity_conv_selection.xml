@@ -6,6 +6,21 @@
     android:layout_height="match_parent"
     tools:context=".ConvSelection">
 
+    <ProgressBar
+        android:id="@+id/convSelProgressBar"
+        style="?android:attr/progressBarStyle"
+        android:layout_width="85dp"
+        android:layout_height="85dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="8dp"
+        android:layout_marginEnd="8dp"
+        android:layout_marginBottom="8dp"
+        android:visibility="invisible"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="@+id/convSel_SwipeRefresh"
+        app:layout_constraintTop_toTopOf="@+id/convSel_SwipeRefresh" />
+
     <TextView
         android:id="@+id/noConvSel_Textview"
         android:layout_width="wrap_content"

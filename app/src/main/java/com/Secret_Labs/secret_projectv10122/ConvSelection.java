@@ -12,6 +12,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
@@ -42,6 +43,7 @@ public class ConvSelection extends AppCompatActivity {
     RecyclerAdapter_ConvSelection adapter_convSelection;
     TextView noConvTV;
     DatabaseHelper dbHelper;
+    ProgressBar reloadPb;
 
     SwipeRefreshLayout sRLayout;
 
@@ -69,7 +71,9 @@ public class ConvSelection extends AppCompatActivity {
         sRLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Put refreshing method here
+                //Refreshing from the local db
+                refreshAdapter();
+
                 sRLayout.setRefreshing(false);
             }
         });
@@ -78,13 +82,13 @@ public class ConvSelection extends AppCompatActivity {
         requestQueue = Volley.newRequestQueue(this);
         common.startUpConnect(this, requestQueue);
 
-        //First refreshing the conversations from the database here
-
-
         //Recyclerview area here
         //Defining the list over here
         convSelList = new ArrayList<>();
         updateConvSelList = new ArrayList<>();
+
+        //First refreshing the conversations from the local database here
+        refreshAdapter();
 
         //Defining the recyclerview
         recyclerView = (RecyclerView) findViewById(R.id.convSel_Recyclerview);
@@ -107,6 +111,7 @@ public class ConvSelection extends AppCompatActivity {
         //Coupling the adapter to the already present recyclerview
         recyclerView.setAdapter(adapter_convSelection);
 
+        //Updating the convlist from online sources
         updateConvList(requestQueue);
 
         //Initial coupling of the adapter, future reloads should use the function refreshAccList
@@ -117,15 +122,21 @@ public class ConvSelection extends AppCompatActivity {
 
     //The function to update the conversations that are presented to the user
     public void updateConvList(RequestQueue queue){
+        //First displaying the progressbar
+        reloadPb = (ProgressBar) findViewById(R.id.convSelProgressBar);
+        reloadPb.setVisibility(View.VISIBLE);
+
         //First checking if the connection to the api is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(ConvSelection.this, "Refresh Failed! No connection to API");
+            reloadPb.setVisibility(View.INVISIBLE);
             return;
         }
 
         //Now checking whether a value is present as acc_Id in sharedpreferences
         if(mainPrefs.getString("activeAccId", "none").equals("none")){
             common.displayToast(ConvSelection.this, "Refresh Failed! No account logged in");
+            reloadPb.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -138,6 +149,7 @@ public class ConvSelection extends AppCompatActivity {
             tempRequestJsonArray.put(tempRequestJson);
         } catch (JSONException e) {
             common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
+            reloadPb.setVisibility(View.INVISIBLE);
             return;
         }
 
@@ -161,6 +173,7 @@ public class ConvSelection extends AppCompatActivity {
                         updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, tempConvLastMessage, tempConvLastMessageDate));
                     } catch (JSONException e){
                         common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
+                        reloadPb.setVisibility(View.INVISIBLE);
                         return;
                     }
                 }
@@ -174,6 +187,7 @@ public class ConvSelection extends AppCompatActivity {
 
                 //For testing refreshing the adapter here
                 refreshAdapter();
+                reloadPb.setVisibility(View.INVISIBLE);
             }
         }, new Response.ErrorListener() {
             @Override
@@ -193,7 +207,9 @@ public class ConvSelection extends AppCompatActivity {
         convSelList.addAll(dbHelper.fetchAllConvThumbnails(mainPrefs.getString("activeAccId", "none")));
 
         //Telling adapter the dataset has changed
-        adapter_convSelection.notifyDataSetChanged();
+        if(adapter_convSelection != null) {
+            adapter_convSelection.notifyDataSetChanged();
+        }
 
         //Checking if the tv should be displayed
         showNoConvTV();
@@ -221,6 +237,7 @@ public class ConvSelection extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_convsel_refresh:
+                refreshAdapter();
                 return true;
             case R.id.action_convsel_about:
                 return true;
