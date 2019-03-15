@@ -8,15 +8,17 @@ public class Obj_ConvInfo {
     private String convPartner_Id;
     private String convPartner_Username;
     private String convLast_Message;
+    private String convLast_MessageSender;
     private String convLast_MessageDate;
 
 
-    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, String convLast_Message, String convLast_MessageDate) {
+    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, String convLast_Message, String convLast_MessageSender, String convLast_MessageDate) {
         this.conv_Id = conv_Id;
         this.convAcc_Id = convAcc_Id;
         this.convPartner_Id = convPartner_Id;
         this.convPartner_Username = convPartner_Username;
         this.convLast_Message = convLast_Message;
+        this.convLast_MessageSender = convLast_MessageSender;
         this.convLast_MessageDate = convLast_MessageDate;
     }
 
@@ -58,6 +60,14 @@ public class Obj_ConvInfo {
 
     public void setConvLast_Message(String convLast_Message) {
         this.convLast_Message = convLast_Message;
+    }
+
+    public String getConvLast_MessageSender() {
+        return convLast_MessageSender;
+    }
+
+    public void setConvLast_MessageSender(String convLast_MessageSender) {
+        this.convLast_MessageSender = convLast_MessageSender;
     }
 
     public String getConvLast_MessageDate() {

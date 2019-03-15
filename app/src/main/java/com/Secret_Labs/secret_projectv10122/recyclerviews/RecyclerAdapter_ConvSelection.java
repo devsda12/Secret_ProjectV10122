@@ -41,7 +41,13 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
         Obj_ConvInfo conv_item = conv_List.get(position);
 
         holder.convsel_partner_name.setText(conv_item.getConvPartner_Username());
-        holder.convsel_last_message.setText(conv_item.getConvLast_Message());
+
+        //Formatting the text to put in the last message with sender
+        String tempLastMessage = conv_item.getConvLast_Message();
+        if(tempLastMessage.length() > 25){
+            tempLastMessage = tempLastMessage.substring(0, 26) + "...";
+        }
+        holder.convsel_last_message.setText(conv_item.getConvLast_MessageSender() + ": " + tempLastMessage);
 
         //Setting the onclicklistener for the entire conv entry
         holder.itemView.setOnClickListener(new View.OnClickListener() {

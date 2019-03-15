@@ -30,6 +30,7 @@ public class DatabaseInfo {
         public static final String CONV_PARTNER_ID_COLUMN = "conv_Partner_Id";
         public static final String CONV_PARTNER_USERNAME_COLUMN = "conv_Partner_Username";
         public static final String CONV_LAST_MESSAGE_COLUMN = "conv_Last_Message";
+        public static final String CONV_LAST_MESSAGE_SENDER_COLUMN = "conv_Last_Message_Sender";
         public static final String CONV_LAST_MESSAGE_DATE_COLUMN = "conv_Last_Message_Date";
     }
 
