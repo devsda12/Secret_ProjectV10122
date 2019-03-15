@@ -18,4 +18,9 @@
         android:title="@string/conv_selection_settings"
         app:showAsAction="never" />
 
+    <item
+        android:id="@+id/action_convsel_logout"
+        android:title="@string/conv_selection_logout"
+        app:showAsAction="never" />
+
 </menu>

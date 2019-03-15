@@ -128,6 +128,7 @@ public class LoginActivity extends AppCompatActivity {
                             //Making Intent for the conv activity
                             Intent goToConvSelection = new Intent(LoginActivity.this, ConvSelection.class);
                             startActivity(goToConvSelection);
+                            finish();
                         } catch (JSONException e){
                             common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
                         }

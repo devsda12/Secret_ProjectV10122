@@ -50,6 +50,12 @@ public class AccountSelection extends AppCompatActivity {
     TextView noAccTV;
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        refreshAccList();
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_accountselection);

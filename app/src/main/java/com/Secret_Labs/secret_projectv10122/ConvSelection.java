@@ -1,5 +1,6 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -193,7 +194,8 @@ public class ConvSelection extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(ConvSelection.this, "Refresh Failed: Request exception occurred");
+                common.displayToast(ConvSelection.this, "Refresh Failed: No conversations started yet");
+                reloadPb.setVisibility(View.INVISIBLE);
             }
         });
 
@@ -243,6 +245,12 @@ public class ConvSelection extends AppCompatActivity {
             case R.id.action_convsel_about:
                 return true;
             case R.id.action_convsel_settings:
+                return true;
+            case R.id.action_convsel_logout:
+                SharedPreferences.Editor tempEdit = mainPrefs.edit();
+                tempEdit.putString("activeAccId", "none");
+                tempEdit.apply();
+                finish();
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
