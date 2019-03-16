@@ -1,9 +1,14 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.widget.CheckBox;
 import android.widget.Toast;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
+import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -16,6 +21,8 @@ import com.android.volley.toolbox.Volley;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.text.SimpleDateFormat;
+import java.util.Date;
 import java.util.Random;
 
 public class Common {
@@ -25,6 +32,7 @@ public class Common {
 
     String mainPrefsName = "mainPrefs";
     SharedPreferences mainPrefs;
+    DatabaseHelper dbHelper;
 
     //Method to generate random int
     public int getRandomNumberInRange(int min, int max){
@@ -108,5 +116,83 @@ public class Common {
         });
 
         queue.add(idObjectRequest);
+    }
+
+    //Method to login with the api
+    public void login(final Context context, RequestQueue queue, final String username, final String password, final CheckBox rememberCheckbox, final boolean finish){
+        mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
+        dbHelper = new DatabaseHelper(context);
+
+        //Checking whether the connection is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            displayToast(context, "Login Failed: No connection to API");
+            return;
+        }
+
+        //Checking whether the fields are empty
+        if(username.equals("") || password.equals("")){
+            displayToast(context, "Login Failed: Fields may not be empty");
+            return;
+        }
+
+        //If not empty making a JSON object with the values
+        JSONObject tempAuthJson = new JSONObject();
+        try{
+            tempAuthJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            tempAuthJson.put("acc_Username", username);
+            tempAuthJson.put("acc_Password", password);
+        } catch (JSONException e) {
+            displayToast(context, "Login Failed: JSON Exception occurred");
+            return;
+        }
+
+        //Creating the request
+        JsonObjectRequest authRequest = new JsonObjectRequest(Request.Method.POST, apiUrl + "/sapp_login", tempAuthJson,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String responseAccId = response.getString("acc_Id");
+                            displayToast(context, responseAccId);
+
+                            //Adding account details to the database after getting the current time
+                            boolean insertResult = false;
+                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                            String currentDT = sdf.format(new Date());
+                            if(rememberCheckbox.isChecked()){
+                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
+                            } else {
+                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
+                            }
+
+                            //Checking if the insert was successful
+                            if(!insertResult){
+                                displayToast(context, "Login Failed: Account already exists");
+                                return;
+                            }
+
+                            //Setting in the sharedpreferences which acc_Id is now active
+                            SharedPreferences.Editor tempEditor = mainPrefs.edit();
+                            tempEditor.putString("activeAccId", responseAccId);
+                            tempEditor.commit();
+
+                            //Making Intent for the conv activity
+                            Intent goToConvSelection = new Intent(context, ConvSelection.class);
+                            context.startActivity(goToConvSelection);
+                            if(finish) {
+                                ((Activity) context).finish();
+                            }
+                        } catch (JSONException e){
+                            displayToast(context, "Login Failed: JSON Exception occurred");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+                    @Override
+                    public void onErrorResponse(VolleyError error) {
+                        displayToast(context, "Login Failed: Username or Password is incorrect");
+                    }
+        });
+        //Adding request to queue
+        queue.add(authRequest);
     }
 }

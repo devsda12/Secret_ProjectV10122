@@ -257,4 +257,9 @@ public class ConvSelection extends AppCompatActivity {
         }
     }
     //End of the toolbar menu
+
+    @Override
+    public void onBackPressed(){
+        //Do nothing
+    }
 }

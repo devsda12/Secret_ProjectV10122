@@ -106,7 +106,7 @@ public class AccountSelection extends AppCompatActivity {
         adapter_accSelection = new RecyclerAdapter_AccSelection(this, acc_list, new OnclickListener_AccSelection() {
             @Override
             public void onItemClicked(int position) {
-
+                loginOnAccPress(requestQueue, position);
             }
 
             @Override
@@ -151,6 +151,12 @@ public class AccountSelection extends AppCompatActivity {
         }
     }
     //End of the acc List refresh
+
+    //Login function when acc is pressed
+    private void loginOnAccPress(RequestQueue queue, int listPos){
+        //First testing if the pressed acc has a stored pswd hash
+
+    }
 
     //These functions are for the expandable fab menu
     private void initializeFabMenu(){

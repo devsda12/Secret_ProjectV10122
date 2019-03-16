@@ -60,13 +60,13 @@ public class LoginActivity extends AppCompatActivity {
         loginButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                login(loginQueue);
+                loginV2(loginQueue);
             }
         });
     }
 
-    //Method that runs when the login button is pressed
-    public void login(RequestQueue queue){
+    //New login method V2 to use common login
+    private void loginV2(RequestQueue queue){
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(LoginActivity.this, "Login Failed: No connection to API");
@@ -84,63 +84,7 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        //If not empty making a JSON object with the values
-        JSONObject tempAuthJson = new JSONObject();
-        try{
-            tempAuthJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
-            tempAuthJson.put("acc_Username", username.getText().toString());
-            tempAuthJson.put("acc_Password", password.getText().toString());
-        } catch (JSONException e) {
-            common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
-            return;
-        }
-
-        //Creating the request
-        JsonObjectRequest authRequest = new JsonObjectRequest(Request.Method.POST, common.apiUrl + "/sapp_login", tempAuthJson,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String responseAccId = response.getString("acc_Id");
-                            common.displayToast(LoginActivity.this, responseAccId);
-
-                            //Adding account details to the database after getting the current time
-                            boolean insertResult = false;
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String currentDT = sdf.format(new Date());
-                            if(rememberCheckbox.isChecked()){
-                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username.getText().toString(), password.getText().toString(), true, currentDT));
-                            } else {
-                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username.getText().toString(), null, false, currentDT));
-                            }
-
-                            //Checking if the insert was successful
-                            if(!insertResult){
-                                common.displayToast(LoginActivity.this, "Login Failed: Account already exists");
-                                return;
-                            }
-
-                            //Setting in the sharedpreferences which acc_Id is now active
-                            SharedPreferences.Editor tempEditor = mainPrefs.edit();
-                            tempEditor.putString("activeAccId", responseAccId);
-                            tempEditor.commit();
-
-                            //Making Intent for the conv activity
-                            Intent goToConvSelection = new Intent(LoginActivity.this, ConvSelection.class);
-                            startActivity(goToConvSelection);
-                            finish();
-                        } catch (JSONException e){
-                            common.displayToast(LoginActivity.this, "Login Failed: JSON Exception occurred");
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        common.displayToast(LoginActivity.this, "Login Failed: Username or Password is incorrect");
-                    }
-                });
-        //Adding request to queue
-        queue.add(authRequest);
+        common.login(LoginActivity.this, queue, username.getText().toString(), password.getText().toString(), rememberCheckbox, true);
     }
 
     //Method that runs when back button is pressed

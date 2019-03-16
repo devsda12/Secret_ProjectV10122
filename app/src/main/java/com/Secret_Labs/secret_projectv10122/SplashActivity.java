@@ -16,8 +16,10 @@ public class SplashActivity extends AppCompatActivity {
             Intent intent = new Intent(this, AccountSelection.class);
             startActivity(intent);
         } else {
-            Intent intent = new Intent(this, ConvSelection.class);
+            Intent intent = new Intent(this, AccountSelection.class);
             startActivity(intent);
+            Intent intent2 = new Intent(this, ConvSelection.class);
+            startActivity(intent2);
         }
         finish();
     }
