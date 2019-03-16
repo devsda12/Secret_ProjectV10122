@@ -42,6 +42,14 @@ public class RecyclerAdapter_AccSelection extends RecyclerView.Adapter<RecyclerA
         holder.acc_name.setText(acc_item.getAcc_Username());
         holder.acc_last_login.setText(acc_item.getAcc_Last_Login());
 
+        //Setting the onclickListener for the whole view
+        holder.itemView.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                mListener.onItemClicked(position);
+            }
+        });
+
         //Setting the onclicklistener for the remove button
         holder.acc_Remove.setOnClickListener(new View.OnClickListener() {
             @Override

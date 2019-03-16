@@ -119,7 +119,7 @@ public class Common {
     }
 
     //Method to login with the api
-    public void login(final Context context, RequestQueue queue, final String username, final String password, final CheckBox rememberCheckbox, final boolean finish){
+    public void login(final Context context, RequestQueue queue, final String username, final String password, final int fromWhereRemember, final boolean finish){
         mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
         dbHelper = new DatabaseHelper(context);
 
@@ -155,20 +155,23 @@ public class Common {
                             String responseAccId = response.getString("acc_Id");
                             displayToast(context, responseAccId);
 
-                            //Adding account details to the database after getting the current time
-                            boolean insertResult = false;
-                            SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                            String currentDT = sdf.format(new Date());
-                            if(rememberCheckbox.isChecked()){
-                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
-                            } else {
-                                insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
-                            }
+                            // 0 means login is invoked from acc selection, 1 means to remember the psswd and 2 means don't
+                            if(fromWhereRemember == 1 || fromWhereRemember == 2) {
+                                //Adding account details to the database after getting the current time
+                                boolean insertResult = false;
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String currentDT = sdf.format(new Date());
+                                if (fromWhereRemember == 1) {
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
+                                } else {
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
+                                }
 
-                            //Checking if the insert was successful
-                            if(!insertResult){
-                                displayToast(context, "Login Failed: Account already exists");
-                                return;
+                                //Checking if the insert was successful
+                                if (!insertResult) {
+                                    displayToast(context, "Login Failed: Account already exists");
+                                    return;
+                                }
                             }
 
                             //Setting in the sharedpreferences which acc_Id is now active

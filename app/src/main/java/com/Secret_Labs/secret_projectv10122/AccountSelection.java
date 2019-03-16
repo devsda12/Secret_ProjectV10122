@@ -154,8 +154,19 @@ public class AccountSelection extends AppCompatActivity {
 
     //Login function when acc is pressed
     private void loginOnAccPress(RequestQueue queue, int listPos){
-        //First testing if the pressed acc has a stored pswd hash
+        //First getting the pressed username
+        String tempUsernameToPass = acc_list.get(listPos).getAcc_Username();
 
+        //Testing if the pressed acc has a stored pswd hash
+        if(acc_list.get(listPos).getAcc_RememberLogin()){
+            String tempPsswdToPass = acc_list.get(listPos).getAcc_Password();
+
+            //Logging in
+            common.login(AccountSelection.this, queue, tempUsernameToPass, tempPsswdToPass, 0, false);
+        } else {
+            //Navigating to the login activity with intent extra's for the username
+
+        }
     }
 
     //These functions are for the expandable fab menu

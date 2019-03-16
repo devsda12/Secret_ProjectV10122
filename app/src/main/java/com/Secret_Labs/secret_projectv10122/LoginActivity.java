@@ -84,7 +84,13 @@ public class LoginActivity extends AppCompatActivity {
             return;
         }
 
-        common.login(LoginActivity.this, queue, username.getText().toString(), password.getText().toString(), rememberCheckbox, true);
+        //Getting fromWhereRemembered int from the checkbox
+        int fromWhereRemember = 2;
+        if(rememberCheckbox.isChecked()){
+            fromWhereRemember = 1;
+        }
+
+        common.login(LoginActivity.this, queue, username.getText().toString(), password.getText().toString(), fromWhereRemember, true);
     }
 
     //Method that runs when back button is pressed
