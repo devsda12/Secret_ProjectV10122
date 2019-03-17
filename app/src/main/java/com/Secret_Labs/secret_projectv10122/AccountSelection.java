@@ -165,7 +165,9 @@ public class AccountSelection extends AppCompatActivity {
             common.login(AccountSelection.this, queue, tempUsernameToPass, tempPsswdToPass, 0, false);
         } else {
             //Navigating to the login activity with intent extra's for the username
-
+            Intent goToLoginInstead = new Intent(AccountSelection.this, LoginActivity.class);
+            goToLoginInstead.putExtra("suggestedUsername", tempUsernameToPass);
+            startActivity(goToLoginInstead);
         }
     }
 

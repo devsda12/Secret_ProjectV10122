@@ -30,6 +30,7 @@ public class LoginActivity extends AppCompatActivity {
     RequestQueue loginQueue;
     Common common;
     Button loginButton;
+    EditText username;
 
     SharedPreferences mainPrefs;
 
@@ -63,6 +64,13 @@ public class LoginActivity extends AppCompatActivity {
                 loginV2(loginQueue);
             }
         });
+
+        //Setting the username if intent has extra
+        username = (EditText) findViewById(R.id.usernameEditText);
+        Intent intent = getIntent();
+        if(intent.hasExtra("suggestedUsername")){
+            username.setText(intent.getStringExtra("suggestedUsername"));
+        }
     }
 
     //New login method V2 to use common login
@@ -74,7 +82,6 @@ public class LoginActivity extends AppCompatActivity {
         }
 
         //First getting references to the username and password from the fields
-        final EditText username = (EditText) findViewById(R.id.usernameEditText);
         final EditText password = (EditText) findViewById(R.id.passwordEditText);
         final CheckBox rememberCheckbox = (CheckBox) findViewById(R.id.rememberCheckBox);
 
