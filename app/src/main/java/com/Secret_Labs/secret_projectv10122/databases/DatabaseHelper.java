@@ -137,6 +137,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
+    //Method to check if the current active acc_Id is present in the local DB
+    public String[] checkIfActiveAccInDB(String activeAccId){
+        //Get a reference to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Executing the query on the database
+        Cursor result = db.rawQuery("SELECT "+ DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + ", " + DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN +" FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{activeAccId});
+        result.moveToFirst();
+
+        //Returning empty array if there are no results
+        if(result.getCount() == 0){
+            return new String[]{null, null};
+        }
+
+        //If there are results returning the username and password for the given acc_Id
+        String[] returnString = new String[]{result.getString(0), result.getString(1)};
+        result.close();
+        return returnString;
+    }
+
     //End of acc_Table functions
 
     //Start of conv_Table functions

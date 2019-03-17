@@ -155,7 +155,7 @@ public class Common {
                             String responseAccId = response.getString("acc_Id");
                             displayToast(context, responseAccId);
 
-                            // 0 means login is invoked from acc selection, 1 means to remember the psswd and 2 means don't
+                            // 0 means login is invoked from acc selection or from startup, 1 means to remember the psswd and 2 means don't from login activity
                             if(fromWhereRemember == 1 || fromWhereRemember == 2) {
                                 //Adding account details to the database after getting the current time
                                 boolean insertResult = false;
@@ -193,6 +193,12 @@ public class Common {
                     @Override
                     public void onErrorResponse(VolleyError error) {
                         displayToast(context, "Login Failed: Username or Password is incorrect");
+
+                        //If username or password is incorrect from acc selection or app startup the login activity should be started
+                        if(fromWhereRemember == 0){
+                            Intent goToLogin = new Intent(context, LoginActivity.class);
+                            context.startActivity(goToLogin);
+                        }
                     }
         });
         //Adding request to queue
