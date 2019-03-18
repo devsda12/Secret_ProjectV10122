@@ -62,6 +62,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     //Method to add a singular account to the database
     public boolean addAccount(Obj_AccountInfo accountInfo){
+        //First checking if the account is already present in the database
+        boolean accInDB = checkIfAccInDB(accountInfo.getAcc_Id());
+
         //Get reference to the database
         SQLiteDatabase db = this.getWritableDatabase();
 
@@ -80,8 +83,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN, tempRememberLogin);
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN, accountInfo.getAcc_Last_Login());
 
-        //Inserting data into database and getting result code back
-        long result = db.insert(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, null, addableValues);
+        //If the data is already in the database update the given data
+        long result;
+        if(accInDB){
+            result = db.update(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, addableValues, DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{accountInfo.getAcc_Id()});
+        } else{
+            //Inserting data into database and getting result code back
+            result = db.insert(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, null, addableValues);
+        }
 
         db.close();
 
@@ -137,7 +146,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     }
 
-    //Method to check if the current active acc_Id is present in the local DB
+    //Method to just check if the given acc_Id is present in the database
+    public boolean checkIfAccInDB(String checkableID){
+        //Get a reference to the database
+        SQLiteDatabase db = this.getReadableDatabase();
+
+        //Executing query on the database
+        Cursor result = db.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{checkableID});
+        result.moveToFirst();
+
+        //Returning false if there are no results
+        if(result.getCount() == 0){
+            result.close();
+            return false;
+        } else {
+            result.close();
+            return true;
+        }
+    }
+
+    //Method to check if the current active acc_Id is present in the local DB and returning the stored username and password
     public String[] checkIfActiveAccInDB(String activeAccId){
         //Get a reference to the database
         SQLiteDatabase db = this.getReadableDatabase();
@@ -148,6 +176,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         //Returning empty array if there are no results
         if(result.getCount() == 0){
+            result.close();
             return new String[]{null, null};
         }
 
@@ -185,7 +214,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             }
         }
 
-        //Now looping through the list and adding every conversation to the database
+        //Now looping through the list and adding every remaining conversation to the database
         for(int i = 0; i < convInfoList.size(); i++){
             ContentValues tempContentValues = new ContentValues();
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN, convInfoList.get(i).getConv_Id());
