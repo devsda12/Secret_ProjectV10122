@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -76,6 +77,16 @@ public class ConvSelection extends AppCompatActivity {
                 refreshAdapter();
 
                 sRLayout.setRefreshing(false);
+            }
+        });
+
+        //Setting the onclicklistener for the add conv fab
+        FloatingActionButton addConvFab = (FloatingActionButton) findViewById(R.id.convSel_AddConvFab);
+        addConvFab.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent goToNewConv = new Intent(ConvSelection.this, NewConvSelection.class);
+                startActivity(goToNewConv);
             }
         });
 
