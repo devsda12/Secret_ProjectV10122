@@ -27,6 +27,11 @@
     <string name="convsel_no_conv">Nothing to show, no conversations started yet..</string>
     <!-- CONV SELECTION ACTIVITY ENDS HERE -->
 
+    <!-- NEW CONV SELECTION ACTIVITY STARTS HERE -->
+    <string name="newconvsel_start_search">Use the searchbar to search for usernames..</string>
+    <string name="newconvsel_no_matching_usernames">Use the searchbar to search for usernames..</string>
+    <!-- NEW CONV SELECTION ACTIVITY ENDS HERE -->
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
