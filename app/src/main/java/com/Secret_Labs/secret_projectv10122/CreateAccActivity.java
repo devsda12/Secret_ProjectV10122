@@ -55,7 +55,7 @@ public class CreateAccActivity extends AppCompatActivity {
         });
     }
 
-    private void createAcc(RequestQueue queue){
+    private void createAcc(final RequestQueue queue){
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(CreateAccActivity.this, "Account Creation failed: No connection to API");
@@ -63,8 +63,8 @@ public class CreateAccActivity extends AppCompatActivity {
         }
 
         //First getting references to the username and password fields
-        EditText username = (EditText) findViewById(R.id.new_UsernameEditText);
-        EditText password = (EditText) findViewById(R.id.new_Password1EditText);
+        final EditText username = (EditText) findViewById(R.id.new_UsernameEditText);
+        final EditText password = (EditText) findViewById(R.id.new_Password1EditText);
         EditText password2 = (EditText) findViewById(R.id.new_Password2EditText);
 
         //Checking whether the fields are empty
@@ -97,6 +97,7 @@ public class CreateAccActivity extends AppCompatActivity {
                         try {
                             String responseAccId = response.getString("acc_Id");
                             common.displayToast(CreateAccActivity.this, responseAccId);
+                            common.login(CreateAccActivity.this, queue, username.getText().toString(), password.getText().toString(), 2, true);
                         } catch (JSONException e){
                             common.displayToast(CreateAccActivity.this, "Account Creation Failed: JSON Exception occurred");
                         }

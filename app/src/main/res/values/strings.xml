@@ -29,7 +29,8 @@
 
     <!-- NEW CONV SELECTION ACTIVITY STARTS HERE -->
     <string name="newconvsel_start_search">Use the searchbar to search for usernames..</string>
-    <string name="newconvsel_no_matching_usernames">Use the searchbar to search for usernames..</string>
+    <string name="newconvsel_less_3_chars">Need 3 or more characters to search..</string>
+    <string name="newconvsel_no_matching_usernames">No matching usernames found..</string>
     <!-- NEW CONV SELECTION ACTIVITY ENDS HERE -->
 
     <!-- TOOLBAR SECTION STARTS HERE -->
