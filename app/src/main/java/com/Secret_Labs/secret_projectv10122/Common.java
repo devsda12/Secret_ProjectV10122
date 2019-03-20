@@ -210,7 +210,8 @@ public class Common {
         mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
         SharedPreferences.Editor tempEdit = mainPrefs.edit();
 
-        //Logging the user out locally
+        //Logging the user out locally and saving the current one to variable
+        String idToLogout = mainPrefs.getString("activeAccId", "none");
         tempEdit.putString("activeAccId", "none");
         tempEdit.apply();
 
@@ -224,7 +225,7 @@ public class Common {
         JSONObject logoutOBJ = new JSONObject();
         try {
             logoutOBJ.put("device_Id", mainPrefs.getString("device_Id", "0"));
-            logoutOBJ.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            logoutOBJ.put("acc_Id", idToLogout);
         } catch (JSONException e) {
             displayToast(context, "Online logout failed: JSON Exception occurred");
             return;
