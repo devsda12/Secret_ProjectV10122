@@ -204,4 +204,58 @@ public class Common {
         //Adding request to queue
         queue.add(authRequest);
     }
+
+    //Method to logout with the api
+    public void logout(final Context context, RequestQueue queue, final boolean finish){
+        mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
+        SharedPreferences.Editor tempEdit = mainPrefs.edit();
+
+        //Logging the user out locally
+        tempEdit.putString("activeAccId", "none");
+        tempEdit.apply();
+
+        //Checking whether the connection is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            displayToast(context, "Online Logout Failed: No connection to API");
+            return;
+        }
+
+        //Making the logout request to the server
+        JSONObject logoutOBJ = new JSONObject();
+        try {
+            logoutOBJ.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            logoutOBJ.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+        } catch (JSONException e) {
+            displayToast(context, "Online logout failed: JSON Exception occurred");
+            return;
+        }
+
+        //Making the request
+        JsonObjectRequest logoutRequest = new JsonObjectRequest(Request.Method.POST, apiUrl + "/sapp_logout", logoutOBJ, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(!response.getString("deleteResult").equals("true")){
+                        displayToast(context, "Online logout succesful");
+                    }
+                } catch (JSONException e) {
+                    displayToast(context, "Online logout failed: JSON Exception occurred");
+                }
+
+                if(finish){
+                    ((Activity)context).finish();
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                displayToast(context, "Online logout failed: Server reported error");
+                if(finish){
+                    ((Activity)context).finish();
+                }
+            }
+        });
+
+        queue.add(logoutRequest);
+    }
 }

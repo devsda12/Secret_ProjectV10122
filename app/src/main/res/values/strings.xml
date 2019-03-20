@@ -33,6 +33,11 @@
     <string name="newconvsel_no_matching_usernames">No matching usernames found..</string>
     <!-- NEW CONV SELECTION ACTIVITY ENDS HERE -->
 
+    <!-- MESSENGER ACTIVITY STARTS HERE -->
+    <string name="messenger_send_button">Send</string>
+    <string name="messenger_edittext_hint">Enter message..</string>
+    <!-- MESSENGER ACTIVITY ENDS HERE -->
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
@@ -41,6 +46,7 @@
     <string name="toolbar_title_account_creation">Create Account</string>
     <string name="toolbar_title_conv_selection">SAPP\'s</string>
     <string name="toolbar_title_newconv_selection">Search Username</string>
+    <string name="toolbar_title_messenger">No username provided</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>

@@ -30,22 +30,22 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
     }
 
     @Override
-    public RecyclerAdapter_ConvSelection.RecyclerviewHolder onCreateViewHolder(ViewGroup parent, int viewType){
+    public RecyclerviewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.convinfo_layout, parent, false);
-        return new RecyclerAdapter_ConvSelection.RecyclerviewHolder(view);
+        return new RecyclerviewHolder(view);
     }
 
     @Override
-    public void onBindViewHolder(RecyclerAdapter_ConvSelection.RecyclerviewHolder holder, final int position){
+    public void onBindViewHolder(RecyclerviewHolder holder, final int position){
         Obj_ConvInfo conv_item = conv_List.get(position);
 
         holder.convsel_partner_name.setText(conv_item.getConvPartner_Username());
 
         //Formatting the text to put in the last message with sender
         String tempLastMessage = conv_item.getConvLast_Message();
-        if(tempLastMessage.length() > 25){
-            tempLastMessage = tempLastMessage.substring(0, 26) + "...";
+        if(tempLastMessage.length() > 30){
+            tempLastMessage = tempLastMessage.substring(0, 31) + "...";
         }
         holder.convsel_last_message.setText(conv_item.getConvLast_MessageSender() + ": " + tempLastMessage);
 

@@ -9,6 +9,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.ListView;
 import android.widget.ProgressBar;
@@ -21,6 +22,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
 import org.json.JSONArray;
@@ -52,9 +54,9 @@ public class NewConvSelection extends AppCompatActivity {
         mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
 
         //Setting the custom toolbar for the activity
-        Toolbar createAccToolbar = (Toolbar) findViewById(R.id.createAccToolbar);
-        createAccToolbar.setTitle(R.string.toolbar_title_newconv_selection);
-        setSupportActionBar(createAccToolbar);
+        Toolbar newConvSelToolbar = (Toolbar) findViewById(R.id.newConvSelToolbar);
+        newConvSelToolbar.setTitle(R.string.toolbar_title_newconv_selection);
+        setSupportActionBar(newConvSelToolbar);
 
         //Adding a back button to the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
@@ -71,8 +73,6 @@ public class NewConvSelection extends AppCompatActivity {
 
         //First filling the list of username with usernames and quotes
         usernameList = new ArrayList<>();
-        //usernameList.add(new Obj_Usersearch("piet", "hello quote", "1234"));
-        //usernameList.add(new Obj_Usersearch("piet", "hello quote", "1234"));
 
         //Filling and setting the adapter for the arraylist
         usernameAdapter = new UsernameSelectionAdapter(this, R.layout.usernameinfo_layout, usernameList);
@@ -83,7 +83,7 @@ public class NewConvSelection extends AppCompatActivity {
     }
 
     //Method to fetch the latest usernames and corresponding acc_Id's from the server
-    public void fetchUsernames(RequestQueue queue, final String searchString){
+    public void fetchUsernames(final RequestQueue queue, final String searchString){
         //Checking if the search string is actually more than 3 chars
         if(searchString.length() < 3){
             usernameList.clear();
@@ -146,7 +146,9 @@ public class NewConvSelection extends AppCompatActivity {
                         String tempUsername = tempJsonObject.getString("acc_Username");
                         String tempUserQuote = "This is the default quote! Hi!";
                         String tempAccId = tempJsonObject.getString("acc_Id");
-                        usernameList.add(new Obj_Usersearch(tempUsername, tempUserQuote, tempAccId));
+                        if(!tempAccId.equals(mainPrefs.getString("activeAccId", "none"))) {
+                            usernameList.add(new Obj_Usersearch(tempUsername, tempUserQuote, tempAccId));
+                        }
                     } catch (JSONException e){
                         common.displayToast(NewConvSelection.this, "Refresh Failed: JSON Exception occurred");
                         if(pBar.getVisibility() == View.VISIBLE) {
@@ -159,6 +161,16 @@ public class NewConvSelection extends AppCompatActivity {
                 //Setting the newly list into the adapter
                 usernameAdapter = new UsernameSelectionAdapter(NewConvSelection.this, R.layout.usernameinfo_layout, usernameList);
                 listView.setAdapter(usernameAdapter);
+
+                //Setting the clicklistener on the new elements
+                listView.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        //Make the onclick of the username
+                        createNewConvTable(queue, usernameList.get(position).getUserAccId());
+                    }
+                });
+
                 if(pBar.getVisibility() == View.VISIBLE) {
                     pBar.setVisibility(View.INVISIBLE);
                 }
@@ -176,6 +188,52 @@ public class NewConvSelection extends AppCompatActivity {
 
         queue.add(fetchUsernamesRequest);
 
+    }
+
+    //Method to send a commit of a username for a new conversation to the server
+    private void createNewConvTable(RequestQueue queue, String partnerId){
+        //First checking if the connection to the api is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            common.displayToast(NewConvSelection.this, "Conversation Creation Failed! No connection to API");
+            return;
+        }
+
+        //Now checking whether a value is present as acc_Id in sharedpreferences
+        if(mainPrefs.getString("activeAccId", "none").equals("none")){
+            common.displayToast(NewConvSelection.this, "Conversation Creation Failed! No account logged in");
+            return;
+        }
+
+        //Now making the request object
+        JSONObject createNewTableRequestOBJ = new JSONObject();
+        try{
+            createNewTableRequestOBJ.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            createNewTableRequestOBJ.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            createNewTableRequestOBJ.put("partner_Id", partnerId);
+        } catch (JSONException e) {
+            common.displayToast(NewConvSelection.this, "Conversation Creation Failed! Json Exception occurred");
+            return;
+        }
+
+        JsonObjectRequest tempRequest = new JsonObjectRequest(Request.Method.POST, common.apiUrl + "/sapp_createTable", createNewTableRequestOBJ, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    if(response.getString("insertResult").equals("true")){
+                        common.displayToast(NewConvSelection.this, "Conversation table created succesfully");
+                    }
+                } catch (JSONException e) {
+                    common.displayToast(NewConvSelection.this, "Conversation Creation Failed! Json Exception occurred");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.displayToast(NewConvSelection.this, "Conversation Creation Failed! The server denied the request");
+            }
+        });
+
+        queue.add(tempRequest);
     }
 
     //Method for updating the textview

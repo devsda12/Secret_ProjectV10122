@@ -1,0 +1,60 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
+
+    <android.support.constraint.ConstraintLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content">
+
+        <ImageView
+            android:id="@+id/partnerMessageTriangle"
+            android:layout_width="50dp"
+            android:layout_height="50dp"
+            android:layout_marginStart="8dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:srcCompat="@drawable/partner_message_triangle" />
+
+        <ImageView
+            android:id="@+id/partnerMessageBox"
+            android:layout_width="342dp"
+            android:layout_height="57dp"
+            android:layout_marginStart="33dp"
+            android:layout_marginTop="20dp"
+            android:layout_marginBottom="20dp"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent"
+            app:layout_constraintVertical_bias="1.0"
+            app:srcCompat="@drawable/partner_message_box" />
+
+        <TextView
+            android:id="@+id/partnerMessagePartnernameTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="8dp"
+            android:text="partnerMessagePartnernameTV"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="@+id/partnerMessageBox"
+            app:layout_constraintTop_toTopOf="@+id/partnerMessageBox" />
+
+        <TextView
+            android:id="@+id/partnerMessagePartnerMessageTV"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="8dp"
+            android:layout_marginTop="3dp"
+            android:text="partnerMessagePartnerMessageTV"
+            android:textColor="@color/colorBlack"
+            app:layout_constraintStart_toStartOf="@+id/partnerMessageBox"
+            app:layout_constraintTop_toBottomOf="@+id/partnerMessagePartnernameTV" />
+
+    </android.support.constraint.ConstraintLayout>
+</LinearLayout>

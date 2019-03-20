@@ -5,4 +5,7 @@
     <color name="colorAccent">#b71c1c</color>
     <color name="colorBackground">#FFFFFF</color>
     <color name="colorBlack">#000</color>
+    <color name="colorWhite">#FFFFFF</color>
+
+    <color name="colorPartnerMessage">#DDDDDD</color>
 </resources>

@@ -258,10 +258,7 @@ public class ConvSelection extends AppCompatActivity {
             case R.id.action_convsel_settings:
                 return true;
             case R.id.action_convsel_logout:
-                SharedPreferences.Editor tempEdit = mainPrefs.edit();
-                tempEdit.putString("activeAccId", "none");
-                tempEdit.apply();
-                finish();
+                common.logout(ConvSelection.this, requestQueue, true);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
