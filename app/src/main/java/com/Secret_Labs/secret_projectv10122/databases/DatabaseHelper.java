@@ -8,12 +8,14 @@ import android.database.sqlite.SQLiteOpenHelper;
 import android.os.strictmode.SqliteObjectLeakedViolation;
 import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
+import android.util.Log;
 
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {
@@ -194,6 +196,9 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         SQLiteDatabase dbWrite = this.getWritableDatabase();
         SQLiteDatabase dbRead = this.getReadableDatabase();
 
+        //List to keep items that need to be removed
+        List<Obj_ConvInfo> removelist = new ArrayList<>();
+
         //First checking if entry already exists
         for(int j = 0; j < convInfoList.size(); j++){
             Cursor tempSelectResult = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
@@ -209,9 +214,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                     return false;
                 }
 
-                //Removing the item which was updated
-                convInfoList.remove(j);
+                //Adding index of updated item to removelist
+                removelist.add(convInfoList.get(j));
             }
+        }
+
+        //Now removing updated items from the list
+        for(int p = 0; p < removelist.size(); p++){
+            convInfoList.remove(removelist.get(p));
         }
 
         //Now looping through the list and adding every remaining conversation to the database

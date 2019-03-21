@@ -77,6 +77,9 @@ public class ConvSelection extends AppCompatActivity {
                 //Refreshing from the local db
                 refreshAdapter();
 
+                //Refreshing from the external server
+                updateConvList(requestQueue);
+
                 sRLayout.setRefreshing(false);
             }
         });
@@ -263,6 +266,8 @@ public class ConvSelection extends AppCompatActivity {
         switch (item.getItemId()) {
             case R.id.action_convsel_refresh:
                 refreshAdapter();
+                //Refreshing from the external server
+                updateConvList(requestQueue);
                 return true;
             case R.id.action_convsel_about:
                 return true;
