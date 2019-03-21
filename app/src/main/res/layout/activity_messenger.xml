@@ -13,18 +13,21 @@
     <android.support.v7.widget.RecyclerView
         android:id="@+id/messengerRecyclerview"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="0dp"
+        app:layout_constraintBottom_toTopOf="@+id/constraintLayout"
         app:layout_constraintTop_toBottomOf="@+id/mesToolbar" />
 
     <android.support.constraint.ConstraintLayout
+        android:id="@+id/constraintLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/colorPartnerMessage"
         android:elevation="100dp"
         app:layout_constraintBottom_toBottomOf="parent">
 
         <EditText
-            android:id="@+id/messangerEditText"
-            android:layout_width="303dp"
+            android:id="@+id/messengerEditText"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginStart="8dp"
             android:layout_marginTop="10dp"
@@ -40,7 +43,7 @@
 
         <Button
             android:id="@+id/messengerSendButton"
-            android:layout_width="wrap_content"
+            android:layout_width="0dp"
             android:layout_height="wrap_content"
             android:layout_marginTop="3dp"
             android:layout_marginEnd="10dp"

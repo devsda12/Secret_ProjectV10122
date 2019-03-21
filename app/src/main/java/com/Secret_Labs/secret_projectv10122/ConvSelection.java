@@ -14,6 +14,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
+import android.widget.Button;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
@@ -87,6 +88,16 @@ public class ConvSelection extends AppCompatActivity {
             public void onClick(View v) {
                 Intent goToNewConv = new Intent(ConvSelection.this, NewConvSelection.class);
                 startActivity(goToNewConv);
+            }
+        });
+
+        //TestBUTTON
+        Button testButton = (Button)findViewById(R.id.testButton);
+        testButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(ConvSelection.this, Messenger.class);
+                startActivity(intent);
             }
         });
 
