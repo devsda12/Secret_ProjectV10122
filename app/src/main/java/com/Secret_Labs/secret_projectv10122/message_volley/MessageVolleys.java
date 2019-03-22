@@ -32,7 +32,7 @@ public class MessageVolleys {
             //First putting the device and acc_Id into the
             tempRequestObject.put("device_Id", deviceId);
             tempRequestObject.put("acc_Id", activeAccId);
-            tempRequestObject.put("table_Name", tablename);
+            tempRequestObject.put("conv_Id", tablename);
             tempRequestArray.put(tempRequestObject);
         } catch (JSONException e) {
             common.displayToast(context, "Message retrieval failed: JSON exception occurred");
