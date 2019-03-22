@@ -264,7 +264,7 @@ public class NewConvSelection extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.action_newconvsel_search);
         usernameSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         usernameSearchView.setQueryHint(getString(R.string.newconv_selection_search));
-        usernameSearchView.setIconifiedByDefault(true);
+        usernameSearchView.setIconifiedByDefault(false);
         usernameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

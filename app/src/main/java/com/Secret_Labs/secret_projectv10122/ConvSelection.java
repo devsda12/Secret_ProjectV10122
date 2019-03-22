@@ -147,7 +147,7 @@ public class ConvSelection extends AppCompatActivity {
     }
 
     //The function to update the conversations that are presented to the user
-    public void updateConvList(RequestQueue queue){
+    public void updateConvList(final RequestQueue queue){
         //First displaying the progressbar
         reloadPb = (ProgressBar) findViewById(R.id.convSelProgressBar);
         reloadPb.setVisibility(View.VISIBLE);
@@ -214,6 +214,9 @@ public class ConvSelection extends AppCompatActivity {
 
                 //For testing refreshing the adapter here
                 refreshAdapter();
+
+                //For now over here syncing the complete message tables
+                dbHelper.tableFillerRequestmaker(ConvSelection.this, queue, convSelList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "none"));
                 reloadPb.setVisibility(View.INVISIBLE);
             }
         }, new Response.ErrorListener() {

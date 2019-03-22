@@ -34,4 +34,14 @@ public class DatabaseInfo {
         public static final String CONV_LAST_MESSAGE_DATE_COLUMN = "conv_Last_Message_Date";
     }
 
+    //Template for the variable conversation tables
+    public class Sapp_Table_Convx{
+        //Column names for the table
+        public static final String CONVX_ID_COLUMN = "convx_Id";
+        public static final String CONVX_SENDER_COLUMN = "convx_Sender";
+        public static final String CONVX_RECEIVER_COLUMN = "convx_Receiver";
+        public static final String CONVX_MESSAGE_COLUMN = "convx_Message";
+        public static final String CONVX_DATETIME_COLUMN = "convx_Datetime";
+    }
+
 }

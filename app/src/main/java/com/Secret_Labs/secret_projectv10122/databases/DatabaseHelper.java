@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122.databases;
 
 import android.content.ContentValues;
 import android.content.Context;
+import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
@@ -10,8 +11,12 @@ import android.provider.ContactsContract;
 import android.support.annotation.Nullable;
 import android.util.Log;
 
+import com.Secret_Labs.secret_projectv10122.LoginActivity;
+import com.Secret_Labs.secret_projectv10122.message_volley.MessageVolleys;
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
+import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
+import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
@@ -266,5 +271,101 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         result.close();
         db.close();
         return convInfoList;
+    }
+
+    //End of conv_Table functions
+
+    //Start of the message (Conv(x)) table functions
+
+    //Function to check if conv table exists
+    public boolean checkIfTableExists(SQLiteDatabase dbRead, String tablename){
+        //First checking if the table already exists
+        Cursor alltables = dbRead.rawQuery("SELECT name FROM sqlite_master WHERE type='table'", null);
+
+        while (alltables.moveToNext()) {
+            if (alltables.getString(0).equals(tablename)) {
+                alltables.close();
+                return true;
+            }
+        }
+
+        //Returning false when table is not yet present
+        alltables.close();
+        return false;
+    }
+
+    //Function to create table when it does not yet exists
+    public int createTableIfExists(String tablename){
+        //Getting reference to the database
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        //Checking if the table exists
+        if(checkIfTableExists(dbRead, tablename)){
+            Cursor checkIfempty = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Convx.CONVX_ID_COLUMN + " FROM [" + tablename + "]", null);
+            if(checkIfempty.getCount() == 0){
+                //Returning code 2 to tell the caller the table does not have to be created but is empty
+                return 2;
+            } else {
+                //Returning code 1 to tell the caller the table does not have to be created because it already exists and is not empty
+                return 1;
+            }
+        }
+
+        //If the table does not exist it should be created
+        String tempCreateTableQuery = "CREATE TABLE [" + tablename + "] ("
+                + DatabaseInfo.Sapp_Table_Convx.CONVX_ID_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Convx.CONVX_SENDER_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Convx.CONVX_RECEIVER_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Convx.CONVX_MESSAGE_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN + " TEXT,"
+                + "FOREIGN KEY(" + DatabaseInfo.Sapp_Table_Convx.CONVX_ID_COLUMN + ") REFERENCES " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + "(" + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + "))";
+
+        dbWrite.execSQL(tempCreateTableQuery);
+
+        //Now again checking if the table exists for the return value
+        if(checkIfTableExists(dbRead, tablename)){
+            //Returning code 3 to tell the caller the tabel is now created and is an empty table
+            return 3;
+        } else {
+            //Returning code 0 if the table is not created after the create table statement. This will tell the caller to abort the message indexing.
+            return 0;
+        }
+    }
+
+    //Function to get the last message from a existing table
+    public Obj_Message fetchLastMessage(String tablename){
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        Cursor result = dbRead.rawQuery("SELECT * FROM " + tablename + " ORDER BY " + DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN + " DESC LIMIT 1", null);
+        result.moveToFirst();
+
+        //Creating the return object
+        Obj_Message returnResult = new Obj_Message(result.getString(1), result.getString(4), result.getString(3), true);
+        result.close();
+        return returnResult;
+    }
+
+    //Highest function to create and update the message tables
+    public void tableFillerRequestmaker(Context context, RequestQueue queue, List<Obj_ConvInfo> convInfoList, String activeAccId, String deviceId){
+        //Walking through the objects to check if the table needs to be created or if it already exists
+        for(int i = 0; i < convInfoList.size(); i++){
+            //First of all making sure the conversation table exists
+            int tempCreateResult = createTableIfExists(convInfoList.get(i).getConv_Id());
+
+            //Creating the messagevolleys object
+            MessageVolleys messageVolleys = new MessageVolleys();
+
+            //Now the request needs to be made depending on if the table is completely new or already exists
+            if(tempCreateResult == 3 || tempCreateResult == 2){
+                messageVolleys.getCompleteConversation(context, queue, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+            } else if(tempCreateResult == 1){
+                //First getting the last message from the existing database
+                Obj_Message lastMessage = fetchLastMessage(convInfoList.get(i).getConv_Id());
+
+                //Now executing the method to send the request
+                messageVolleys.getMessagesAfterLastMessage(context, queue, lastMessage, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+            }
+        }
     }
 }
