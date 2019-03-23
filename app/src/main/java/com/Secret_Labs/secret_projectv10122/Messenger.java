@@ -55,6 +55,9 @@ public class Messenger extends AppCompatActivity {
         messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
         messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
         messageList.add(new Obj_Message("Jan", "12 uur", "Hey ho there i go", true));
+        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", true));
+        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", false));
+        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", true));
 
         //Setting the adapter
         messengerAdapter = new RecyclerAdapter_Messenger(this, messageList);

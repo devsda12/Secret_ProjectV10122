@@ -15,6 +15,7 @@ import com.Secret_Labs.secret_projectv10122.LoginActivity;
 import com.Secret_Labs.secret_projectv10122.message_volley.MessageVolleys;
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
+import com.Secret_Labs.secret_projectv10122.models.Obj_DatabaseMessage;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
 import com.android.volley.RequestQueue;
 import com.android.volley.toolbox.StringRequest;
@@ -305,9 +306,11 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor checkIfempty = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Convx.CONVX_ID_COLUMN + " FROM [" + tablename + "]", null);
             if(checkIfempty.getCount() == 0){
                 //Returning code 2 to tell the caller the table does not have to be created but is empty
+                checkIfempty.close();
                 return 2;
             } else {
                 //Returning code 1 to tell the caller the table does not have to be created because it already exists and is not empty
+                checkIfempty.close();
                 return 1;
             }
         }
@@ -334,38 +337,42 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Function to get the last message from a existing table
-    public Obj_Message fetchLastMessage(String tablename){
+    public Obj_DatabaseMessage fetchLastMessage(String tablename){
         SQLiteDatabase dbRead = this.getReadableDatabase();
 
-        Cursor result = dbRead.rawQuery("SELECT * FROM " + tablename + " ORDER BY " + DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN + " DESC LIMIT 1", null);
+        Cursor result = dbRead.rawQuery("SELECT * FROM [" + tablename + "] ORDER BY " + DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN + " DESC LIMIT 1", null);
         result.moveToFirst();
 
         //Creating the return object
-        Obj_Message returnResult = new Obj_Message(result.getString(1), result.getString(4), result.getString(3), true);
+        Obj_DatabaseMessage returnResult = new Obj_DatabaseMessage(tablename, result.getString(1), result.getString(2), result.getString(3), result.getString(4));
         result.close();
         return returnResult;
     }
 
-    //Highest function to create and update the message tables
-    public void tableFillerRequestmaker(Context context, RequestQueue queue, List<Obj_ConvInfo> convInfoList, String activeAccId, String deviceId){
-        //Walking through the objects to check if the table needs to be created or if it already exists
-        for(int i = 0; i < convInfoList.size(); i++){
-            //First of all making sure the conversation table exists
-            int tempCreateResult = createTableIfExists(convInfoList.get(i).getConv_Id());
+    //Functions under here are called on result of the message fetch requests
+    //Function to add the fetched messages to the database
+    public boolean insertMessagesIntoDB(List<Obj_DatabaseMessage> messageList){
+        //Getting reference to the database
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
 
-            //Creating the messagevolleys object
-            MessageVolleys messageVolleys = new MessageVolleys();
+        //Making a contentvalues for every message and inserting them after
+        for(int i = 0; i < messageList.size(); i++){
+            ContentValues tempContentvalues = new ContentValues();
+            tempContentvalues.put(DatabaseInfo.Sapp_Table_Convx.CONVX_ID_COLUMN, messageList.get(i).getConv_Id());
+            tempContentvalues.put(DatabaseInfo.Sapp_Table_Convx.CONVX_SENDER_COLUMN, messageList.get(i).getSender());
+            tempContentvalues.put(DatabaseInfo.Sapp_Table_Convx.CONVX_RECEIVER_COLUMN, messageList.get(i).getReceiver());
+            tempContentvalues.put(DatabaseInfo.Sapp_Table_Convx.CONVX_MESSAGE_COLUMN, messageList.get(i).getMessage());
+            tempContentvalues.put(DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN, messageList.get(i).getDatetime());
+            long tempresult = dbWrite.insert("[" + messageList.get(i).getConv_Id() + "]", null, tempContentvalues);
 
-            //Now the request needs to be made depending on if the table is completely new or already exists
-            if(tempCreateResult == 3 || tempCreateResult == 2){
-                messageVolleys.getCompleteConversation(context, queue, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
-            } else if(tempCreateResult == 1){
-                //First getting the last message from the existing database
-                Obj_Message lastMessage = fetchLastMessage(convInfoList.get(i).getConv_Id());
-
-                //Now executing the method to send the request
-                messageVolleys.getMessagesAfterLastMessage(context, queue, lastMessage, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+            if(tempresult == -1){
+                dbWrite.close();
+                return false;
             }
         }
+
+        //After all messages have been inserted successfully true can be returned
+        return true;
+
     }
 }
