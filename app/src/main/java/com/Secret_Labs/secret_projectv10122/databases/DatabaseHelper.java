@@ -194,6 +194,22 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnString;
     }
 
+    //Method to return the username from a given acc_Id
+    public String returnUsernameFromAccId(String acc_Id){
+        //Reference to the database
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        //Making query
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+        result.moveToFirst();
+
+        //Getting the acc_Username from the result
+        String returnUsername = result.getString(0);
+        result.close();
+        dbRead.close();
+        return returnUsername;
+    }
+
     //End of acc_Table functions
 
     //Start of conv_Table functions
@@ -307,10 +323,14 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if(checkIfempty.getCount() == 0){
                 //Returning code 2 to tell the caller the table does not have to be created but is empty
                 checkIfempty.close();
+                dbWrite.close();
+                dbRead.close();
                 return 2;
             } else {
                 //Returning code 1 to tell the caller the table does not have to be created because it already exists and is not empty
                 checkIfempty.close();
+                dbWrite.close();
+                dbRead.close();
                 return 1;
             }
         }
@@ -329,9 +349,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Now again checking if the table exists for the return value
         if(checkIfTableExists(dbRead, tablename)){
             //Returning code 3 to tell the caller the tabel is now created and is an empty table
+            dbWrite.close();
+            dbRead.close();
             return 3;
         } else {
             //Returning code 0 if the table is not created after the create table statement. This will tell the caller to abort the message indexing.
+            dbWrite.close();
+            dbRead.close();
             return 0;
         }
     }
@@ -372,7 +396,30 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
 
         //After all messages have been inserted successfully true can be returned
+        dbWrite.close();
         return true;
 
+    }
+
+    //Functions under here are to fetch the messages from the given conversation table
+    public List<Obj_Message> fetchAllMessagesByConvId(Obj_ConvInfo convInfo, String acc_Username){
+        //Reference to the database
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+        List<Obj_Message> returnlist = new ArrayList<>();
+
+        //Querying the database
+        Cursor result = dbRead.rawQuery("SELECT * FROM [" + convInfo.getConv_Id() + "]", null);
+
+        while(result.moveToNext()){
+            boolean tempYourself = false;
+            if(result.getString(1).equals(acc_Username)){
+                tempYourself = true;
+            }
+            returnlist.add(new Obj_Message(result.getString(1), result.getString(4), result.getString(3), tempYourself));
+        }
+
+        result.close();
+        dbRead.close();
+        return returnlist;
     }
 }
