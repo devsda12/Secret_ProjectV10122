@@ -227,6 +227,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if(tempSelectResult.getCount() > 0){
                 ContentValues tempContentValues = new ContentValues();
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN, convInfoList.get(j).getConvLast_Message());
+                tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_SENDER_COLUMN, convInfoList.get(j).getConvLast_MessageSender());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(j).getConvLast_MessageDate());
                 long tempResult = dbWrite.update(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, tempContentValues, DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
                 if(tempResult == -1){

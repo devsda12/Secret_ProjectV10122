@@ -8,6 +8,9 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.View;
+import android.widget.Button;
+import android.widget.EditText;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseInfo;
@@ -49,7 +52,7 @@ public class Messenger extends AppCompatActivity {
         mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
         dbHelper = new DatabaseHelper(this);
         messageQueue = Volley.newRequestQueue(this);
-        Intent intentReceiver = getIntent();
+        final Intent intentReceiver = getIntent();
 
         Toolbar mesToolbar = (Toolbar) findViewById(R.id.mesToolbar);
         if(intentReceiver.hasExtra("partnerUsername")){
@@ -63,9 +66,41 @@ public class Messenger extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
+        //Edittext part under here
+        final EditText messageText = (EditText) findViewById(R.id.messengerEditText);
+
+        //Send button onclick
+        Button sendButton = (Button) findViewById(R.id.messengerSendButton);
+        sendButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                userAddMessage(intentReceiver.getExtras().getString("conv_Id"), dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
+                messageText.setText("");
+            }
+        });
+
         //Recyclerview under here
         messageList = new ArrayList<>();
         messengerRecyclerview = (RecyclerView) findViewById(R.id.messengerRecyclerview);
+
+        //Recyclerview onlayoutchangelistener part
+        messengerRecyclerview.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
+            @Override
+            public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
+                if(bottom < oldBottom){
+                    messengerRecyclerview.postDelayed(new Runnable() {
+                        @Override
+                        public void run() {
+                            if(messageList.size() > 0) {
+                                messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
+                            } else {
+                                messengerRecyclerview.smoothScrollToPosition(0);
+                            }
+                        }
+                    }, 100);
+                }
+            }
+        });
 
         //Layoutmanager
         LinearLayoutManager recyclerLayoutmanager = new LinearLayoutManager(this);
@@ -77,6 +112,11 @@ public class Messenger extends AppCompatActivity {
         //Setting the adapter
         messengerAdapter = new RecyclerAdapter_Messenger(this, messageList);
         messengerRecyclerview.setAdapter(messengerAdapter);
+
+        //Scrolling to the bottom
+        if(messageList.size() > 0) {
+            messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
+        }
     }
 
     //Method to run when user adds message to the list
@@ -123,6 +163,10 @@ public class Messenger extends AppCompatActivity {
                     List<Obj_DatabaseMessage> insertList = new ArrayList<>();
                     insertList.add(new Obj_DatabaseMessage(conv_Id, sender, receiver, message, currentDT));
                     dbHelper.insertMessagesIntoDB(insertList);
+
+                    //Now creating a new message object to put inside the list
+                    Obj_Message insertMessage = new Obj_Message(sender, currentDT, message, true);
+                    recyclerviewMessageInsert(insertMessage);
                 }
             }
         }, new Response.ErrorListener() {
@@ -133,6 +177,15 @@ public class Messenger extends AppCompatActivity {
         });
 
         messageQueue.add(sendMessageRequest);
+    }
+
+    //Method to notify the recyclerview there has been an item added
+    private void recyclerviewMessageInsert(Obj_Message insertMessage){
+        //Getting the index the message should take
+        int insertIndex = messageList.size() + 1;
+        messageList.add(insertMessage);
+        messengerAdapter.notifyItemInserted(insertIndex);
+        messengerRecyclerview.scrollToPosition(messageList.size() - 1);
     }
 
     //Method that runs when back button is pressed
