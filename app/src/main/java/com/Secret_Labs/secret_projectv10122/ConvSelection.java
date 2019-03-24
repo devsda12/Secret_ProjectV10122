@@ -94,16 +94,6 @@ public class ConvSelection extends AppCompatActivity {
             }
         });
 
-        //TestBUTTON
-        Button testButton = (Button)findViewById(R.id.testButton);
-        testButton.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                Intent intent = new Intent(ConvSelection.this, Messenger.class);
-                startActivity(intent);
-            }
-        });
-
         //Testing the Api connection
         requestQueue = Volley.newRequestQueue(this);
         common.startUpConnect(this, requestQueue);
@@ -130,7 +120,15 @@ public class ConvSelection extends AppCompatActivity {
         adapter_convSelection = new RecyclerAdapter_ConvSelection(this, convSelList, new OnclickListener_ConvSelection() {
             @Override
             public void onItemClicked(int position) {
+                //First getting the conversation ID and partner name from the convSelList list
+                String pressedConvId = convSelList.get(position).getConv_Id();
+                String pressedPartnerName = convSelList.get(position).getConvPartner_Username();
 
+                //Making and starting the intent
+                Intent goToMessenger = new Intent(ConvSelection.this, Messenger.class);
+                goToMessenger.putExtra("partnerUsername", pressedPartnerName);
+                goToMessenger.putExtra("conv_Id", pressedConvId);
+                startActivity(goToMessenger);
             }
         });
 

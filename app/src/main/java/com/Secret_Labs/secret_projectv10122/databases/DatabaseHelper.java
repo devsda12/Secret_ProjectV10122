@@ -402,13 +402,13 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     }
 
     //Functions under here are to fetch the messages from the given conversation table
-    public List<Obj_Message> fetchAllMessagesByConvId(Obj_ConvInfo convInfo, String acc_Username){
+    public List<Obj_Message> fetchAllMessagesByConvId(String conv_Id, String acc_Username){
         //Reference to the database
         SQLiteDatabase dbRead = this.getReadableDatabase();
         List<Obj_Message> returnlist = new ArrayList<>();
 
         //Querying the database
-        Cursor result = dbRead.rawQuery("SELECT * FROM [" + convInfo.getConv_Id() + "]", null);
+        Cursor result = dbRead.rawQuery("SELECT * FROM [" + conv_Id + "]", null);
 
         while(result.moveToNext()){
             boolean tempYourself = false;

@@ -1,12 +1,15 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_Messenger;
 
@@ -19,10 +22,16 @@ public class Messenger extends AppCompatActivity {
     RecyclerAdapter_Messenger messengerAdapter;
     List<Obj_Message> messageList;
 
+    Common common;
+    SharedPreferences mainprefs;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_messenger);
+        common = new Common();
+        mainprefs = getSharedPreferences(common.mainPrefsName, 0);
+        DatabaseHelper dbHelper = new DatabaseHelper(this);
         Intent intentReceiver = getIntent();
 
         Toolbar mesToolbar = (Toolbar) findViewById(R.id.mesToolbar);
@@ -46,18 +55,7 @@ public class Messenger extends AppCompatActivity {
         messengerRecyclerview.setLayoutManager(recyclerLayoutmanager);
 
         //Filling the list under here
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Jan", "12 uur", "Hey ho there i go", true));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Jan", "12 uur", "Hey ho there i go", true));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go", false));
-        messageList.add(new Obj_Message("Jan", "12 uur", "Hey ho there i go", true));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", true));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", false));
-        messageList.add(new Obj_Message("Piet", "12 uur", "Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go Hey ho there i go", true));
+        messageList = dbHelper.fetchAllMessagesByConvId(intentReceiver.getExtras().getString("conv_Id"), dbHelper.returnUsernameFromAccId(mainprefs.getString("activeAccId", "none")));
 
         //Setting the adapter
         messengerAdapter = new RecyclerAdapter_Messenger(this, messageList);
