@@ -409,7 +409,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         List<Obj_Message> returnlist = new ArrayList<>();
 
         //Querying the database
-        Cursor result = dbRead.rawQuery("SELECT * FROM [" + conv_Id + "]", null);
+        Cursor result = dbRead.rawQuery("SELECT * FROM [" + conv_Id + "] ORDER BY datetime(" + DatabaseInfo.Sapp_Table_Convx.CONVX_DATETIME_COLUMN + ") ASC", null);
 
         while(result.moveToNext()){
             boolean tempYourself = false;

@@ -53,7 +53,6 @@ public class RecyclerAdapter_Messenger extends RecyclerView.Adapter<RecyclerView
     @Override
     public void onBindViewHolder(RecyclerView.ViewHolder viewHolder, int position) {
         Obj_Message message_item = messageList.get(position);
-        Log.d("loggiesss", Integer.toString(viewHolder.getItemViewType()));
 
         //Checking which layout to use
         switch (viewHolder.getItemViewType()){

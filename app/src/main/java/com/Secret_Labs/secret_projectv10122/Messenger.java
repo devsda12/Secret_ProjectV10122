@@ -8,12 +8,15 @@ import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseInfo;
+import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_DatabaseMessage;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_Messenger;
@@ -44,6 +47,8 @@ public class Messenger extends AppCompatActivity {
 
     RequestQueue messageQueue;
 
+    String currentConvId;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -53,6 +58,7 @@ public class Messenger extends AppCompatActivity {
         dbHelper = new DatabaseHelper(this);
         messageQueue = Volley.newRequestQueue(this);
         final Intent intentReceiver = getIntent();
+        currentConvId = intentReceiver.getExtras().getString("conv_Id");
 
         Toolbar mesToolbar = (Toolbar) findViewById(R.id.mesToolbar);
         if(intentReceiver.hasExtra("partnerUsername")){
@@ -74,7 +80,7 @@ public class Messenger extends AppCompatActivity {
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userAddMessage(intentReceiver.getExtras().getString("conv_Id"), dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
+                userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
                 messageText.setText("");
             }
         });
@@ -83,7 +89,7 @@ public class Messenger extends AppCompatActivity {
         messageList = new ArrayList<>();
         messengerRecyclerview = (RecyclerView) findViewById(R.id.messengerRecyclerview);
 
-        //Recyclerview onlayoutchangelistener part
+        //Recyclerview onlayoutchangelistener part for when the keyboard is out
         messengerRecyclerview.addOnLayoutChangeListener(new View.OnLayoutChangeListener() {
             @Override
             public void onLayoutChange(View v, int left, int top, int right, int bottom, int oldLeft, int oldTop, int oldRight, int oldBottom) {
@@ -107,7 +113,7 @@ public class Messenger extends AppCompatActivity {
         messengerRecyclerview.setLayoutManager(recyclerLayoutmanager);
 
         //Filling the list under here
-        messageList = dbHelper.fetchAllMessagesByConvId(intentReceiver.getExtras().getString("conv_Id"), dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")));
+        messageList = dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")));
 
         //Setting the adapter
         messengerAdapter = new RecyclerAdapter_Messenger(this, messageList);
@@ -115,7 +121,7 @@ public class Messenger extends AppCompatActivity {
 
         //Scrolling to the bottom
         if(messageList.size() > 0) {
-            messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
+            messengerRecyclerview.scrollToPosition(messageList.size() - 1);
         }
     }
 
@@ -187,6 +193,49 @@ public class Messenger extends AppCompatActivity {
         messengerAdapter.notifyItemInserted(insertIndex);
         messengerRecyclerview.scrollToPosition(messageList.size() - 1);
     }
+
+    //Method to refresh the current messages list
+    private void refreshFullList(){
+        //Making temporary convinfo object
+        Obj_ConvInfo tempObj = new Obj_ConvInfo(currentConvId, null, null, null, null, null, null);
+        List<Obj_ConvInfo> tempObjList = new ArrayList<>();
+        tempObjList.add(tempObj);
+
+        //Checking whether the connection is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            common.displayToast(Messenger.this, "Message refresh failed: No connection to API");
+            return;
+        }
+
+        //Making call to the tablefillerrequestmaker with a convIfoList with 1 item in it: the convinfo object of the current conversation
+        common.tableFillerRequestmaker(Messenger.this, messageQueue, tempObjList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "0"));
+
+        //Now on the new dataset reacquiring the messages from the database and refreshing the list with it
+        messageList.clear();
+        messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
+        messengerAdapter.notifyDataSetChanged();
+    }
+
+    //These functions are for the toolbar and the toolbar menu
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        getMenuInflater().inflate(R.menu.menu_messenger, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle item selection
+        switch (item.getItemId()) {
+            case R.id.action_messenger_refresh:
+                refreshFullList();
+                return true;
+            default:
+                return super.onOptionsItemSelected(item);
+        }
+    }
+    //End of the toolbar menu
 
     //Method that runs when back button is pressed
     @Override

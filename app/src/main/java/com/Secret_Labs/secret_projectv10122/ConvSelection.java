@@ -56,6 +56,12 @@ public class ConvSelection extends AppCompatActivity {
     SharedPreferences mainPrefs;
 
     @Override
+    protected void onResume(){
+        super.onResume();
+        updateConvList(requestQueue);
+    }
+
+    @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_conv_selection);
@@ -74,9 +80,6 @@ public class ConvSelection extends AppCompatActivity {
         sRLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                //Refreshing from the local db
-                refreshAdapter();
-
                 //Refreshing from the external server
                 updateConvList(requestQueue);
 
@@ -266,7 +269,6 @@ public class ConvSelection extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_convsel_refresh:
-                refreshAdapter();
                 //Refreshing from the external server
                 updateConvList(requestQueue);
                 return true;
