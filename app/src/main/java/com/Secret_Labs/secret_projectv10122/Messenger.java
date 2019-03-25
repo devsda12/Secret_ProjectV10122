@@ -208,7 +208,7 @@ public class Messenger extends AppCompatActivity {
         }
 
         //Making call to the tablefillerrequestmaker with a convIfoList with 1 item in it: the convinfo object of the current conversation
-        common.tableFillerRequestmaker(Messenger.this, messageQueue, tempObjList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "0"));
+        common.tableFillerRequestmaker(Messenger.this, messageQueue, tempObjList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "0"), false);
 
         //Now on the new dataset reacquiring the messages from the database and refreshing the list with it
         messageList.clear();

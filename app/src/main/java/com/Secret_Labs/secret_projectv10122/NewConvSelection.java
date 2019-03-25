@@ -1,5 +1,6 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v7.app.AppCompatActivity;
@@ -16,6 +17,7 @@ import android.widget.ProgressBar;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.listview_adapters.UsernameSelectionAdapter;
+import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Usersearch;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
@@ -167,7 +169,7 @@ public class NewConvSelection extends AppCompatActivity {
                     @Override
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         //Make the onclick of the username
-                        createNewConvTable(queue, usernameList.get(position).getUserAccId());
+                        createNewConvTable(queue, usernameList.get(position).getUserAccId(), usernameList.get(position).getUsername());
                     }
                 });
 
@@ -191,7 +193,7 @@ public class NewConvSelection extends AppCompatActivity {
     }
 
     //Method to send a commit of a username for a new conversation to the server
-    private void createNewConvTable(RequestQueue queue, String partnerId){
+    private void createNewConvTable(final RequestQueue queue, final String partnerId, final String partnerUsername){
         //First checking if the connection to the api is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(NewConvSelection.this, "Conversation Creation Failed! No connection to API");
@@ -221,6 +223,21 @@ public class NewConvSelection extends AppCompatActivity {
                 try {
                     if(response.getString("insertResult").equals("true")){
                         common.displayToast(NewConvSelection.this, "Conversation table created succesfully");
+
+                        //Now creating the local table
+                        List<Obj_ConvInfo> tempInsertlist = new ArrayList<>();
+                        Obj_ConvInfo tempConvInfoObj = new Obj_ConvInfo(mainPrefs.getString("activeAccId", "none") + partnerId, null, null, null, null, null, null);
+                        tempInsertlist.add(tempConvInfoObj);
+
+                        //Inserting the local table
+                        common.tableFillerRequestmaker(NewConvSelection.this, queue, tempInsertlist, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "0"), true);
+
+                        //Starting the messenger
+                        Intent goToMessenger = new Intent(NewConvSelection.this, Messenger.class);
+                        goToMessenger.putExtra("partnerUsername", partnerUsername);
+                        goToMessenger.putExtra("conv_Id", mainPrefs.getString("activeAccId", "none") + partnerId);
+                        startActivity(goToMessenger);
+                        finish();
                     }
                 } catch (JSONException e) {
                     common.displayToast(NewConvSelection.this, "Conversation Creation Failed! Json Exception occurred");
@@ -264,7 +281,8 @@ public class NewConvSelection extends AppCompatActivity {
         MenuItem searchItem = menu.findItem(R.id.action_newconvsel_search);
         usernameSearchView = (SearchView) MenuItemCompat.getActionView(searchItem);
         usernameSearchView.setQueryHint(getString(R.string.newconv_selection_search));
-        usernameSearchView.setIconifiedByDefault(false);
+        usernameSearchView.setIconifiedByDefault(true);
+        usernameSearchView.setIconified(false);
         usernameSearchView.setOnQueryTextListener(new SearchView.OnQueryTextListener() {
             @Override
             public boolean onQueryTextSubmit(String s) {

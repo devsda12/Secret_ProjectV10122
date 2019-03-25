@@ -217,7 +217,7 @@ public class ConvSelection extends AppCompatActivity {
                 refreshAdapter();
 
                 //For now over here syncing the complete message tables
-                common.tableFillerRequestmaker(ConvSelection.this, queue, convSelList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "none"));
+                common.tableFillerRequestmaker(ConvSelection.this, queue, convSelList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "none"), false);
                 reloadPb.setVisibility(View.INVISIBLE);
             }
         }, new Response.ErrorListener() {

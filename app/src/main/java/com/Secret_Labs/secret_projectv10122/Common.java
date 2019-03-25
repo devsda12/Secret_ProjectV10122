@@ -267,7 +267,7 @@ public class Common {
     }
 
     //Method to fetch and update all conversation tables
-    public void tableFillerRequestmaker(Context context, RequestQueue queue, List<Obj_ConvInfo> convInfoList, String activeAccId, String deviceId){
+    public void tableFillerRequestmaker(Context context, RequestQueue queue, List<Obj_ConvInfo> convInfoList, String activeAccId, String deviceId, boolean createdLocally){
         DatabaseHelper dbHelper = new DatabaseHelper(context);
 
         //Walking through the objects to check if the table needs to be created or if it already exists
@@ -278,15 +278,18 @@ public class Common {
             //Creating the messagevolleys object
             MessageVolleys messageVolleys = new MessageVolleys();
 
-            //Now the request needs to be made depending on if the table is completely new or already exists
-            if(tempCreateResult == 3 || tempCreateResult == 2){
-                messageVolleys.getCompleteConversation(context, queue, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
-            } else if(tempCreateResult == 1){
-                //First getting the last message from the existing database
-                Obj_DatabaseMessage lastMessage = dbHelper.fetchLastMessage(convInfoList.get(i).getConv_Id());
+            //If the conversation was created locally there doesn't have to be a request send
+            if(!createdLocally) {
+                //Now the request needs to be made depending on if the table is completely new or already exists
+                if (tempCreateResult == 3 || tempCreateResult == 2) {
+                    messageVolleys.getCompleteConversation(context, queue, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+                } else if (tempCreateResult == 1) {
+                    //First getting the last message from the existing database
+                    Obj_DatabaseMessage lastMessage = dbHelper.fetchLastMessage(convInfoList.get(i).getConv_Id());
 
-                //Now executing the method to send the request
-                messageVolleys.getMessagesAfterLastMessage(context, queue, lastMessage, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+                    //Now executing the method to send the request
+                    messageVolleys.getMessagesAfterLastMessage(context, queue, lastMessage, activeAccId, deviceId, convInfoList.get(i).getConv_Id());
+                }
             }
         }
     }
