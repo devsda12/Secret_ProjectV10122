@@ -214,6 +214,7 @@ public class Messenger extends AppCompatActivity {
         messageList.clear();
         messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
         messengerAdapter.notifyDataSetChanged();
+        messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
     }
 
     //These functions are for the toolbar and the toolbar menu
