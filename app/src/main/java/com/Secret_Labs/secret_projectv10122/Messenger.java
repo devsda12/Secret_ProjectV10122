@@ -24,9 +24,11 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -48,6 +50,8 @@ public class Messenger extends AppCompatActivity {
     RequestQueue messageQueue;
 
     String currentConvId;
+    String currentPartnerUsername;
+    EditText messageText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -59,6 +63,7 @@ public class Messenger extends AppCompatActivity {
         messageQueue = Volley.newRequestQueue(this);
         final Intent intentReceiver = getIntent();
         currentConvId = intentReceiver.getExtras().getString("conv_Id");
+        currentPartnerUsername = intentReceiver.getExtras().getString("partnerUsername");
 
         Toolbar mesToolbar = (Toolbar) findViewById(R.id.mesToolbar);
         if(intentReceiver.hasExtra("partnerUsername")){
@@ -73,14 +78,15 @@ public class Messenger extends AppCompatActivity {
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //Edittext part under here
-        final EditText messageText = (EditText) findViewById(R.id.messengerEditText);
+        messageText = (EditText) findViewById(R.id.messengerEditText);
 
         //Send button onclick
         Button sendButton = (Button) findViewById(R.id.messengerSendButton);
         sendButton.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
+                //userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
+                messageTableFillerRequestMaker(true);
                 messageText.setText("");
             }
         });
@@ -194,27 +200,77 @@ public class Messenger extends AppCompatActivity {
         messengerRecyclerview.scrollToPosition(messageList.size() - 1);
     }
 
-    //Method to refresh the current messages list
-    private void refreshFullList(){
-        //Making temporary convinfo object
-        Obj_ConvInfo tempObj = new Obj_ConvInfo(currentConvId, null, null, null, null, null, null);
-        List<Obj_ConvInfo> tempObjList = new ArrayList<>();
-        tempObjList.add(tempObj);
-
+    //Method to create the requests needed to fill the messages database
+    private void messageTableFillerRequestMaker(final boolean beforeMessageSend){
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(Messenger.this, "Message refresh failed: No connection to API");
             return;
         }
 
-        //Making call to the tablefillerrequestmaker with a convIfoList with 1 item in it: the convinfo object of the current conversation
-        common.tableFillerRequestmaker(Messenger.this, messageQueue, tempObjList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "0"), false);
+        //Creating the JSON object and array
+        JSONObject tempRequestObject = new JSONObject();
+        JSONArray tempRequestArray = new JSONArray();
+        try {
+            //First putting the device and acc_Id into the
+            tempRequestObject.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            tempRequestObject.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            tempRequestObject.put("conv_Id", currentConvId);
+            tempRequestObject.put("lastMessageDate", dbHelper.fetchLastMessage(currentConvId).getDatetime());
+            tempRequestArray.put(tempRequestObject);
+        } catch (JSONException e) {
+            common.displayToast(Messenger.this, "Message retrieval failed: JSON exception occurred");
+            return;
+        }
 
-        //Now on the new dataset reacquiring the messages from the database and refreshing the list with it
-        messageList.clear();
-        messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
-        messengerAdapter.notifyDataSetChanged();
-        messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
+        //Creating the request
+        JsonArrayRequest fetchMessagesAfterLastMessage = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
+            @Override
+            public void onResponse(JSONArray response) {
+                List<Obj_DatabaseMessage> tempMessageList = new ArrayList<>();
+                tempMessageList.clear();
+
+                //Looping through the response and adding to tempmessagelist
+                for(int i = 0; i < response.length(); i++){
+                    JSONObject tempJsonObject = null;
+                    try {
+                        tempJsonObject = response.getJSONObject(i);
+                        String tempSender = tempJsonObject.getString("Sender");
+                        String tempReceiver = tempJsonObject.getString("Receiver");
+                        String tempMessage = tempJsonObject.getString("Message");
+                        String tempDatetime = tempJsonObject.getString("DateTime");
+                        tempMessageList.add(new Obj_DatabaseMessage(currentConvId, tempSender, tempReceiver, tempMessage, tempDatetime));
+                    } catch (JSONException e) {
+                        common.displayToast(Messenger.this, "Message retrieval failed: Json exception in response");
+                        return;
+                    }
+                }
+
+                //Calling function to add all received messages into the database
+                boolean insertResult = dbHelper.insertMessagesIntoDB(tempMessageList);
+
+                //Notifying the dataset has changed and recoupling it to the recyclerview
+                messageList.clear();
+                messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
+                messengerAdapter.notifyDataSetChanged();
+                messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
+
+                //When the messages are successfully inserted and there is a message to be send: calling the function to send the message
+                if(insertResult && beforeMessageSend){
+                    userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.displayToast(Messenger.this, "Message retrieval failed: Server returned error");
+                if(beforeMessageSend){
+                    userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
+                }
+            }
+        });
+
+        messageQueue.add(fetchMessagesAfterLastMessage);
     }
 
     //These functions are for the toolbar and the toolbar menu
@@ -230,7 +286,7 @@ public class Messenger extends AppCompatActivity {
         // Handle item selection
         switch (item.getItemId()) {
             case R.id.action_messenger_refresh:
-                refreshFullList();
+                messageTableFillerRequestMaker(false);
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
