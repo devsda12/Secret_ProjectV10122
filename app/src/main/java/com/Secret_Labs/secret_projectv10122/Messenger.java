@@ -87,7 +87,6 @@ public class Messenger extends AppCompatActivity {
             public void onClick(View v) {
                 //userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
                 messageTableFillerRequestMaker(true);
-                messageText.setText("");
             }
         });
 
@@ -258,6 +257,7 @@ public class Messenger extends AppCompatActivity {
                 //When the messages are successfully inserted and there is a message to be send: calling the function to send the message
                 if(insertResult && beforeMessageSend){
                     userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
+                    messageText.setText("");
                 }
             }
         }, new Response.ErrorListener() {
@@ -266,6 +266,7 @@ public class Messenger extends AppCompatActivity {
                 common.displayToast(Messenger.this, "Message retrieval failed: Server returned error");
                 if(beforeMessageSend){
                     userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
+                    messageText.setText("");
                 }
             }
         });
