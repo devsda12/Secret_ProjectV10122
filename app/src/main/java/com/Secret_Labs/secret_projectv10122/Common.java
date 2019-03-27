@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.ContactsContract;
+import android.support.annotation.NonNull;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -22,6 +23,10 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
 import com.android.volley.toolbox.Volley;
+import com.google.android.gms.tasks.OnCompleteListener;
+import com.google.android.gms.tasks.Task;
+import com.google.firebase.iid.FirebaseInstanceId;
+import com.google.firebase.iid.InstanceIdResult;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -125,7 +130,7 @@ public class Common {
     }
 
     //Method to login with the api
-    public void login(final Context context, RequestQueue queue, final String username, final String password, final int fromWhereRemember, final boolean finish){
+    public void login(final Context context, final RequestQueue queue, final String username, final String password, final int fromWhereRemember, final boolean finish){
         mainPrefs = context.getSharedPreferences(mainPrefsName, 0);
         dbHelper = new DatabaseHelper(context);
 
@@ -141,6 +146,25 @@ public class Common {
             return;
         }
 
+        //Under here getting the firebase registration ID for getting the messages from the server
+        FirebaseInstanceId.getInstance().getInstanceId().addOnCompleteListener(new OnCompleteListener<InstanceIdResult>() {
+            @Override
+            public void onComplete(@NonNull Task<InstanceIdResult> task) {
+                if(!task.isSuccessful()){
+                    displayToast(context, "Firebase registration ID retrieval failed");
+                    return;
+                }
+
+                //Retrieving the token
+                String idToken = task.getResult().getToken();
+                displayToast(context, idToken);
+
+                //Continuing the login process
+                loginAfterTokenRetrieval(context, queue, username, password, idToken, fromWhereRemember, finish);
+            }
+        });
+
+        /*
         //If not empty making a JSON object with the values
         JSONObject tempAuthJson = new JSONObject();
         try{
@@ -206,6 +230,79 @@ public class Common {
                             context.startActivity(goToLogin);
                         }
                     }
+        });
+        //Adding request to queue
+        queue.add(authRequest);
+        */
+    }
+
+    private void loginAfterTokenRetrieval(final Context context, RequestQueue queue, final String username, final String password, final String idToken, final int fromWhereRemember, final boolean finish){
+        //Continuing with making a JSON object with the values
+        JSONObject tempAuthJson = new JSONObject();
+        try{
+            tempAuthJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            tempAuthJson.put("device_FirebaseToken", idToken);
+            tempAuthJson.put("acc_Username", username);
+            tempAuthJson.put("acc_Password", password);
+        } catch (JSONException e) {
+            displayToast(context, "Login Failed: JSON Exception occurred");
+            return;
+        }
+
+        //Creating the request
+        JsonObjectRequest authRequest = new JsonObjectRequest(Request.Method.POST, apiUrl + "/sapp_login", tempAuthJson,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String responseAccId = response.getString("acc_Id");
+                            displayToast(context, responseAccId);
+
+                            // 0 means login is invoked from acc selection or from startup, 1 means to remember the psswd and 2 means don't from login activity
+                            if(fromWhereRemember == 1 || fromWhereRemember == 2) {
+                                //Adding account details to the database after getting the current time
+                                boolean insertResult = false;
+                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
+                                String currentDT = sdf.format(new Date());
+                                if (fromWhereRemember == 1) {
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
+                                } else {
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
+                                }
+
+                                //Checking if the insert was successful
+                                if (!insertResult) {
+                                    displayToast(context, "Login Failed: Account already exists");
+                                    return;
+                                }
+                            }
+
+                            //Setting in the sharedpreferences which acc_Id is now active
+                            SharedPreferences.Editor tempEditor = mainPrefs.edit();
+                            tempEditor.putString("activeAccId", responseAccId);
+                            tempEditor.commit();
+
+                            //Making Intent for the conv activity
+                            Intent goToConvSelection = new Intent(context, ConvSelection.class);
+                            context.startActivity(goToConvSelection);
+                            if(finish) {
+                                ((Activity) context).finish();
+                            }
+                        } catch (JSONException e){
+                            displayToast(context, "Login Failed: JSON Exception occurred");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                displayToast(context, "Login Failed: Username or Password is incorrect");
+
+                //If username or password is incorrect from acc selection or app startup the login activity should be started
+                if(fromWhereRemember == 0){
+                    Intent goToLogin = new Intent(context, LoginActivity.class);
+                    context.startActivity(goToLogin);
+                }
+            }
         });
         //Adding request to queue
         queue.add(authRequest);

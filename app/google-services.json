@@ -1,0 +1,42 @@
+{
+  "project_info": {
+    "project_number": "901221110184",
+    "firebase_url": "https://sapp-firebase-notifications.firebaseio.com",
+    "project_id": "sapp-firebase-notifications",
+    "storage_bucket": "sapp-firebase-notifications.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:901221110184:android:d20f24784e42e971",
+        "android_client_info": {
+          "package_name": "com.Secret_Labs.secret_projectv10122"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "901221110184-unrq695dpb1hp15t6s4vpoqjpme21u1l.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCPHN-keWMudBVxdhAlWglA5AQSocXoXl8"
+        }
+      ],
+      "services": {
+        "analytics_service": {
+          "status": 1
+        },
+        "appinvite_service": {
+          "status": 1,
+          "other_platform_oauth_client": []
+        },
+        "ads_service": {
+          "status": 2
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}
