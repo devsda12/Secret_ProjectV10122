@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122.firebase_messaging;
 
 import android.app.NotificationManager;
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.support.v4.app.NotificationCompat;
 
 import com.Secret_Labs.secret_projectv10122.R;
@@ -48,6 +49,18 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         mNotificationManager.notify(0, nBuilder.build());
 
         //Now making the requests to the getPartialConversation
+    }
+
+    //Function to execute on response of the server
+    private void storeOrUpdateMessages(String convId){
+        SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
+
+        //Checking in the default prefs if the activity is active and if so if the convId corresponds
+        if(mainPrefs.getBoolean("messengerActive", false) && convId.equals(mainPrefs.getString("convIdActive", "none"))){
+            //In here making the broadcast to the messenger because the updated chat is active
+        }
+
+        //If the chat is not active the conversation needs to be updated normally
     }
 
 }
