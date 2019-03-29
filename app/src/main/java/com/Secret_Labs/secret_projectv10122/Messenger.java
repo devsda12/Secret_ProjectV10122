@@ -1,13 +1,17 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.app.DownloadManager;
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -52,6 +56,13 @@ public class Messenger extends AppCompatActivity {
     String currentConvId;
     String currentPartnerUsername;
     EditText messageText;
+
+    @Override
+    protected void onResume(){
+        super.onResume();
+        mainPrefs.edit().putString("convIdActive", currentConvId).commit();
+        registerReceiver(notificationReceiver, new IntentFilter("activeConvIdBroadcast"));
+    }
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -300,5 +311,27 @@ public class Messenger extends AppCompatActivity {
     public boolean onSupportNavigateUp() {
         onBackPressed();
         return true;
+    }
+
+    //Broadcast receiver under here
+    public BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("Messenger", "Notification broadcast received");
+        }
+    };
+
+    //Methods under here are to change the sharedpreferences when the activity is no more active
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mainPrefs.edit().putString("convIdActive", "none").commit();
+        unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mainPrefs.edit().putString("convIdActive", "none").commit();
     }
 }
