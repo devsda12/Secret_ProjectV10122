@@ -317,7 +317,7 @@ public class Messenger extends AppCompatActivity {
     public BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
         @Override
         public void onReceive(Context context, Intent intent) {
-            Log.d("Messenger", "Notification broadcast received");
+            messageTableFillerRequestMaker(false);
         }
     };
 
