@@ -28,7 +28,9 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 
 public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
@@ -65,7 +67,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Function to execute on response of the server
     private void storeOrUpdateMessages(final String convId){
-        SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
+        final SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
 
         //Checking in the default prefs if the activity is active and if so if the convId corresponds
         if(convId.equals(mainPrefs.getString("convIdActive", "none"))){
@@ -79,6 +81,19 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
                 Log.d("ServiceError", "The api connection is false so could not update");
                 return;
             }
+
+            //Checking whether an update for the current tablename is already in progress
+            Set<String> currentProgressSet = mainPrefs.getStringSet("wideSpreadUpdate", new HashSet<String>());
+            if(currentProgressSet.size() > 0) {
+                if (currentProgressSet.contains(convId)) {
+                    //Update for said table is already in progress or called for
+                    return;
+                }
+            }
+
+            //Now adding said table to the list
+            currentProgressSet.add(convId);
+            mainPrefs.edit().putStringSet("wideSpreadUpdate", currentProgressSet).commit();
 
             //Creating a JSON Object under here
             //Creating the JSON object and array
@@ -122,6 +137,11 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
                     //Inserting the messages into the database
                     boolean insertResult = new DatabaseHelper(SappFireBaseMessagingService.this).insertMessagesIntoDB(tempMessageList);
 
+                    //First giving the convId free for refresh
+                    Set<String> tempSet = mainPrefs.getStringSet("wideSpreadUpdate", new HashSet<String>());
+                    tempSet.remove(convId);
+                    mainPrefs.edit().putStringSet("wideSpreadUpdate", tempSet).commit();
+
                     //If the insertion was successful a notification has to be made. Calling this method under here
                     if(insertResult){
                         notificationer(tempMessageList);
@@ -145,6 +165,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this)
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
                 .setSmallIcon(R.mipmap.sapp_launcher_v2)
+                .setVibrate(new long[]{300, 300, 500})
                 .setContentTitle("SAPP");
 
         //Looping through all messages in the list and adding them to notification body
