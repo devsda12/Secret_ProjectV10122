@@ -62,6 +62,12 @@ public class Messenger extends AppCompatActivity {
         super.onResume();
         mainPrefs.edit().putString("convIdActive", currentConvId).commit();
         registerReceiver(notificationReceiver, new IntentFilter("activeConvIdBroadcast"));
+
+        //Notifying the dataset has potentially changed and recoupling it to the recyclerview
+        messageList.clear();
+        messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
+        messengerAdapter.notifyDataSetChanged();
+        messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
     }
 
     @Override
