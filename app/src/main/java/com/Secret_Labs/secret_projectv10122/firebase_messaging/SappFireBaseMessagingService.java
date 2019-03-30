@@ -19,6 +19,7 @@ import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.google.firebase.messaging.FirebaseMessagingService;
 import com.google.firebase.messaging.RemoteMessage;
@@ -33,6 +34,47 @@ import java.util.List;
 import java.util.Set;
 
 public class SappFireBaseMessagingService extends FirebaseMessagingService {
+
+    //This method runs when a new token is received
+    @Override
+    public void onNewToken(String token){
+        SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
+        //Checking whether the connection is true
+        if(!mainPrefs.getBoolean("apiConnection", false)){
+            Log.d("ServiceError", "The api connection is false so could not send updated token");
+            return;
+        }
+
+        //Making request
+        JSONObject tempTokenUpdateObj = new JSONObject();
+        try {
+            tempTokenUpdateObj.put("device_Id", mainPrefs.getString("device_Id", "0"));
+            tempTokenUpdateObj.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            tempTokenUpdateObj.put("newToken", token);
+        } catch (JSONException e) {
+            Log.d("ServiceError", "Json error occured on packing");
+            return;
+        }
+
+        //Making the actual request
+        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_updateToken", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                try {
+                    Log.d("ServiceSucces", "The service updated token '" + response.getString("insertedToken") + "' succesfully");
+                } catch (JSONException e) {
+                    Log.d("ServiceSucces", "Token updated succesfully, but there was an error in the response");
+                }
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ServiceError", "The server returned an error on the token update");
+            }
+        });
+
+        Volley.newRequestQueue(this).add(tempTokenUpdateRequest);
+    }
 
     //This override method runs when there is a message received from the firebase messaging service
     @Override
