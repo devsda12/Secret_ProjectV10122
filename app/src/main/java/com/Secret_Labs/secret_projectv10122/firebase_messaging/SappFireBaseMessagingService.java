@@ -57,7 +57,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         }
 
         //Making the actual request
-        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_updateToken", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
+        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_updateFirebaseToken", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
