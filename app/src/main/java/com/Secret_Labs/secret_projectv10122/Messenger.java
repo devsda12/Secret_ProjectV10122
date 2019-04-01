@@ -62,12 +62,6 @@ public class Messenger extends AppCompatActivity {
         super.onResume();
         mainPrefs.edit().putString("convIdActive", currentConvId).commit();
         registerReceiver(notificationReceiver, new IntentFilter("activeConvIdBroadcast"));
-
-        //Notifying the dataset has potentially changed and recoupling it to the recyclerview
-        messageList.clear();
-        messageList.addAll(dbHelper.fetchAllMessagesByConvId(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none"))));
-        messengerAdapter.notifyDataSetChanged();
-        messengerRecyclerview.smoothScrollToPosition(messageList.size() - 1);
     }
 
     @Override
@@ -222,6 +216,17 @@ public class Messenger extends AppCompatActivity {
         if(!mainPrefs.getBoolean("apiConnection", false)){
             common.displayToast(Messenger.this, "Message refresh failed: No connection to API");
             return;
+        }
+
+        //Checking if the messagelist is empty for empty message
+        if(messageList.size() == 0){
+            if(beforeMessageSend){
+                userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
+                messageText.setText("");
+                return;
+            }else{
+                return;
+            }
         }
 
         //Creating the JSON object and array
