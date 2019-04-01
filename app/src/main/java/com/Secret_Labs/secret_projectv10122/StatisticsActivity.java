@@ -26,21 +26,25 @@ import java.util.ArrayList;
 public class StatisticsActivity extends AppCompatActivity {
 
     BarChart barChart;
-    float Value1;
-    float Value2;
-    float Value3;
-    float Value4;
-    float Value5;
-    float Value6;
-    float Value7;
+    float Value1 = 0;
+    float Value2 = 0;
+    float Value3 = 0;
+    float Value4 = 0;
+    float Value5 = 0;
+    float Value6 = 0;
+    float Value7 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        barChart = (BarChart) findViewById(R.id.Barchart01);
+        requestData();
 
+        barChart = (BarChart) findViewById(R.id.Barchart01);
+    }
+
+    public void onRequestBindData(){
         ArrayList<BarEntry> barEntries = new ArrayList<>();
         barEntries.add(new BarEntry(Value1, 0));
         barEntries.add(new BarEntry(Value2, 1));
@@ -66,22 +70,39 @@ public class StatisticsActivity extends AppCompatActivity {
         }
         //Making request
         JSONObject tempTokenUpdateObj = new JSONObject();
-        JSONArray tempTokenUpdateArr = new JSONArray();
+        final JSONArray tempTokenUpdateArr = new JSONArray();
         try {
             tempTokenUpdateObj.put("device_Id", mainPrefs.getString("device_Id", "0"));
             tempTokenUpdateObj.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
+            tempTokenUpdateArr.put(tempTokenUpdateObj);
         } catch (JSONException e) {
             Log.d("ServiceError", "Json error occured on packing");
             return;
         }
 
-        JsonArrayRequest tempTokenUpdateRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_requestStats", tempTokenUpdateArr, new Response.Listener<JSONObject>() {
+        JsonArrayRequest tempTokenUpdateRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_requestStats", tempTokenUpdateArr, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 //Data staat in response
                 //respons.getString/boolean/int
                 try {
-                    Value1 = BigDecimal.valueOf(response.get(0).getDouble("logins").floatValue();
+                    JSONObject Monday = response.getJSONObject(0);
+                    JSONObject Tuesday = response.getJSONObject(1);
+                    JSONObject Wednesday = response.getJSONObject(2);
+                    JSONObject Thursday = response.getJSONObject(3);
+                    JSONObject Friday = response.getJSONObject(4);
+                    JSONObject Saturday = response.getJSONObject(5);
+                    JSONObject Sunday = response.getJSONObject(6);
+
+                    Value1 = BigDecimal.valueOf(Monday.getDouble("logins")).floatValue();
+                    Value2 = BigDecimal.valueOf(Tuesday.getDouble("logins")).floatValue();
+                    Value3 = BigDecimal.valueOf(Wednesday.getDouble("logins")).floatValue();
+                    Value4 = BigDecimal.valueOf(Thursday.getDouble("logins")).floatValue();
+                    Value5 = BigDecimal.valueOf(Friday.getDouble("logins")).floatValue();
+                    Value6 = BigDecimal.valueOf(Saturday.getDouble("logins")).floatValue();
+                    Value7 = BigDecimal.valueOf(Sunday.getDouble("logins")).floatValue();
+                    onRequestBindData();
+
                 } catch (JSONException e) {
                     Log.d("ServiceError", "Json error occured on packing");
                 }
