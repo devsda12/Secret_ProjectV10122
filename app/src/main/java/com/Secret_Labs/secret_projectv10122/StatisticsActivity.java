@@ -8,6 +8,7 @@ import android.util.Log;
 import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
@@ -15,6 +16,7 @@ import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
 
+import org.json.JSONArray;
 import org.json.JSONException;
 import org.json.JSONObject;
 
@@ -64,6 +66,7 @@ public class StatisticsActivity extends AppCompatActivity {
         }
         //Making request
         JSONObject tempTokenUpdateObj = new JSONObject();
+        JSONArray tempTokenUpdateArr = new JSONArray();
         try {
             tempTokenUpdateObj.put("device_Id", mainPrefs.getString("device_Id", "0"));
             tempTokenUpdateObj.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
@@ -72,13 +75,13 @@ public class StatisticsActivity extends AppCompatActivity {
             return;
         }
 
-        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_requestStats", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
+        JsonArrayRequest tempTokenUpdateRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_requestStats", tempTokenUpdateArr, new Response.Listener<JSONObject>() {
             @Override
-            public void onResponse(JSONObject response) {
+            public void onResponse(JSONArray response) {
                 //Data staat in response
                 //respons.getString/boolean/int
                 try {
-                    Value1 = BigDecimal.valueOf(response.getDouble("logins")).floatValue();
+                    Value1 = BigDecimal.valueOf(response.get(0).getDouble("logins").floatValue();
                 } catch (JSONException e) {
                     Log.d("ServiceError", "Json error occured on packing");
                 }
