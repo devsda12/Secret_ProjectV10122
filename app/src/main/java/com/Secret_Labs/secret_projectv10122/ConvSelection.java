@@ -58,7 +58,7 @@ public class ConvSelection extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
-        updateConvList(requestQueue);
+        Log.d("ConvSelection", "On resume called");
     }
 
     @Override
@@ -149,6 +149,7 @@ public class ConvSelection extends AppCompatActivity {
 
     //The function to update the conversations that are presented to the user
     public void updateConvList(final RequestQueue queue){
+        Log.d("ConvSelection", "UpdateConvList called");
         //First displaying the progressbar
         reloadPb = (ProgressBar) findViewById(R.id.convSelProgressBar);
         reloadPb.setVisibility(View.VISIBLE);
@@ -184,6 +185,7 @@ public class ConvSelection extends AppCompatActivity {
         JsonArrayRequest jsonArrayRequest = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getChats", tempRequestJsonArray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
+                Log.d("ConvSelection", "On response of conv info request");
                 //Clearing the old update list
                 updateConvSelList.clear();
 
@@ -217,6 +219,7 @@ public class ConvSelection extends AppCompatActivity {
                 refreshAdapter();
 
                 //For now over here syncing the complete message tables
+                Log.d("ConvSelection", "Executing tablefillerrequestmaker");
                 common.tableFillerRequestmaker(ConvSelection.this, queue, convSelList, mainPrefs.getString("activeAccId", "none"), mainPrefs.getString("device_Id", "none"), false);
                 reloadPb.setVisibility(View.INVISIBLE);
             }
