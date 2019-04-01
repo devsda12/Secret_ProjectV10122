@@ -12,7 +12,8 @@
         android:roundIcon="@mipmap/sapp_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".Messenger"></activity>
+        <activity android:name=".StatisticsActivity"></activity>
+        <activity android:name=".Messenger" />
         <activity android:name=".NewConvSelection" />
         <activity android:name=".ConvSelection" />
         <activity android:name=".CreateAccActivity" />
@@ -26,10 +27,8 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountSelection" />
-
-        <!-- Under here the firebase notification service -->
-        <service android:name="com.Secret_Labs.secret_projectv10122.firebase_messaging.SappFireBaseMessagingService">
+        <activity android:name=".AccountSelection" /> <!-- Under here the firebase notification service -->
+        <service android:name=".firebase_messaging.SappFireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />
             </intent-filter>
