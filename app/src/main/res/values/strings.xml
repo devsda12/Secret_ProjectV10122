@@ -59,4 +59,9 @@
     <string name="messenger_refresh">Refresh</string>
 
     <!-- TOOLBAR SECTION ENDS HERE -->
+
+    <!-- NOTIFICATION SECTION STARTS HERE -->
+    <string name="notification_channel_name">SAPP Notification Channel</string>
+    <string name="notification_channel_desc">The official notification channel for SAPP</string>
+    <!-- NOTIFICATION SECTION STARTS HERE -->
 </resources>

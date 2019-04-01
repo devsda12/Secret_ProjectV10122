@@ -1,10 +1,12 @@
 package com.Secret_Labs.secret_projectv10122.firebase_messaging;
 
+import android.app.NotificationChannel;
 import android.app.NotificationManager;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.BitmapFactory;
+import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
 import android.view.textclassifier.TextLinks;
@@ -215,7 +217,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Method to make notifications if the updated conversation is not active
     private void notificationer(List<Obj_DatabaseMessage> messageList){
-        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this)
+        NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
                 .setSmallIcon(R.mipmap.sapp_launcher_v2)
                 .setVibrate(new long[]{300, 300, 500})
@@ -228,6 +230,19 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         }
         currentBody = currentBody.substring(0, currentBody.length() - 1);
         nBuilder.setContentText(currentBody);
+
+        //For api 26 and higher setting channel
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+            CharSequence name = getString(R.string.notification_channel_name);
+            String description = getString(R.string.notification_channel_desc);
+            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            NotificationChannel channel = new NotificationChannel("SAPP_Channel", name, importance);
+            channel.setDescription(description);
+            // Register the channel with the system; you can't change the importance
+            // or other notification behaviors after this
+            NotificationManager notificationManager = getSystemService(NotificationManager.class);
+            notificationManager.createNotificationChannel(channel);
+        }
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(0, nBuilder.build());
