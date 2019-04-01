@@ -38,6 +38,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
     //This method runs when a new token is received
     @Override
     public void onNewToken(String token){
+        Log.d("ServiceNotice", "On new token function starts now with token: " + token);
         SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
@@ -79,6 +80,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
     //This override method runs when there is a message received from the firebase messaging service
     @Override
     public void onMessageReceived(RemoteMessage remoteMessage){
+        Log.d("ServiceNotice", "OnMessagereceived called");
         //Getting the send conversation ID's from the message
         String bodyString = remoteMessage.getData().get("conv_Id");
 
@@ -110,10 +112,12 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
     //Function to execute on response of the server
     private void storeOrUpdateMessages(final String convId){
         final SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
+        Log.d("ServiceUpdate", "Store or update called");
 
         //Checking in the default prefs if the activity is active and if so if the convId corresponds
         if(convId.equals(mainPrefs.getString("convIdActive", "none"))){
             //In here making the broadcast to the messenger because the updated chat is active
+            Log.d("ServiceUpdate", "Broadcasting to messenger");
             Intent broadCastIntent = new Intent("activeConvIdBroadcast");
             this.sendBroadcast(broadCastIntent);
         } else {
@@ -129,6 +133,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             if(currentProgressSet.size() > 0) {
                 if (currentProgressSet.contains(convId)) {
                     //Update for said table is already in progress or called for
+                    Log.d("ServiceUpdate", "CovID already updating");
                     return;
                 }
             }
@@ -157,6 +162,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             JsonArrayRequest storeRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
+                    Log.d("ServiceUpdate", "Table update response");
                     List<Obj_DatabaseMessage> tempMessageList = new ArrayList<>();
                     tempMessageList.clear();
 
@@ -195,6 +201,11 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
                 @Override
                 public void onErrorResponse(VolleyError error) {
                     Log.d("ServiceError", "Server returned error");
+
+                    //First giving the convId free for refresh
+                    Set<String> tempSet = mainPrefs.getStringSet("wideSpreadUpdate", new HashSet<String>());
+                    tempSet.remove(convId);
+                    mainPrefs.edit().putStringSet("wideSpreadUpdate", tempSet).commit();
                 }
             });
 

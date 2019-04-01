@@ -150,6 +150,11 @@ public class MessageVolleys {
             @Override
             public void onErrorResponse(VolleyError error) {
                 common.displayToast(context, "Message retrieval failed: Server returned error");
+
+                //Giving the convId free for refresh
+                Set<String> tempSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
+                tempSet.remove(tablename);
+                context.getSharedPreferences("mainPrefs", 0).edit().putStringSet("wideSpreadUpdate", tempSet).commit();
             }
         });
 

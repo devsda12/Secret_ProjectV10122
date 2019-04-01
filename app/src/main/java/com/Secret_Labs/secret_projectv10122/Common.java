@@ -6,6 +6,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
+import android.util.Log;
 import android.widget.CheckBox;
 import android.widget.Toast;
 
@@ -237,6 +238,7 @@ public class Common {
     }
 
     private void loginAfterTokenRetrieval(final Context context, RequestQueue queue, final String username, final String password, final String idToken, final int fromWhereRemember, final boolean finish){
+        Log.d("LoginNotice", "Firebase ID being send: " + idToken);
         //Continuing with making a JSON object with the values
         JSONObject tempAuthJson = new JSONObject();
         try{
