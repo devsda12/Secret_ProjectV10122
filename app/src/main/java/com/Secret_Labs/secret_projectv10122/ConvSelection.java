@@ -59,6 +59,7 @@ public class ConvSelection extends AppCompatActivity {
     protected void onResume(){
         super.onResume();
         Log.d("ConvSelection", "On resume called");
+        updateConvList(requestQueue);
     }
 
     @Override

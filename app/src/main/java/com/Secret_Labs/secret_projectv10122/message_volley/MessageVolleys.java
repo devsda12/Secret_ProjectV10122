@@ -32,6 +32,19 @@ public class MessageVolleys {
     public void getCompleteConversation(final Context context, RequestQueue queue, String activeAccId, String deviceId, final String tablename){
         common = new Common();
 
+        //Checking whether an update for the current tablename is already in progress
+        Set<String> currentProgressSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
+        if(currentProgressSet.size() > 0) {
+            if (currentProgressSet.contains(tablename)) {
+                //Update for said table is already in progress or called for
+                return;
+            }
+        }
+
+        //Now adding said table to the list
+        currentProgressSet.add(tablename);
+        context.getSharedPreferences("mainPrefs", 0).edit().putStringSet("wideSpreadUpdate", currentProgressSet).commit();
+
         //Making the json object and array
         JSONObject tempRequestObject = new JSONObject();
         JSONArray tempRequestArray = new JSONArray();
@@ -71,11 +84,21 @@ public class MessageVolleys {
 
                 //Calling function to add all of the messages to the chosen database
                 new DatabaseHelper(context).insertMessagesIntoDB(tempMessageList);
+
+                //Giving the convId free for refresh
+                Set<String> tempSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
+                tempSet.remove(tablename);
+                context.getSharedPreferences("mainPrefs", 0).edit().putStringSet("wideSpreadUpdate", tempSet).commit();
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 common.displayToast(context, "Message retrieval failed: Server returned error");
+
+                //Giving the convId free for refresh
+                Set<String> tempSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
+                tempSet.remove(tablename);
+                context.getSharedPreferences("mainPrefs", 0).edit().putStringSet("wideSpreadUpdate", tempSet).commit();
             }
         });
 
