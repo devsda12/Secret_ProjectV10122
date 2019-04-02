@@ -39,9 +39,8 @@ public class StatisticsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
 
-        requestData();
-
         barChart = (BarChart) findViewById(R.id.Barchart01);
+        requestData();
     }
 
     public void onRequestBindData(){
@@ -54,6 +53,8 @@ public class StatisticsActivity extends AppCompatActivity {
         barEntries.add(new BarEntry(Value6, 5));
         barEntries.add(new BarEntry(Value7, 6));
 
+        Log.d("StatisticsNotice", "Now bar entries array filled");
+
         BarDataSet set = new BarDataSet(barEntries, "Logins");
         BarData data = new BarData(set);
         data.setBarWidth(0.9f);
@@ -65,7 +66,7 @@ public class StatisticsActivity extends AppCompatActivity {
         SharedPreferences mainPrefs = getSharedPreferences("mainPrefs", 0);
         //Checking whether the connection is true
         if(!mainPrefs.getBoolean("apiConnection", false)){
-            Log.d("ServiceError", "The api connection is false so could not send do anything");
+            Log.d("StatisticsError", "The api connection is false so could not send do anything");
             return;
         }
         //Making request
@@ -76,7 +77,7 @@ public class StatisticsActivity extends AppCompatActivity {
             tempTokenUpdateObj.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
             tempTokenUpdateArr.put(tempTokenUpdateObj);
         } catch (JSONException e) {
-            Log.d("ServiceError", "Json error occured on packing");
+            Log.d("StatisticsError", "Json error occured on packing");
             return;
         }
 
@@ -94,17 +95,18 @@ public class StatisticsActivity extends AppCompatActivity {
                     JSONObject Saturday = response.getJSONObject(5);
                     JSONObject Sunday = response.getJSONObject(6);
 
-                    Value1 = BigDecimal.valueOf(Monday.getDouble("logins")).floatValue();
-                    Value2 = BigDecimal.valueOf(Tuesday.getDouble("logins")).floatValue();
-                    Value3 = BigDecimal.valueOf(Wednesday.getDouble("logins")).floatValue();
-                    Value4 = BigDecimal.valueOf(Thursday.getDouble("logins")).floatValue();
-                    Value5 = BigDecimal.valueOf(Friday.getDouble("logins")).floatValue();
-                    Value6 = BigDecimal.valueOf(Saturday.getDouble("logins")).floatValue();
-                    Value7 = BigDecimal.valueOf(Sunday.getDouble("logins")).floatValue();
+                    Value1 = BigDecimal.valueOf(Monday.getInt("logins")).floatValue();
+                    Value2 = BigDecimal.valueOf(Tuesday.getInt("logins")).floatValue();
+                    Value3 = BigDecimal.valueOf(Wednesday.getInt("logins")).floatValue();
+                    Value4 = BigDecimal.valueOf(Thursday.getInt("logins")).floatValue();
+                    Value5 = BigDecimal.valueOf(Friday.getInt("logins")).floatValue();
+                    Value6 = BigDecimal.valueOf(Saturday.getInt("logins")).floatValue();
+                    Value7 = BigDecimal.valueOf(Sunday.getInt("logins")).floatValue();
+                    Log.d("StatisticsNotice", "Value of monday logins: " + Float.toString(Value1));
                     onRequestBindData();
 
                 } catch (JSONException e) {
-                    Log.d("ServiceError", "Json error occured on packing");
+                    Log.d("StatisticsError", "Json error occured on packing");
                 }
                 //zet in variabele voor grafiek
 
@@ -112,7 +114,7 @@ public class StatisticsActivity extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                Log.d("ServiceError", "The server returned an error on the statistics update");
+                Log.d("StatisticsError", "The server returned an error on the statistics update");
             }
         });
 
