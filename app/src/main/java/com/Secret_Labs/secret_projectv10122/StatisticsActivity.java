@@ -3,6 +3,7 @@ package com.Secret_Labs.secret_projectv10122;
 import android.content.SharedPreferences;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 
 import com.android.volley.Request;
@@ -46,6 +47,15 @@ public class StatisticsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_statistics);
+
+        //Setting the custom toolbar for the activity
+        Toolbar newConvSelToolbar = (Toolbar) findViewById(R.id.statisticsToolbar);
+        newConvSelToolbar.setTitle(R.string.toolbar_title_statistics);
+        setSupportActionBar(newConvSelToolbar);
+
+        //Adding a back button to the toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         barChart = (BarChart) findViewById(R.id.Barchart01);
         barChart2 = (BarChart) findViewById(R.id.Barchart02);
@@ -160,5 +170,12 @@ public class StatisticsActivity extends AppCompatActivity {
         });
 
         Volley.newRequestQueue(this).add(tempTokenUpdateRequest);
+    }
+
+    //Method that runs when back button is pressed
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
