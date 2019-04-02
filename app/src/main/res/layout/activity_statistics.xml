@@ -25,7 +25,26 @@
                 android:layout_marginStart="12dp"
                 android:layout_marginTop="16dp"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent" >
+
+            </com.github.mikephil.charting.charts.BarChart>
+
+            <TextView
+                android:id="@+id/TextStats"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:text="Logins this week" />
+
+            <com.github.mikephil.charting.charts.BarChart
+                android:id="@+id/Barchart02"
+                android:layout_width="match_parent"
+                android:layout_height="250dp"
+                android:layout_marginStart="12dp"
+                android:layout_marginTop="16dp"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+            </com.github.mikephil.charting.charts.BarChart>
         </LinearLayout>
     </ScrollView>
 

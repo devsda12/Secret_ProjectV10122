@@ -9,7 +9,6 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
-import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.data.BarData;
@@ -26,13 +25,22 @@ import java.util.ArrayList;
 public class StatisticsActivity extends AppCompatActivity {
 
     BarChart barChart;
-    float Value1 = 0;
-    float Value2 = 0;
-    float Value3 = 0;
-    float Value4 = 0;
-    float Value5 = 0;
-    float Value6 = 0;
-    float Value7 = 0;
+    BarChart barChart2;
+    float Logins1 = 0;
+    float Logins2 = 0;
+    float Logins3 = 0;
+    float Logins4 = 0;
+    float Logins5 = 0;
+    float Logins6 = 0;
+    float Logins7 = 0;
+
+    float messages1 = 0;
+    float messages2 = 0;
+    float messages3 = 0;
+    float messages4 = 0;
+    float messages5 = 0;
+    float messages6 = 0;
+    float messages7 = 0;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -40,18 +48,19 @@ public class StatisticsActivity extends AppCompatActivity {
         setContentView(R.layout.activity_statistics);
 
         barChart = (BarChart) findViewById(R.id.Barchart01);
+        barChart2 = (BarChart) findViewById(R.id.Barchart02);
         requestData();
     }
 
     public void onRequestBindData(){
         ArrayList<BarEntry> barEntries = new ArrayList<>();
-        barEntries.add(new BarEntry(Value1, 0));
-        barEntries.add(new BarEntry(Value2, 1));
-        barEntries.add(new BarEntry(Value3, 2));
-        barEntries.add(new BarEntry(Value4, 3));
-        barEntries.add(new BarEntry(Value5, 4));
-        barEntries.add(new BarEntry(Value6, 5));
-        barEntries.add(new BarEntry(Value7, 6));
+        barEntries.add(new BarEntry(0, Logins1));
+        barEntries.add(new BarEntry(1, Logins2));
+        barEntries.add(new BarEntry(2, Logins3));
+        barEntries.add(new BarEntry(3, Logins4));
+        barEntries.add(new BarEntry(4, Logins5));
+        barEntries.add(new BarEntry(5, Logins6));
+        barEntries.add(new BarEntry(6, Logins7));
 
         Log.d("StatisticsNotice", "Now bar entries array filled");
 
@@ -60,6 +69,26 @@ public class StatisticsActivity extends AppCompatActivity {
         data.setBarWidth(0.9f);
         barChart.setData(data);
         barChart.invalidate();
+
+
+        //messages graph
+        ArrayList<BarEntry> barEntries2 = new ArrayList<>();
+        barEntries2.add(new BarEntry(0, messages1));
+        barEntries2.add(new BarEntry(1, messages2));
+        barEntries2.add(new BarEntry(2, messages3));
+        barEntries2.add(new BarEntry(3, messages4));
+        barEntries2.add(new BarEntry(4, messages5));
+        barEntries2.add(new BarEntry(5, messages6));
+        barEntries2.add(new BarEntry(6, messages7));
+
+        Log.d("StatisticsNotice", "Now bar entries array filled");
+
+        BarDataSet set2 = new BarDataSet(barEntries2, "messages");
+        BarData data2 = new BarData(set2);
+        data.setBarWidth(0.9f);
+        barChart2.setData(data2);
+        barChart2.invalidate();
+
     }
 
     public void requestData(){
@@ -78,6 +107,7 @@ public class StatisticsActivity extends AppCompatActivity {
             tempTokenUpdateArr.put(tempTokenUpdateObj);
         } catch (JSONException e) {
             Log.d("StatisticsError", "Json error occured on packing");
+            Log.d("StatisticsError", e.toString());
             return;
         }
 
@@ -95,18 +125,29 @@ public class StatisticsActivity extends AppCompatActivity {
                     JSONObject Saturday = response.getJSONObject(5);
                     JSONObject Sunday = response.getJSONObject(6);
 
-                    Value1 = BigDecimal.valueOf(Monday.getInt("logins")).floatValue();
-                    Value2 = BigDecimal.valueOf(Tuesday.getInt("logins")).floatValue();
-                    Value3 = BigDecimal.valueOf(Wednesday.getInt("logins")).floatValue();
-                    Value4 = BigDecimal.valueOf(Thursday.getInt("logins")).floatValue();
-                    Value5 = BigDecimal.valueOf(Friday.getInt("logins")).floatValue();
-                    Value6 = BigDecimal.valueOf(Saturday.getInt("logins")).floatValue();
-                    Value7 = BigDecimal.valueOf(Sunday.getInt("logins")).floatValue();
-                    Log.d("StatisticsNotice", "Value of monday logins: " + Float.toString(Value1));
+                    Logins1 = BigDecimal.valueOf(Integer.parseInt(Monday.getString("logins"))).floatValue();
+                    Logins2 = BigDecimal.valueOf(Integer.parseInt(Tuesday.getString("logins"))).floatValue();
+                    Logins3 = BigDecimal.valueOf(Integer.parseInt(Wednesday.getString("logins"))).floatValue();
+                    Logins4 = BigDecimal.valueOf(Integer.parseInt(Thursday.getString("logins"))).floatValue();
+                    Logins5 = BigDecimal.valueOf(Integer.parseInt(Friday.getString("logins"))).floatValue();
+                    Logins6 = BigDecimal.valueOf(Integer.parseInt(Saturday.getString("logins"))).floatValue();
+                    Logins7 = BigDecimal.valueOf(Integer.parseInt(Sunday.getString("logins"))).floatValue();
+                    Log.d("StatisticsNotice", "Value of tuesday logins: " + Float.toString(Logins2));
+
+                    messages1 = BigDecimal.valueOf(Integer.parseInt(Monday.getString("messages"))).floatValue();
+                    messages2 = BigDecimal.valueOf(Integer.parseInt(Tuesday.getString("messages"))).floatValue();
+                    messages3 = BigDecimal.valueOf(Integer.parseInt(Wednesday.getString("messages"))).floatValue();
+                    messages4 = BigDecimal.valueOf(Integer.parseInt(Thursday.getString("messages"))).floatValue();
+                    messages5 = BigDecimal.valueOf(Integer.parseInt(Friday.getString("messages"))).floatValue();
+                    messages6 = BigDecimal.valueOf(Integer.parseInt(Saturday.getString("messages"))).floatValue();
+                    messages7 = BigDecimal.valueOf(Integer.parseInt(Sunday.getString("messages"))).floatValue();
+                    Log.d("StatisticsNotice", "Value of tuesday messages: " + Float.toString(messages2));
+
                     onRequestBindData();
 
                 } catch (JSONException e) {
                     Log.d("StatisticsError", "Json error occured on packing");
+                    Log.d("StatisticsError", e.toString());
                 }
                 //zet in variabele voor grafiek
 
