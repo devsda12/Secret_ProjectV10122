@@ -49,7 +49,7 @@
                 android:id="@+id/textView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="16dp"
+                android:layout_marginTop="48dp"
                 android:text="@string/text_chart02"
                 android:textAlignment="center"
                 app:layout_constraintEnd_toEndOf="parent"
