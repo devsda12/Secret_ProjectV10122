@@ -47,6 +47,8 @@
     <string name="toolbar_title_conv_selection">SAPP\'s</string>
     <string name="toolbar_title_newconv_selection">Search Username</string>
     <string name="toolbar_title_messenger">No username provided</string>
+    <string name="toolbar_title_statistics">Statistics</string>
+    <string name="toolbar_title_settings">Settings</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>
