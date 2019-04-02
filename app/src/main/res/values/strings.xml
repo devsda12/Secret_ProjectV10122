@@ -38,6 +38,15 @@
     <string name="messenger_edittext_hint">Enter message..</string>
     <!-- MESSENGER ACTIVITY ENDS HERE -->
 
+    <!-- SETTINGS ACTIVITY STARTS HERE -->
+    <string name="statisticsButton">Statistics</string>
+    <!-- SETTINGS ACTIVITY ENDS HERE -->
+
+    <!-- STATISTICS ACTIVITY STARTS HERE -->
+    <string name="text_chart01">All logins this week so far</string>
+    <string name="text_chart02">All messages this week so far</string>
+    <!-- STATISTICS ACTIVITY ENDS HERE -->
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
