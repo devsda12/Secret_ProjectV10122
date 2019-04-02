@@ -12,9 +12,13 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
+import com.github.mikephil.charting.components.AxisBase;
+import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
+import com.github.mikephil.charting.formatter.IAxisValueFormatter;
+import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -74,10 +78,33 @@ public class StatisticsActivity extends AppCompatActivity {
 
         Log.d("StatisticsNotice", "Now bar entries array filled");
 
+        final ArrayList<String> xLabel = new ArrayList<>();
+        xLabel.add("Monday");
+        xLabel.add("Tuesday");
+        xLabel.add("Wednesday");
+        xLabel.add("Thursday");
+        xLabel.add("Friday");
+        xLabel.add("Saturday");
+        xLabel.add("Sunday");
+
+        XAxis xAxis = barChart.getXAxis();
+        xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis.setDrawGridLines(false);
+        xAxis.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return xLabel.get((int)value);
+            }
+        });
+
         BarDataSet set = new BarDataSet(barEntries, "Logins");
+        set.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data = new BarData(set);
         data.setBarWidth(0.9f);
+
         barChart.setData(data);
+        barChart.setScaleEnabled(false);
+        barChart.getDescription().setEnabled(false);
         barChart.invalidate();
 
 
@@ -93,10 +120,24 @@ public class StatisticsActivity extends AppCompatActivity {
 
         Log.d("StatisticsNotice", "Now bar entries array filled");
 
+        XAxis xAxis2 = barChart2.getXAxis();
+        xAxis2.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis2.setDrawGridLines(false);
+        xAxis2.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return xLabel.get((int)value);
+            }
+        });
+
         BarDataSet set2 = new BarDataSet(barEntries2, "messages");
+        set2.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data2 = new BarData(set2);
         data.setBarWidth(0.9f);
+
         barChart2.setData(data2);
+        barChart2.setScaleEnabled(false);
+        barChart2.getDescription().setEnabled(false);
         barChart2.invalidate();
 
     }
