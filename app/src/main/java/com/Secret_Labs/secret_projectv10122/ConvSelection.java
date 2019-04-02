@@ -279,6 +279,7 @@ public class ConvSelection extends AppCompatActivity {
             case R.id.action_convsel_about:
                 return true;
             case R.id.action_convsel_settings:
+                startActivity(new Intent(ConvSelection.this, SettingsActivity.class));
                 return true;
             case R.id.action_convsel_logout:
                 common.logout(ConvSelection.this, requestQueue, true);
