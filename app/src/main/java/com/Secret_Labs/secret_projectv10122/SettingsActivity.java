@@ -1,13 +1,11 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
-import android.support.constraint.ConstraintLayout;
-import androidx.constraintlayout.widget.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Button;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -25,10 +23,16 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        Button button = (Button) findViewById(R.id.buttonStatistics);
-        ConstraintLayout layout = (ConstraintLayout) findViewById(R.id.LayoutSettings01);
+        CardView view1 = (CardView) findViewById(R.id.cardViewAbout);
+        CardView view2 = (CardView) findViewById(R.id.cardViewStats);
 
-        layout.setOnClickListener(new View.OnClickListener() {
+        view1.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, StatisticsActivity.class));
+            }
+        });
+        view2.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, StatisticsActivity.class));
