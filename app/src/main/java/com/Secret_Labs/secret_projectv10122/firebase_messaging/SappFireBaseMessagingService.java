@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122.firebase_messaging;
 
 import android.app.NotificationChannel;
 import android.app.NotificationManager;
+import android.app.PendingIntent;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
@@ -12,6 +13,7 @@ import android.util.Log;
 import android.view.textclassifier.TextLinks;
 
 import com.Secret_Labs.secret_projectv10122.Common;
+import com.Secret_Labs.secret_projectv10122.Messenger;
 import com.Secret_Labs.secret_projectv10122.R;
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
@@ -219,12 +221,20 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Method to make notifications if the updated conversation is not active
     private void notificationer(List<Obj_DatabaseMessage> messageList, SharedPreferences mainprefs){
+        //Intent for the tap on the notification
+        Intent intent = new Intent(this, Messenger.class);
+        intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
+        intent.putExtra("partnerUsername", messageList.get(0).getSender());
+        intent.putExtra("conv_Id", messageList.get(0).getConv_Id());
+        PendingIntent pendingIntent = PendingIntent.getActivity(this, 0, intent, 0);
+
         //First creating the notification builder
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
                 .setSmallIcon(R.mipmap.sapp_launcher_v2)
                 .setVibrate(new long[]{300, 300, 500})
-                .setContentTitle("SAPP");
+                .setContentTitle("SAPP")
+                .setContentIntent(pendingIntent);
 
         //Checking the length of the messageList
         if(messageList.size() > 1){
