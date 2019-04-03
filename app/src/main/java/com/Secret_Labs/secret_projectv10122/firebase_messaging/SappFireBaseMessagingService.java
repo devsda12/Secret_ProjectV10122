@@ -232,7 +232,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
                 .setSmallIcon(R.mipmap.sapp_launcher_v2)
-                .setVibrate(new long[]{300, 300, 500})
+                .setVibrate(new long[]{300, 500, 200, 150, 200, 150})
                 .setContentTitle("SAPP")
                 .setContentIntent(pendingIntent);
 
@@ -255,9 +255,10 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
             CharSequence name = getString(R.string.notification_channel_name);
             String description = getString(R.string.notification_channel_desc);
-            int importance = NotificationManager.IMPORTANCE_DEFAULT;
+            int importance = NotificationManager.IMPORTANCE_HIGH;
             NotificationChannel channel = new NotificationChannel("SAPP_Channel", name, importance);
             channel.setDescription(description);
+            channel.setVibrationPattern(new long[]{300, 500, 200, 150, 200, 150});
             // Register the channel with the system; you can't change the importance
             // or other notification behaviors after this
             NotificationManager notificationManager = getSystemService(NotificationManager.class);

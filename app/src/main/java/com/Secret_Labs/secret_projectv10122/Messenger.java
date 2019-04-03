@@ -102,7 +102,11 @@ public class Messenger extends AppCompatActivity {
             @Override
             public void onClick(View v) {
                 //userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), intentReceiver.getExtras().getString("partnerUsername"), messageText.getText().toString());
-                messageTableFillerRequestMaker(true);
+                if(!messageText.getText().toString().equals("")) {
+                    messageTableFillerRequestMaker(true);
+                } else {
+                    common.displayToast(Messenger.this, "Screw you Remon this is disabled now :D");
+                }
             }
         });
 
