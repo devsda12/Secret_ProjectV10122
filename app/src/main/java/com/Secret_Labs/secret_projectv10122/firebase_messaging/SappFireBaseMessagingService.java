@@ -33,7 +33,9 @@ import org.json.JSONObject;
 import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
+import java.util.Map;
 import java.util.Set;
+import java.util.concurrent.ThreadLocalRandom;
 
 public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
@@ -194,7 +196,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
                     //If the insertion was successful a notification has to be made. Calling this method under here
                     if(insertResult){
-                        notificationer(tempMessageList);
+                        notificationer(tempMessageList, mainPrefs);
                     } else {
                         Log.d("ServiceError", "Error on inserting messages into database");
                     }
@@ -216,7 +218,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
     }
 
     //Method to make notifications if the updated conversation is not active
-    private void notificationer(List<Obj_DatabaseMessage> messageList){
+    private void notificationer(List<Obj_DatabaseMessage> messageList, SharedPreferences mainprefs){
         //First creating the notification builder
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
@@ -252,8 +254,30 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
+        //Getting the notification preferences
+        SharedPreferences tempNotificationPreferences = getSharedPreferences("notificationIdsShown", 0);
+
+        //First getting a random int
+        int randomId = ThreadLocalRandom.current().nextInt(100, 200 + 1);
+
+        //Checking whether the preferences already contains the notification
+        if(tempNotificationPreferences.contains(messageList.get(0).getConv_Id())){
+            randomId = tempNotificationPreferences.getInt(messageList.get(0).getConv_Id(), 0);
+        } else {
+            //Now checking if the int is already present in the sharedpreferences
+            Map<String,?> allNIds = tempNotificationPreferences.getAll();
+            for(Map.Entry<String,?> entry : allNIds.entrySet()){
+                if(entry.getValue().equals(randomId)){
+                    randomId = ThreadLocalRandom.current().nextInt(200, 300 + 1);
+                }
+            }
+        }
+
+        //Under here the ID of the notification is set to true because a notification with this id is shown
+        tempNotificationPreferences.edit().putInt(messageList.get(0).getConv_Id(), randomId).apply();
+
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-        mNotificationManager.notify(0, nBuilder.build());
+        mNotificationManager.notify(randomId, nBuilder.build());
     }
 
 }

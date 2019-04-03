@@ -1,6 +1,7 @@
 package com.Secret_Labs.secret_projectv10122;
 
 import android.app.DownloadManager;
+import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
@@ -62,6 +63,7 @@ public class Messenger extends AppCompatActivity {
         super.onResume();
         mainPrefs.edit().putString("convIdActive", currentConvId).commit();
         registerReceiver(notificationReceiver, new IntentFilter("activeConvIdBroadcast"));
+        dismissNotification();
     }
 
     @Override
@@ -87,6 +89,9 @@ public class Messenger extends AppCompatActivity {
         //Adding a back button to the toolbar
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
+
+        //Notification dismissal under here
+        dismissNotification();
 
         //Edittext part under here
         messageText = (EditText) findViewById(R.id.messengerEditText);
@@ -294,6 +299,16 @@ public class Messenger extends AppCompatActivity {
         });
 
         messageQueue.add(fetchMessagesAfterLastMessage);
+    }
+
+    //Method to dismiss notification if one is present for the current conv_Id
+    private void dismissNotification(){
+        SharedPreferences tempNotificationPrefs = getSharedPreferences("notificationIdsShown", 0);
+        if(tempNotificationPrefs.contains(currentConvId)){
+            NotificationManager tempNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
+            tempNotificationManager.cancel(tempNotificationPrefs.getInt(currentConvId, 0));
+            tempNotificationPrefs.edit().remove("notificationIdsShown").apply();
+        }
     }
 
     //These functions are for the toolbar and the toolbar menu
