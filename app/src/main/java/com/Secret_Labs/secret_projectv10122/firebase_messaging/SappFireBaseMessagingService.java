@@ -217,19 +217,27 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Method to make notifications if the updated conversation is not active
     private void notificationer(List<Obj_DatabaseMessage> messageList){
+        //First creating the notification builder
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
                 .setSmallIcon(R.mipmap.sapp_launcher_v2)
                 .setVibrate(new long[]{300, 300, 500})
                 .setContentTitle("SAPP");
 
-        //Looping through all messages in the list and adding them to notification body
-        String currentBody = "";
-        for(int i = 0; i < messageList.size(); i++){
-            currentBody = currentBody + messageList.get(i).getSender() + ": " + messageList.get(i).getMessage() + "\n";
+        //Checking the length of the messageList
+        if(messageList.size() > 1){
+            //Looping through all messages in the list and adding them to notification body
+            String currentBody = "";
+            for(int i = 0; i < messageList.size(); i++){
+                currentBody = currentBody + messageList.get(i).getSender() + ": " + messageList.get(i).getMessage() + "\n";
+            }
+            currentBody = currentBody.substring(0, currentBody.length() - 1);
+
+            nBuilder.setContentText(Integer.toString(messageList.size()) + " new messages");
+            nBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(currentBody));
+        } else {
+            nBuilder.setContentText(messageList.get(0).getSender() + ": " + messageList.get(0).getMessage());
         }
-        currentBody = currentBody.substring(0, currentBody.length() - 1);
-        nBuilder.setContentText(currentBody);
 
         //For api 26 and higher setting channel
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
