@@ -40,12 +40,21 @@
 
     <!-- SETTINGS ACTIVITY STARTS HERE -->
     <string name="statisticsButton">Statistics</string>
+    <string name="aboutButton">About</string>
+    <string name="passButton">Change Password</string>
     <!-- SETTINGS ACTIVITY ENDS HERE -->
 
     <!-- STATISTICS ACTIVITY STARTS HERE -->
     <string name="text_chart01">All logins this week so far</string>
     <string name="text_chart02">All messages this week so far</string>
     <!-- STATISTICS ACTIVITY ENDS HERE -->
+
+    <!-- changePassword ACTIVITY STARTS HERE -->
+    <string name="changpass_oldPass">Old password</string>
+    <string name="changpass_newPass">New password</string>
+    <string name="changpass_repeatNewPass">Repeat new password</string>
+    <string name="changpass_changePassButton">Change Password</string>
+    <!-- changePassword ACTIVITY ENDS HERE -->
 
     <!-- TOOLBAR SECTION STARTS HERE -->
 
@@ -58,6 +67,7 @@
     <string name="toolbar_title_messenger">No username provided</string>
     <string name="toolbar_title_statistics">Statistics</string>
     <string name="toolbar_title_settings">Settings</string>
+    <string name="toolbar_title_changePass">Change password</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>
