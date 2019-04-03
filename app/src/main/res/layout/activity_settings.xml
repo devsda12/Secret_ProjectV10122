@@ -19,6 +19,41 @@
         app:layout_constraintTop_toBottomOf="@+id/settingsToolbar">
 
         <android.support.v7.widget.CardView
+            android:id="@+id/cardViewPass"
+            android:layout_width="match_parent"
+            android:layout_height="40dp"
+            android:layout_marginTop="8dp"
+            app:layout_constraintStart_toStartOf="parent"
+            android:foreground="?android:attr/selectableItemBackgroundBorderless"
+            app:layout_constraintTop_toTopOf="parent" >
+
+            <android.support.constraint.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/settingsToolbar">
+
+                <TextView
+                    android:id="@+id/textView4"
+                    android:layout_width="wrap_content"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="100dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="170dp"
+                    android:layout_marginBottom="8dp"
+                    android:text="@string/passButton"
+                    android:textSize="18sp"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
+            </android.support.constraint.ConstraintLayout>
+        </android.support.v7.widget.CardView>
+
+        <android.support.v7.widget.CardView
             android:id="@+id/cardViewAbout"
             android:layout_width="match_parent"
             android:layout_height="40dp"
@@ -38,15 +73,18 @@
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="96dp"
-                    android:layout_marginTop="2dp"
+                    android:layout_height="0dp"
+                    android:layout_marginStart="100dp"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="263dp"
                     android:layout_marginBottom="8dp"
-                    android:text="About"
+                    android:text="@string/aboutButton"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="1.0" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>
@@ -55,9 +93,9 @@
             android:id="@+id/cardViewStats"
             android:layout_width="match_parent"
             android:layout_height="40dp"
-            android:layout_marginTop="8dp"
+            android:layout_marginTop="1dp"
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
-            app:layout_constraintTop_toTopOf="parent">
+            app:layout_constraintTop_toBottomOf="@+id/cardViewPass">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -69,17 +107,18 @@
 
                 <TextView
                     android:id="@+id/textView2"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_width="0dp"
+                    android:layout_height="30dp"
                     android:layout_marginStart="100dp"
-                    android:layout_marginTop="2dp"
-                    android:layout_marginBottom="8dp"
-                    android:text="Statistics"
+                    android:layout_marginTop="5dp"
+                    android:layout_marginEnd="236dp"
+                    android:layout_marginBottom="6dp"
+                    android:text="@string/statisticsButton"
                     android:textSize="18sp"
                     app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent"
-                    app:layout_constraintVertical_bias="1.0" />
+                    app:layout_constraintTop_toTopOf="parent" />
             </android.support.constraint.ConstraintLayout>
 
         </android.support.v7.widget.CardView>

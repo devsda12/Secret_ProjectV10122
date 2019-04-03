@@ -23,19 +23,26 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        CardView view1 = (CardView) findViewById(R.id.cardViewAbout);
-        CardView view2 = (CardView) findViewById(R.id.cardViewStats);
+        CardView viewAbout = (CardView) findViewById(R.id.cardViewAbout);
+        CardView viewStats = (CardView) findViewById(R.id.cardViewStats);
+        CardView viewPass = (CardView) findViewById(R.id.cardViewPass);
 
-        view1.setOnClickListener(new View.OnClickListener() {
+        viewStats.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, StatisticsActivity.class));
             }
         });
-        view2.setOnClickListener(new View.OnClickListener() {
+        viewAbout.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, StatisticsActivity.class));
+            }
+        });
+        viewPass.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, ChangePass.class));
             }
         });
 
