@@ -13,6 +13,7 @@ import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
 import com.github.mikephil.charting.components.XAxis;
+import com.github.mikephil.charting.components.YAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
@@ -115,6 +116,11 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
+        YAxis yAxisLeft = barChartLoginsCurrent.getAxis(YAxis.AxisDependency.LEFT);
+        YAxis yAxisRight = barChartLoginsCurrent.getAxis(YAxis.AxisDependency.RIGHT);
+        yAxisLeft.setAxisMinValue(0);
+        yAxisRight.setAxisMinValue(0);
+
         BarDataSet set = new BarDataSet(barEntries, "Logins");
         set.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data = new BarData(set);
@@ -148,6 +154,11 @@ public class StatisticsActivity extends AppCompatActivity {
             }
         });
 
+        YAxis yAxisLeft2 = barChartMessagesCurrent.getAxis(YAxis.AxisDependency.LEFT);
+        YAxis yAxisRight2 = barChartMessagesCurrent.getAxis(YAxis.AxisDependency.RIGHT);
+        yAxisLeft2.setAxisMinValue(0);
+        yAxisRight2.setAxisMinValue(0);
+
         BarDataSet set2 = new BarDataSet(barEntries2, "messages");
         set2.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data2 = new BarData(set2);
@@ -171,7 +182,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         Log.d("StatisticsNotice", "Now bar entries array filled");
 
-        XAxis xAxis4 = barChartMessagesCurrent.getXAxis();
+        XAxis xAxis4 = barChartMessagesOld.getXAxis();
         xAxis4.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis4.setDrawGridLines(false);
         xAxis4.setValueFormatter(new IndexAxisValueFormatter(){
@@ -180,6 +191,11 @@ public class StatisticsActivity extends AppCompatActivity {
                 return xLabel.get((int)value);
             }
         });
+
+        YAxis yAxisLeft4 = barChartMessagesOld.getAxis(YAxis.AxisDependency.LEFT);
+        YAxis yAxisRight4 = barChartMessagesOld.getAxis(YAxis.AxisDependency.RIGHT);
+        yAxisLeft4.setAxisMinValue(0);
+        yAxisRight4.setAxisMinValue(0);
 
         BarDataSet set4 = new BarDataSet(barEntries4, "messages");
         set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
@@ -213,6 +229,11 @@ public class StatisticsActivity extends AppCompatActivity {
                 return xLabel.get((int)value);
             }
         });
+
+        YAxis yAxisLeft3 = barChartLoginsOld.getAxis(YAxis.AxisDependency.LEFT);
+        YAxis yAxisRight3 = barChartLoginsOld.getAxis(YAxis.AxisDependency.RIGHT);
+        yAxisLeft3.setAxisMinValue(0);
+        yAxisRight3.setAxisMinValue(0);
 
         BarDataSet set3 = new BarDataSet(barEntries3, "messages");
         set3.setColor(getResources().getColor(R.color.colorPrimaryDark));
