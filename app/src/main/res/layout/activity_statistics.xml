@@ -30,12 +30,37 @@
                 android:layout_marginTop="8dp"
                 android:layout_marginEnd="8dp"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.0"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
 
                 <android.support.constraint.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content">
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/BarchartLoginsOld"
+                        android:layout_width="0dp"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView02">
+
+                    </com.github.mikephil.charting.charts.BarChart>
+
+                    <TextView
+                        android:id="@+id/textView02"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_marginTop="30dp"
+                        android:text="All logins last week"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/BarchartLoginsCurrent" />
 
                     <TextView
                         android:id="@+id/TextStats"
@@ -49,9 +74,9 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/Barchart01"
+                        android:id="@+id/BarchartLoginsCurrent"
                         android:layout_width="0dp"
-                        android:layout_height="246dp"
+                        android:layout_height="250dp"
                         android:layout_marginTop="8dp"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintHorizontal_bias="0.0"
@@ -64,13 +89,12 @@
             </androidx.cardview.widget.CardView>
 
             <androidx.cardview.widget.CardView
+                android:id="@+id/cardView"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="8dp"
-                android:layout_marginTop="8dp"
+                android:layout_marginTop="48dp"
                 android:layout_marginEnd="8dp"
-                android:layout_marginBottom="8dp"
-                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cardViewAbout">
@@ -80,10 +104,22 @@
                     android:layout_height="match_parent">
 
                     <TextView
+                        android:id="@+id/textView03"
+                        android:layout_width="0dp"
+                        android:layout_height="46dp"
+                        android:layout_marginTop="30dp"
+                        android:text="All messages last week"
+                        android:textAlignment="center"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="1.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/BarchartMessagesCurrent" />
+
+                    <TextView
                         android:id="@+id/textView"
                         android:layout_width="0dp"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
+                        android:layout_height="46dp"
+                        android:layout_marginTop="8dp"
                         android:text="@string/text_chart02"
                         android:textAlignment="center"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -91,7 +127,19 @@
                         app:layout_constraintTop_toTopOf="parent" />
 
                     <com.github.mikephil.charting.charts.BarChart
-                        android:id="@+id/Barchart02"
+                        android:id="@+id/BarchartMessagesOld"
+                        android:layout_width="0dp"
+                        android:layout_height="250dp"
+                        android:layout_marginTop="8dp"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintHorizontal_bias="0.0"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/textView03">
+
+                    </com.github.mikephil.charting.charts.BarChart>
+
+                    <com.github.mikephil.charting.charts.BarChart
+                        android:id="@+id/BarchartMessagesCurrent"
                         android:layout_width="0dp"
                         android:layout_height="250dp"
                         android:layout_marginTop="8dp"
@@ -102,6 +150,7 @@
                     </com.github.mikephil.charting.charts.BarChart>
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
+
         </androidx.constraintlayout.widget.ConstraintLayout>
     </ScrollView>
 

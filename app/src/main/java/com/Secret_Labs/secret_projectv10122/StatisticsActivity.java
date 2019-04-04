@@ -12,12 +12,10 @@ import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 import com.github.mikephil.charting.charts.BarChart;
-import com.github.mikephil.charting.components.AxisBase;
 import com.github.mikephil.charting.components.XAxis;
 import com.github.mikephil.charting.data.BarData;
 import com.github.mikephil.charting.data.BarDataSet;
 import com.github.mikephil.charting.data.BarEntry;
-import com.github.mikephil.charting.formatter.IAxisValueFormatter;
 import com.github.mikephil.charting.formatter.IndexAxisValueFormatter;
 
 import org.json.JSONArray;
@@ -25,13 +23,14 @@ import org.json.JSONException;
 import org.json.JSONObject;
 
 import java.math.BigDecimal;
-import java.text.DecimalFormat;
 import java.util.ArrayList;
 
 public class StatisticsActivity extends AppCompatActivity {
 
-    BarChart barChart;
-    BarChart barChart2;
+    BarChart barChartLoginsCurrent;
+    BarChart barChartMessagesCurrent;
+    BarChart barChartLoginsOld;
+    BarChart barChartMessagesOld;
     float Logins1 = 0;
     float Logins2 = 0;
     float Logins3 = 0;
@@ -48,6 +47,22 @@ public class StatisticsActivity extends AppCompatActivity {
     float messages6 = 0;
     float messages7 = 0;
 
+    float Logins1Old = 0;
+    float Logins2Old = 0;
+    float Logins3Old = 0;
+    float Logins4Old = 0;
+    float Logins5Old = 0;
+    float Logins6Old = 0;
+    float Logins7Old = 0;
+
+    float messages1Old = 0;
+    float messages2Old = 0;
+    float messages3Old = 0;
+    float messages4Old = 0;
+    float messages5Old = 0;
+    float messages6Old = 0;
+    float messages7Old = 0;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -62,8 +77,10 @@ public class StatisticsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        barChart = (BarChart) findViewById(R.id.Barchart01);
-        barChart2 = (BarChart) findViewById(R.id.Barchart02);
+        barChartLoginsCurrent = (BarChart) findViewById(R.id.BarchartLoginsCurrent);
+        barChartMessagesCurrent = (BarChart) findViewById(R.id.BarchartMessagesCurrent);
+        barChartLoginsOld = (BarChart) findViewById(R.id.BarchartLoginsOld);
+        barChartMessagesOld = (BarChart) findViewById(R.id.BarchartMessagesOld);
         requestData();
     }
 
@@ -88,7 +105,7 @@ public class StatisticsActivity extends AppCompatActivity {
         xLabel.add("Saturday");
         xLabel.add("Sunday");
 
-        XAxis xAxis = barChart.getXAxis();
+        XAxis xAxis = barChartLoginsCurrent.getXAxis();
         xAxis.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis.setDrawGridLines(false);
         xAxis.setValueFormatter(new IndexAxisValueFormatter(){
@@ -103,10 +120,10 @@ public class StatisticsActivity extends AppCompatActivity {
         BarData data = new BarData(set);
         data.setBarWidth(0.9f);
 
-        barChart.setData(data);
-        barChart.setScaleEnabled(false);
-        barChart.getDescription().setEnabled(false);
-        barChart.invalidate();
+        barChartLoginsCurrent.setData(data);
+        barChartLoginsCurrent.setScaleEnabled(false);
+        barChartLoginsCurrent.getDescription().setEnabled(false);
+        barChartLoginsCurrent.invalidate();
 
 
         //messages graph
@@ -121,7 +138,7 @@ public class StatisticsActivity extends AppCompatActivity {
 
         Log.d("StatisticsNotice", "Now bar entries array filled");
 
-        XAxis xAxis2 = barChart2.getXAxis();
+        XAxis xAxis2 = barChartMessagesCurrent.getXAxis();
         xAxis2.setPosition(XAxis.XAxisPosition.BOTTOM);
         xAxis2.setDrawGridLines(false);
         xAxis2.setValueFormatter(new IndexAxisValueFormatter(){
@@ -134,12 +151,78 @@ public class StatisticsActivity extends AppCompatActivity {
         BarDataSet set2 = new BarDataSet(barEntries2, "messages");
         set2.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data2 = new BarData(set2);
-        data.setBarWidth(0.9f);
+        data2.setBarWidth(0.9f);
 
-        barChart2.setData(data2);
-        barChart2.setScaleEnabled(false);
-        barChart2.getDescription().setEnabled(false);
-        barChart2.invalidate();
+        barChartMessagesCurrent.setData(data2);
+        barChartMessagesCurrent.setScaleEnabled(false);
+        barChartMessagesCurrent.getDescription().setEnabled(false);
+        barChartMessagesCurrent.invalidate();
+
+
+        // old messages graph
+        ArrayList<BarEntry> barEntries4 = new ArrayList<>();
+        barEntries4.add(new BarEntry(0, messages1Old));
+        barEntries4.add(new BarEntry(1, messages2Old));
+        barEntries4.add(new BarEntry(2, messages3Old));
+        barEntries4.add(new BarEntry(3, messages4Old));
+        barEntries4.add(new BarEntry(4, messages5Old));
+        barEntries4.add(new BarEntry(5, messages6Old));
+        barEntries4.add(new BarEntry(6, messages7Old));
+
+        Log.d("StatisticsNotice", "Now bar entries array filled");
+
+        XAxis xAxis4 = barChartMessagesCurrent.getXAxis();
+        xAxis4.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis4.setDrawGridLines(false);
+        xAxis4.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return xLabel.get((int)value);
+            }
+        });
+
+        BarDataSet set4 = new BarDataSet(barEntries4, "messages");
+        set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
+        BarData data4 = new BarData(set4);
+        data4.setBarWidth(0.9f);
+
+        barChartMessagesOld.setData(data4);
+        barChartMessagesOld.setScaleEnabled(false);
+        barChartMessagesOld.getDescription().setEnabled(false);
+        barChartMessagesOld.invalidate();
+
+
+        // old logins graph
+        ArrayList<BarEntry> barEntries3 = new ArrayList<>();
+        barEntries3.add(new BarEntry(0, Logins1Old));
+        barEntries3.add(new BarEntry(1, Logins2Old));
+        barEntries3.add(new BarEntry(2, Logins3Old));
+        barEntries3.add(new BarEntry(3, Logins4Old));
+        barEntries3.add(new BarEntry(4, Logins5Old));
+        barEntries3.add(new BarEntry(5, Logins6Old));
+        barEntries3.add(new BarEntry(6, Logins7Old));
+
+        Log.d("StatisticsNotice", "Now bar entries array filled");
+
+        XAxis xAxis3 = barChartLoginsOld.getXAxis();
+        xAxis3.setPosition(XAxis.XAxisPosition.BOTTOM);
+        xAxis3.setDrawGridLines(false);
+        xAxis3.setValueFormatter(new IndexAxisValueFormatter(){
+            @Override
+            public String getFormattedValue(float value) {
+                return xLabel.get((int)value);
+            }
+        });
+
+        BarDataSet set3 = new BarDataSet(barEntries3, "messages");
+        set3.setColor(getResources().getColor(R.color.colorPrimaryDark));
+        BarData data3 = new BarData(set3);
+        data3.setBarWidth(0.9f);
+
+        barChartLoginsOld.setData(data4);
+        barChartLoginsOld.setScaleEnabled(false);
+        barChartLoginsOld.getDescription().setEnabled(false);
+        barChartLoginsOld.invalidate();
 
     }
 
@@ -177,6 +260,14 @@ public class StatisticsActivity extends AppCompatActivity {
                     JSONObject Saturday = response.getJSONObject(5);
                     JSONObject Sunday = response.getJSONObject(6);
 
+                    JSONObject MondayOld = response.getJSONObject(7);
+                    JSONObject TuesdayOld = response.getJSONObject(8);
+                    JSONObject WednesdayOld = response.getJSONObject(9);
+                    JSONObject ThursdayOld = response.getJSONObject(10);
+                    JSONObject FridayOld = response.getJSONObject(11);
+                    JSONObject SaturdayOld = response.getJSONObject(12);
+                    JSONObject SundayOld = response.getJSONObject(13);
+
                     Logins1 = BigDecimal.valueOf(Integer.parseInt(Monday.getString("logins"))).floatValue();
                     Logins2 = BigDecimal.valueOf(Integer.parseInt(Tuesday.getString("logins"))).floatValue();
                     Logins3 = BigDecimal.valueOf(Integer.parseInt(Wednesday.getString("logins"))).floatValue();
@@ -194,6 +285,24 @@ public class StatisticsActivity extends AppCompatActivity {
                     messages6 = BigDecimal.valueOf(Integer.parseInt(Saturday.getString("messages"))).floatValue();
                     messages7 = BigDecimal.valueOf(Integer.parseInt(Sunday.getString("messages"))).floatValue();
                     Log.d("StatisticsNotice", "Value of tuesday messages: " + Float.toString(messages2));
+
+                    Logins1Old = BigDecimal.valueOf(Integer.parseInt(MondayOld.getString("logins"))).floatValue();
+                    Logins2Old = BigDecimal.valueOf(Integer.parseInt(TuesdayOld.getString("logins"))).floatValue();
+                    Logins3Old = BigDecimal.valueOf(Integer.parseInt(WednesdayOld.getString("logins"))).floatValue();
+                    Logins4Old = BigDecimal.valueOf(Integer.parseInt(ThursdayOld.getString("logins"))).floatValue();
+                    Logins5Old = BigDecimal.valueOf(Integer.parseInt(FridayOld.getString("logins"))).floatValue();
+                    Logins6Old = BigDecimal.valueOf(Integer.parseInt(SaturdayOld.getString("logins"))).floatValue();
+                    Logins7Old = BigDecimal.valueOf(Integer.parseInt(SundayOld.getString("logins"))).floatValue();
+                    Log.d("StatisticsNotice", "Value of tuesday logins: " + Float.toString(Logins2Old));
+
+                    messages1Old = BigDecimal.valueOf(Integer.parseInt(MondayOld.getString("messages"))).floatValue();
+                    messages2Old = BigDecimal.valueOf(Integer.parseInt(TuesdayOld.getString("messages"))).floatValue();
+                    messages3Old = BigDecimal.valueOf(Integer.parseInt(WednesdayOld.getString("messages"))).floatValue();
+                    messages4Old = BigDecimal.valueOf(Integer.parseInt(ThursdayOld.getString("messages"))).floatValue();
+                    messages5Old = BigDecimal.valueOf(Integer.parseInt(FridayOld.getString("messages"))).floatValue();
+                    messages6Old = BigDecimal.valueOf(Integer.parseInt(SaturdayOld.getString("messages"))).floatValue();
+                    messages7Old = BigDecimal.valueOf(Integer.parseInt(SundayOld.getString("messages"))).floatValue();
+                    Log.d("StatisticsNotice", "Value of tuesday messages: " + Float.toString(messages2Old));
 
                     onRequestBindData();
 
