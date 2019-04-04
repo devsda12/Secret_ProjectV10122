@@ -159,7 +159,7 @@ public class StatisticsActivity extends AppCompatActivity {
         yAxisLeft2.setAxisMinValue(0);
         yAxisRight2.setAxisMinValue(0);
 
-        BarDataSet set2 = new BarDataSet(barEntries2, "messages");
+        BarDataSet set2 = new BarDataSet(barEntries2, "Messages");
         set2.setColor(getResources().getColor(R.color.colorPrimary));
         BarData data2 = new BarData(set2);
         data2.setBarWidth(0.9f);
@@ -197,7 +197,7 @@ public class StatisticsActivity extends AppCompatActivity {
         yAxisLeft4.setAxisMinValue(0);
         yAxisRight4.setAxisMinValue(0);
 
-        BarDataSet set4 = new BarDataSet(barEntries4, "messages");
+        BarDataSet set4 = new BarDataSet(barEntries4, "Messages");
         set4.setColor(getResources().getColor(R.color.colorPrimaryDark));
         BarData data4 = new BarData(set4);
         data4.setBarWidth(0.9f);
@@ -235,12 +235,12 @@ public class StatisticsActivity extends AppCompatActivity {
         yAxisLeft3.setAxisMinValue(0);
         yAxisRight3.setAxisMinValue(0);
 
-        BarDataSet set3 = new BarDataSet(barEntries3, "messages");
+        BarDataSet set3 = new BarDataSet(barEntries3, "Logins");
         set3.setColor(getResources().getColor(R.color.colorPrimaryDark));
         BarData data3 = new BarData(set3);
         data3.setBarWidth(0.9f);
 
-        barChartLoginsOld.setData(data4);
+        barChartLoginsOld.setData(data3);
         barChartLoginsOld.setScaleEnabled(false);
         barChartLoginsOld.getDescription().setEnabled(false);
         barChartLoginsOld.invalidate();
