@@ -118,7 +118,7 @@
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewPass">
+            app:layout_constraintTop_toBottomOf="@+id/cardViewProfilePic">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
@@ -164,7 +164,7 @@
             android:foreground="?android:attr/selectableItemBackgroundBorderless"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cardViewAbout">
+            app:layout_constraintTop_toBottomOf="@+id/cardViewPass">
 
             <android.support.constraint.ConstraintLayout
                 android:layout_width="match_parent"
