@@ -8,8 +8,15 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.android.volley.Request;
 import com.android.volley.RequestQueue;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.Volley;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 public class ChangePass extends AppCompatActivity {
 
@@ -65,9 +72,51 @@ public class ChangePass extends AppCompatActivity {
         }
 
         //Checking whether the password fields match
+        if(!newPassword.getText().toString().equals(newPassword2.getText().toString())){
+            common.displayToast(ChangePass.this, "Password change Failed: Passwords do not match");
+            return;
+        }
+
+        //Check if old password is the same as new password
+        if(newPassword.getText().toString().equals(oldPassword.getText().toString())){
+            common.displayToast(ChangePass.this, "Password change Failed: New Password is the same as old password");
+            return;
+        }
+
         //If code reaches here making a new JSONObject with the given values
+        JSONObject tempCreateAccJson = new JSONObject();
+        try{
+            tempCreateAccJson.put("acc_NewPassword", newPassword.getText().toString());
+            tempCreateAccJson.put("acc_Password", oldPassword.getText().toString());
+            tempCreateAccJson.put("acc_Id", mainPrefs.getString("activeAccId", "0"));
+            tempCreateAccJson.put("acc_Id", mainPrefs.getString("device_Id", "none"));
+        } catch(JSONException e){
+            common.displayToast(ChangePass.this, "Password change Failed: JSON Exception occurred");
+            return;
+        }
         //Creating the JSONObject request itself
+        JsonObjectRequest createAccRequest = new JsonObjectRequest(Request.Method.POST, common.apiUrl + "/sapp_changePass", tempCreateAccJson,
+                new Response.Listener<JSONObject>() {
+                    @Override
+                    public void onResponse(JSONObject response) {
+                        try {
+                            String responseTrue = response.getString("insertResult");
+                            if(responseTrue.equals("true")) {
+                                common.displayToast(ChangePass.this, "Password changed successfully");
+                            }
+                            common.login(ChangePass.this, queue, newPassword.getText().toString(), oldPassword.getText().toString(), 2, true);
+                        } catch (JSONException e){
+                            common.displayToast(ChangePass.this, "Password change Failed: JSON Exception occurred");
+                        }
+                    }
+                }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.displayToast(ChangePass.this, "Password Change Failed Volley Error");
+            }
+        });
         //Adding request to queue
+        queue.add(createAccRequest);
 
     }
 
