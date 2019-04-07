@@ -241,8 +241,10 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
         //Checking if there is already an notification key value pair to update the currentBody with
         String currentBody = "";
+        int currentSize = 0;
         if(tempNotificationPreferences.contains(messageList.get(0).getConv_Id() + "_Notification_Body")){
             currentBody = tempNotificationPreferences.getString(messageList.get(0).getConv_Id() + "_Notification_Body", "");
+            currentSize = currentBody.split("\\n").length;
         }
 
         //Checking the length of the messageList
@@ -251,13 +253,21 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             for(int i = 0; i < messageList.size(); i++){
                 currentBody = currentBody + messageList.get(i).getSender() + ": " + messageList.get(i).getMessage() + "\n";
             }
-            currentBody = currentBody.substring(0, currentBody.length() - 1);
+            //currentBody = currentBody.substring(0, currentBody.length() - 1);
+            currentSize = currentSize + messageList.size();
 
-            nBuilder.setContentText(Integer.toString(messageList.size()) + " new messages");
-            nBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(currentBody));
+            nBuilder.setContentText(Integer.toString(currentSize) + " new messages");
+            nBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(currentBody.substring(0, currentBody.length() - 1)));
         } else {
-            currentBody = messageList.get(0).getSender() + ": " + messageList.get(0).getMessage() + "\n";
-            nBuilder.setContentText(currentBody);
+            currentBody = currentBody + messageList.get(0).getSender() + ": " + messageList.get(0).getMessage() + "\n";
+
+            if(currentSize > 0){
+                nBuilder.setContentText(Integer.toString(currentSize + 1) + " new messages");
+            } else {
+                nBuilder.setContentText(messageList.get(0).getSender() + ": " + messageList.get(0).getMessage());
+            }
+
+            nBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(currentBody.substring(0, currentBody.length() - 1)));
         }
 
         //For api 26 and higher setting channel
