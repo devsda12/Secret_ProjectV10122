@@ -221,6 +221,9 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Method to make notifications if the updated conversation is not active
     private void notificationer(List<Obj_DatabaseMessage> messageList, SharedPreferences mainprefs){
+        //Getting the notification preferences
+        SharedPreferences tempNotificationPreferences = getSharedPreferences("notificationIdsShown", 0);
+
         //Intent for the tap on the notification
         Intent intent = new Intent(this, Messenger.class);
         intent.setFlags(Intent.FLAG_ACTIVITY_NEW_TASK | Intent.FLAG_ACTIVITY_CLEAR_TASK);
@@ -236,10 +239,15 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
                 .setContentTitle("SAPP")
                 .setContentIntent(pendingIntent);
 
+        //Checking if there is already an notification key value pair to update the currentBody with
+        String currentBody = "";
+        if(tempNotificationPreferences.contains(messageList.get(0).getConv_Id() + "_Notification_Body")){
+            currentBody = tempNotificationPreferences.getString(messageList.get(0).getConv_Id() + "_Notification_Body", "");
+        }
+
         //Checking the length of the messageList
         if(messageList.size() > 1){
             //Looping through all messages in the list and adding them to notification body
-            String currentBody = "";
             for(int i = 0; i < messageList.size(); i++){
                 currentBody = currentBody + messageList.get(i).getSender() + ": " + messageList.get(i).getMessage() + "\n";
             }
@@ -248,7 +256,8 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             nBuilder.setContentText(Integer.toString(messageList.size()) + " new messages");
             nBuilder.setStyle(new NotificationCompat.BigTextStyle().bigText(currentBody));
         } else {
-            nBuilder.setContentText(messageList.get(0).getSender() + ": " + messageList.get(0).getMessage());
+            currentBody = messageList.get(0).getSender() + ": " + messageList.get(0).getMessage() + "\n";
+            nBuilder.setContentText(currentBody);
         }
 
         //For api 26 and higher setting channel
@@ -265,15 +274,13 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             notificationManager.createNotificationChannel(channel);
         }
 
-        //Getting the notification preferences
-        SharedPreferences tempNotificationPreferences = getSharedPreferences("notificationIdsShown", 0);
-
+        //Under here updating the notification preferences
         //First getting a random int
         int randomId = ThreadLocalRandom.current().nextInt(100, 200 + 1);
 
         //Checking whether the preferences already contains the notification
-        if(tempNotificationPreferences.contains(messageList.get(0).getConv_Id())){
-            randomId = tempNotificationPreferences.getInt(messageList.get(0).getConv_Id(), 0);
+        if(tempNotificationPreferences.contains(messageList.get(0).getConv_Id() + "_Notification_ID")){
+            randomId = tempNotificationPreferences.getInt(messageList.get(0).getConv_Id() + "_Notification_ID", 0);
         } else {
             //Now checking if the int is already present in the sharedpreferences
             Map<String,?> allNIds = tempNotificationPreferences.getAll();
@@ -284,8 +291,9 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             }
         }
 
-        //Under here the ID of the notification is set to true because a notification with this id is shown
-        tempNotificationPreferences.edit().putInt(messageList.get(0).getConv_Id(), randomId).apply();
+        //Under here the ID of the notification is set to true because a notification with this id is shown, also storing the current body of the notification in a second key value pair
+        tempNotificationPreferences.edit().putInt(messageList.get(0).getConv_Id() + "_Notification_ID", randomId).apply();
+        tempNotificationPreferences.edit().putString(messageList.get(0).getConv_Id() + "_Notification_Body", currentBody).apply();
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(randomId, nBuilder.build());

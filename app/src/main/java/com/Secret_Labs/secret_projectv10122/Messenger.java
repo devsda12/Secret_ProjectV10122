@@ -308,10 +308,11 @@ public class Messenger extends AppCompatActivity {
     //Method to dismiss notification if one is present for the current conv_Id
     private void dismissNotification(){
         SharedPreferences tempNotificationPrefs = getSharedPreferences("notificationIdsShown", 0);
-        if(tempNotificationPrefs.contains(currentConvId)){
+        if(tempNotificationPrefs.contains(currentConvId + "_Notification_ID")){
             NotificationManager tempNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
-            tempNotificationManager.cancel(tempNotificationPrefs.getInt(currentConvId, 0));
-            tempNotificationPrefs.edit().remove("notificationIdsShown").apply();
+            tempNotificationManager.cancel(tempNotificationPrefs.getInt(currentConvId + "_Notification_ID", 0));
+            tempNotificationPrefs.edit().remove(currentConvId + "_Notification_ID").apply();
+            tempNotificationPrefs.edit().remove(currentConvId + "_Notification_Body").apply();
         }
     }
 
