@@ -105,7 +105,7 @@ public class SettingsActivity extends AppCompatActivity {
                     Bitmap pictureBitmap = null;
                     try {
                         pictureBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
-
+                        sendImageToServer(pictureBitmap);
                     } catch (IOException e) {
                         common.displayToast(SettingsActivity.this, "There was an error on the selected image");
                     }
@@ -127,13 +127,15 @@ public class SettingsActivity extends AppCompatActivity {
             @Override
             public void onResponse(NetworkResponse response) {
                 progressDialog.dismiss();
-                common.displayToast(SettingsActivity.this, "Profile picture updated successfully");
+                common.displayToast(SettingsActivity.this, new String(response.data));
+                //common.displayToast(SettingsActivity.this, "Profile picture updated successfully");
             }
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
                 progressDialog.dismiss();
-                common.displayToast(SettingsActivity.this, "Profile picture did not update successfully");
+                common.displayToast(SettingsActivity.this, error.getMessage());
+                //common.displayToast(SettingsActivity.this, "Profile picture did not update successfully");
             }
         }) {
 
