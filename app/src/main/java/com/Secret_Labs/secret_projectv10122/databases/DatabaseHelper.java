@@ -39,6 +39,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " TEXT PRIMARY KEY,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN + " BLOB,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN + " INTEGER,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN + " TEXT" + ")";
 
@@ -49,6 +50,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_USERNAME_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_COLUMN + " BLOB,"
+                + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_SENDER_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN + " TEXT,"
@@ -141,10 +144,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(result.moveToNext()){
             //Converting int to boolean
             boolean tempRememberlogin = false;
-            if(result.getInt(3) == 1){
+            if(result.getInt(4) == 1){
                 tempRememberlogin = true;
             }
-            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(4)));
+            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(5)));
         }
 
         //Closing and returning
