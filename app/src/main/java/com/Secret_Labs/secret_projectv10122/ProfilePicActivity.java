@@ -39,6 +39,7 @@ public class ProfilePicActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_profile_pic);
         common = new Common();
+        mainprefs = getSharedPreferences(common.mainPrefsName, 0);
 
 
         //First defining the buttons and the imageview
