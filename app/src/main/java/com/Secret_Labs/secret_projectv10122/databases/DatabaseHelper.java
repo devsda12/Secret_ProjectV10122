@@ -246,6 +246,17 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return false;
     }
 
+    //Method to store acc_Profile picture in database
+    public boolean storeProfilePic(byte[] profilePic, String acc_Id){
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
+
+        //Creating the contentvalues
+        ContentValues insertNewProfilePic = new ContentValues();
+        insertNewProfilePic.put(DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN, profilePic);
+
+        //Inserting the image
+        long result = dbWrite.insert()
+    }
 
     //End of acc_Table functions
 
@@ -319,7 +330,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Putting results in new list
         List<Obj_ConvInfo> convInfoList = new ArrayList<>();
         while(result.moveToNext()){
-            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getString(5), result.getString(6)));
+            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getString(6), result.getString(7), result.getString(8)));
         }
 
         //Closing and returning
