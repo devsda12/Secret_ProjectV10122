@@ -8,6 +8,7 @@ import android.view.View;
 import android.widget.Button;
 import android.widget.EditText;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
@@ -89,7 +90,7 @@ public class ChangePass extends AppCompatActivity {
             tempCreateAccJson.put("acc_NewPassword", newPassword.getText().toString());
             tempCreateAccJson.put("acc_Password", oldPassword.getText().toString());
             tempCreateAccJson.put("acc_Id", mainPrefs.getString("activeAccId", "0"));
-            tempCreateAccJson.put("acc_Id", mainPrefs.getString("device_Id", "none"));
+            tempCreateAccJson.put("device_Id", mainPrefs.getString("device_Id", "none"));
         } catch(JSONException e){
             common.displayToast(ChangePass.this, "Password change Failed: JSON Exception occurred");
             return;
@@ -99,20 +100,14 @@ public class ChangePass extends AppCompatActivity {
                 new Response.Listener<JSONObject>() {
                     @Override
                     public void onResponse(JSONObject response) {
-                        try {
-                            String responseTrue = response.getString("insertResult");
-                            if(responseTrue.equals("true")) {
-                                common.displayToast(ChangePass.this, "Password changed successfully");
-                            }
-                            common.login(ChangePass.this, queue, newPassword.getText().toString(), oldPassword.getText().toString(), 2, true);
-                        } catch (JSONException e){
-                            common.displayToast(ChangePass.this, "Password change Failed: JSON Exception occurred");
-                        }
+                        new DatabaseHelper(ChangePass.this).changePassword(newPassword.getText().toString(), mainPrefs.getString("activeAccId", "0"));
+                        common.displayToast(ChangePass.this, "Password changed successfully");
+                        finish();
                     }
                 }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(ChangePass.this, "Password Change Failed Volley Error");
+                common.displayToast(ChangePass.this, "Password Change Failed Password incorrect");
             }
         });
         //Adding request to queue

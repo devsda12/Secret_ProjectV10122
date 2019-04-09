@@ -210,6 +210,40 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return returnUsername;
     }
 
+    private boolean passwordRemembered(String acc_Id){
+        //Reference to the database
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        //Making query
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+        result.moveToFirst();
+
+        int returnRemembered = result.getInt(0);
+        result.close();
+        dbRead.close();
+
+        return (returnRemembered == 1);
+    }
+
+    public boolean changePassword(String new_Password, String acc_Id) {
+        ContentValues addableValues = new ContentValues();
+        addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN, new_Password);
+
+
+        if(passwordRemembered(acc_Id)) {
+            //Reference to the database
+            SQLiteDatabase dbWrite = this.getWritableDatabase();
+
+            //Making query
+            dbWrite.update(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, addableValues, DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+            dbWrite.close();
+
+            return true;
+        }
+        return false;
+    }
+
+
     //End of acc_Table functions
 
     //Start of conv_Table functions
