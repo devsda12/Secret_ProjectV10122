@@ -277,6 +277,7 @@ public class ConvSelection extends AppCompatActivity {
                 updateConvList(requestQueue);
                 return true;
             case R.id.action_convsel_about:
+                startActivity(new Intent(ConvSelection.this, aboutActivity.class));
                 return true;
             case R.id.action_convsel_settings:
                 startActivity(new Intent(ConvSelection.this, SettingsActivity.class));

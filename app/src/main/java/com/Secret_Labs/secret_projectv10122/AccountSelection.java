@@ -270,6 +270,7 @@ public class AccountSelection extends AppCompatActivity {
                 refreshAccList();
                 return true;
             case R.id.action_accountselection_about:
+                startActivity(new Intent(AccountSelection.this, aboutActivity.class));
                 return true;
             default:
                 return super.onOptionsItemSelected(item);
