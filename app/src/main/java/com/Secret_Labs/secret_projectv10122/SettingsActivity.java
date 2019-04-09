@@ -116,6 +116,9 @@ public class SettingsActivity extends AppCompatActivity {
 
     //Method to actually send the image to the server
     private void sendImageToServer(final Bitmap imageBitmap){
+        //Rescaling image bitmap
+        final Bitmap newImageBitmap = Bitmap.createScaledBitmap(imageBitmap, 512, 512, false);
+
         //Setting the progressdialog
         final ProgressDialog progressDialog = new ProgressDialog(SettingsActivity.this);
         progressDialog.setTitle("Uploading Image");
@@ -129,7 +132,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onResponse(NetworkResponse response) {
                 progressDialog.dismiss();
                 common.displayToast(SettingsActivity.this, new String(response.data));
-                new DatabaseHelper(SettingsActivity.this).storeProfilePic(getBitmapAsByteArray(imageBitmap), mainprefs.getString("activeAccId", "none"));
+                new DatabaseHelper(SettingsActivity.this).storeProfilePic(getBitmapAsByteArray(newImageBitmap), mainprefs.getString("activeAccId", "none"));
                 //common.displayToast(SettingsActivity.this, "Profile picture updated successfully");
             }
         }, new Response.ErrorListener() {
@@ -155,7 +158,7 @@ public class SettingsActivity extends AppCompatActivity {
             protected Map<String, DataPart> getByteData(){
                 Map<String, DataPart> params = new HashMap<>();
                 String imagename = mainprefs.getString("activeAccId", "none") + "_ProfilePicture";
-                params.put("profilePic", new DataPart(imagename + ".png", getBitmapAsByteArray(imageBitmap)));
+                params.put("profilePic", new DataPart(imagename + ".png", getBitmapAsByteArray(newImageBitmap)));
                 return params;
             }
 
