@@ -63,7 +63,7 @@ public class SettingsActivity extends AppCompatActivity {
         viewProfilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
-                pickImageFromGallery();
+                startActivity(new Intent(SettingsActivity.this, ProfilePicActivity.class));
             }
         });
         viewStats.setOnClickListener(new View.OnClickListener() {
