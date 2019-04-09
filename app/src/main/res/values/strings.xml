@@ -57,6 +57,12 @@
     <string name="changpass_changePassButton">Change Password</string>
     <!-- changePassword ACTIVITY ENDS HERE -->
 
+    <!-- changeProfilePicture ACTIVITY STARTS HERE -->
+    <string name="profilePicSelect">Select image</string>
+    <string name="profilePicSubmit">Submit image</string>
+    <!-- changeProfilePicture ACTIVITY ENDS HERE -->
+
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
@@ -69,6 +75,7 @@
     <string name="toolbar_title_statistics">Statistics</string>
     <string name="toolbar_title_settings">Settings</string>
     <string name="toolbar_title_changePass">Change password</string>
+    <string name="toolbar_title_changeProfilePicture">Change Profile picture</string>
 
     <!-- Toolbar menu strings under here -->
     <string name="account_selection_refresh">Refresh</string>
