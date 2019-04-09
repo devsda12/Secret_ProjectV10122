@@ -267,9 +267,9 @@ public class Common {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String currentDT = sdf.format(new Date());
                                 if (fromWhereRemember == 1) {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, null, true, currentDT));
                                 } else {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, null, false, currentDT));
                                 }
 
                                 //Checking if the insert was successful

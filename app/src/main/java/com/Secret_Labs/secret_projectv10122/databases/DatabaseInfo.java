@@ -4,7 +4,7 @@ public class DatabaseInfo {
 
     //Main variables of the database
     public static final String DBNAME = "Sapp_Acc_DB";
-    public static final int DBVERSION = 1;
+    public static final int DBVERSION = 2;
 
     //Main table properties for stored accounts on the device
     public class Sapp_Table_Acc{

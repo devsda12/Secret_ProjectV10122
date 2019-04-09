@@ -6,14 +6,16 @@ public class Obj_AccountInfo {
     private String acc_Id;
     private String acc_Username;
     private String acc_Password;
+    private byte[] acc_ProfilePic;
     private Boolean acc_RememberLogin;
     private String acc_Last_Login;
 
     //The constructor
-    public Obj_AccountInfo(String acc_Id, String acc_Username, String acc_Password, Boolean acc_RememberLogin, String acc_Last_Login){
+    public Obj_AccountInfo(String acc_Id, String acc_Username, String acc_Password, byte[] acc_ProfilePic, Boolean acc_RememberLogin, String acc_Last_Login){
         this.acc_Id = acc_Id;
         this.acc_Username = acc_Username;
         this.acc_Password = acc_Password;
+        this.acc_ProfilePic = acc_ProfilePic;
         this.acc_RememberLogin = acc_RememberLogin;
         this.acc_Last_Login = acc_Last_Login;
     }
@@ -40,6 +42,14 @@ public class Obj_AccountInfo {
 
     public void setAcc_Password(String acc_Password) {
         this.acc_Password = acc_Password;
+    }
+
+    public byte[] getAcc_ProfilePic() {
+        return acc_ProfilePic;
+    }
+
+    public void setAcc_ProfilePic(byte[] acc_ProfilePic) {
+        this.acc_ProfilePic = acc_ProfilePic;
     }
 
     public Boolean getAcc_RememberLogin() {

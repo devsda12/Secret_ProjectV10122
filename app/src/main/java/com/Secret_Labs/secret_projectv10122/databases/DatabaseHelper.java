@@ -147,7 +147,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             if(result.getInt(4) == 1){
                 tempRememberlogin = true;
             }
-            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(5)));
+            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), result.getBlob(3), tempRememberlogin, result.getString(5)));
         }
 
         //Closing and returning
@@ -255,7 +255,15 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         insertNewProfilePic.put(DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN, profilePic);
 
         //Inserting the image
-        long result = dbWrite.insert()
+        long result = dbWrite.update(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, insertNewProfilePic, DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+
+        dbWrite.close();
+
+        if (result == -1){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //End of acc_Table functions

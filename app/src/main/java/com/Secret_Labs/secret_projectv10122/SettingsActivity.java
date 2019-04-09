@@ -14,6 +14,7 @@ import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Toast;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.message_volley.VolleyMultipartRequest;
 import com.android.volley.AuthFailureError;
 import com.android.volley.NetworkResponse;
@@ -128,6 +129,7 @@ public class SettingsActivity extends AppCompatActivity {
             public void onResponse(NetworkResponse response) {
                 progressDialog.dismiss();
                 common.displayToast(SettingsActivity.this, new String(response.data));
+                new DatabaseHelper(SettingsActivity.this).storeProfilePic(getBitmapAsByteArray(imageBitmap), mainprefs.getString("activeAccId", "none"));
                 //common.displayToast(SettingsActivity.this, "Profile picture updated successfully");
             }
         }, new Response.ErrorListener() {
