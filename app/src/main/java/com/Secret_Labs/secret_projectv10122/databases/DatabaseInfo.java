@@ -15,6 +15,7 @@ public class DatabaseInfo {
         public static final String ACC_ID_COLUMN = "acc_Id";
         public static final String ACC_USERNAME_COLUMN = "acc_Username";
         public static final String ACC_PASSWORD_COLUMN = "acc_Password";
+        public static final String ACC_PROFILE_PICTURE_COLUMN = "acc_Profile_Picture";
         public static final String ACC_REMEMBERLOGIN_COLUMN = "acc_Rememberlogin";
         public static final String ACC_LASTLOGIN_COLUMN = "acc_Lastlogin";
     }
@@ -29,6 +30,8 @@ public class DatabaseInfo {
         public static final String CONV_ACC_ID_COLUMN = "conv_Acc_Id";
         public static final String CONV_PARTNER_ID_COLUMN = "conv_Partner_Id";
         public static final String CONV_PARTNER_USERNAME_COLUMN = "conv_Partner_Username";
+        public static final String CONV_PARTNER_PROFILE_PICTURE_COLUMN = "conv_Partner_Profile_Picture";
+        public static final String CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN = "conv_Partner_Profile_Picture_Id";
         public static final String CONV_LAST_MESSAGE_COLUMN = "conv_Last_Message";
         public static final String CONV_LAST_MESSAGE_SENDER_COLUMN = "conv_Last_Message_Sender";
         public static final String CONV_LAST_MESSAGE_DATE_COLUMN = "conv_Last_Message_Date";
