@@ -144,10 +144,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(result.moveToNext()){
             //Converting int to boolean
             boolean tempRememberlogin = false;
-            if(result.getInt(3) == 1){
+            if(result.getInt(4) == 1){
                 tempRememberlogin = true;
             }
-            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(4)));
+            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), tempRememberlogin, result.getString(5)));
         }
 
         //Closing and returning
