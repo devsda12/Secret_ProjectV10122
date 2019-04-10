@@ -116,7 +116,7 @@ public class ProfilePicActivity extends AppCompatActivity {
             public void onResponse(NetworkResponse response) {
                 progressDialog.dismiss();
                 common.displayToast(ProfilePicActivity.this, new String(response.data));
-                new DatabaseHelper(ProfilePicActivity.this).storeProfilePic(getBitmapAsByteArray(imageBitmap), mainprefs.getString("activeAccId", "none"));
+                new DatabaseHelper(ProfilePicActivity.this).storeProfilePic(common.getBitmapAsByteArray(imageBitmap), mainprefs.getString("activeAccId", "none"));
                 finish();
             }
         }, new Response.ErrorListener() {
@@ -141,7 +141,7 @@ public class ProfilePicActivity extends AppCompatActivity {
             protected Map<String, DataPart> getByteData(){
                 Map<String, DataPart> params = new HashMap<>();
                 String imagename = mainprefs.getString("activeAccId", "none") + "_ProfilePicture";
-                params.put("profilePic", new DataPart(imagename + ".png", getBitmapAsByteArray(imageBitmap)));
+                params.put("profilePic", new DataPart(imagename + ".png", common.getBitmapAsByteArray(imageBitmap)));
                 return params;
             }
 

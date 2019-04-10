@@ -4,6 +4,7 @@ import android.app.Activity;
 import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.provider.ContactsContract;
 import android.support.annotation.NonNull;
 import android.util.Log;
@@ -32,6 +33,7 @@ import com.google.firebase.iid.InstanceIdResult;
 import org.json.JSONException;
 import org.json.JSONObject;
 
+import java.io.ByteArrayOutputStream;
 import java.text.SimpleDateFormat;
 import java.util.Date;
 import java.util.List;
@@ -50,6 +52,15 @@ public class Common {
     public int getRandomNumberInRange(int min, int max){
         Random random = new Random();
         return random.nextInt((max - min) + 1) + min;
+    }
+
+    //Method that converts bitmap image to bytearray. This is used for the database as well as the multipart request
+    public byte[] getBitmapAsByteArray(Bitmap bitmap) {
+        ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+
+        //The quality under here determines the quality of the compressed image. Set to 0 now. This will save data.
+        bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
+        return outputStream.toByteArray();
     }
 
     //Method to display toasts

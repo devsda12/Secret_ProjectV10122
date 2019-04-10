@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
@@ -27,6 +28,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonArrayRequest;
 import com.android.volley.toolbox.Volley;
 
@@ -169,6 +171,9 @@ public class ConvSelection extends AppCompatActivity {
             return;
         }
 
+        //Getting the current conv_Id's with profile pic id's from the database
+        List<Obj_ConvInfo> templist = dbHelper.fetchConvIdWithProfilePicId(mainPrefs.getString("activeAccId", "none"));
+
         //Now making the json object
         JSONArray tempRequestJsonArray = new JSONArray();
         JSONObject tempRequestJson = new JSONObject();
@@ -176,6 +181,19 @@ public class ConvSelection extends AppCompatActivity {
             tempRequestJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
             tempRequestJson.put("acc_Id", mainPrefs.getString("activeAccId", "none"));
             tempRequestJsonArray.put(tempRequestJson);
+
+            for(int i = 0; i < templist.size(); i++){
+                JSONObject tempJsonObject = new JSONObject();
+                tempJsonObject.put("conv_Id", templist.get(i).getConv_Id());
+
+                //Checking if null
+                if(templist.get(i).getConvPartner_ProfilePicId() == null){
+                    tempJsonObject.put("profilePic_Id", "null");
+                } else {
+                    tempJsonObject.put("profilePic_Id", templist.get(i).getConvPartner_ProfilePicId());
+                }
+                tempRequestJsonArray.put(tempJsonObject);
+            }
         } catch (JSONException e) {
             common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
             reloadPb.setVisibility(View.INVISIBLE);
@@ -198,10 +216,17 @@ public class ConvSelection extends AppCompatActivity {
                         String tempConvAccId = mainPrefs.getString("activeAccId", "none");
                         String tempConvPartnerId = tempJsonObject.getString("partner_Id");
                         String tempConvPartnerUsername = tempJsonObject.getString("partner_Username");
+                        String tempConvNewProfileId = tempJsonObject.getString("newProfilePictureId");
                         String tempConvLastMessage = tempJsonObject.getString("last_Message");
                         String tempConvLastMessageSender = tempJsonObject.getString("message_Sender");
                         String tempConvLastMessageDate = tempJsonObject.getString("message_Date");
-                        updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, tempConvLastMessage, tempConvLastMessageSender, tempConvLastMessageDate));
+
+                        //If the new profile picture ID is something else than null a new image will be requested
+                        if (!tempConvNewProfileId.equals("null")){
+                            requestProfilePicture(queue, tempConvId, tempConvNewProfileId);
+                        }
+
+                        updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, null, tempConvNewProfileId, tempConvLastMessage, tempConvLastMessageSender, tempConvLastMessageDate));
                     } catch (JSONException e){
                         common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
                         reloadPb.setVisibility(View.INVISIBLE);
@@ -234,6 +259,26 @@ public class ConvSelection extends AppCompatActivity {
 
         //Adding request to the queue
         queue.add(jsonArrayRequest);
+    }
+
+    //Function to request the profile pictures
+    private void requestProfilePicture(RequestQueue queue, final String conv_Id, final String profilePicId){
+        //Making the request
+        ImageRequest profilePicRequest = new ImageRequest(common.apiUrl + "/sapp_getProfilePic/" + profilePicId, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                Log.d("ConvSelection", "Storing image on response of imagerequest");
+                dbHelper.storeConvProfilePicture(common.getBitmapAsByteArray(response), profilePicId, conv_Id);
+                refreshAdapter();
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("ConvSelection", "Error on response of the imagerequest");
+            }
+        });
+
+        queue.add(profilePicRequest);
     }
 
     //Function to refresh the adapter

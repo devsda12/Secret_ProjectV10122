@@ -8,9 +8,7 @@
 
     <include
         android:id="@+id/profileToolbar"
-        layout="@layout/toolbar"
-        android:layout_width="none"
-        android:layout_height="none" />
+        layout="@layout/toolbar" />
 
     <androidx.cardview.widget.CardView
         android:id="@+id/cardView2"

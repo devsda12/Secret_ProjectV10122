@@ -285,6 +285,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN, convInfoList.get(j).getConvLast_Message());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_SENDER_COLUMN, convInfoList.get(j).getConvLast_MessageSender());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(j).getConvLast_MessageDate());
+
+                //If the profile picture ID is updated it needs to be stored as well
+                if(!convInfoList.get(j).getConvPartner_ProfilePicId().equals("null")){
+                    tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN, convInfoList.get(j).getConvPartner_ProfilePicId());
+                }
+
                 long tempResult = dbWrite.update(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, tempContentValues, DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
                 if(tempResult == -1){
                     tempSelectResult.close();
@@ -310,6 +316,12 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN, convInfoList.get(i).getConvAcc_Id());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_ID_COLUMN, convInfoList.get(i).getConvPartner_Id());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_USERNAME_COLUMN, convInfoList.get(i).getConvPartner_Username());
+
+            //If the profile picture ID is updated it needs to be stored as well
+            if(!convInfoList.get(i).getConvPartner_ProfilePicId().equals("null")){
+                tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN, convInfoList.get(i).getConvPartner_ProfilePicId());
+            }
+
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN, convInfoList.get(i).getConvLast_Message());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_SENDER_COLUMN, convInfoList.get(i).getConvLast_MessageSender());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(i).getConvLast_MessageDate());
@@ -327,6 +339,23 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         return true;
     }
 
+    //Method to add a profile picture to the conv_Table
+    public boolean storeConvProfilePicture(byte[] profilePic, String profilePicId, String conv_Id){
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
+
+        ContentValues newProfilePictureValues = new ContentValues();
+        newProfilePictureValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_COLUMN, profilePic);
+        newProfilePictureValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN, profilePicId);
+
+        long result = dbWrite.update(DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME, newProfilePictureValues, DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{conv_Id});
+
+        if(result == -1){
+            return false;
+        } else {
+            return true;
+        }
+    }
+
     //Fetch all convs by acc_Id
     public List<Obj_ConvInfo> fetchAllConvThumbnails(String acc_Id){
         //Getting reference to the database
@@ -338,13 +367,27 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Putting results in new list
         List<Obj_ConvInfo> convInfoList = new ArrayList<>();
         while(result.moveToNext()){
-            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getString(6), result.getString(7), result.getString(8)));
+            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getBlob(4), result.getString(5), result.getString(6), result.getString(7), result.getString(8)));
         }
 
         //Closing and returning
         result.close();
         db.close();
         return convInfoList;
+    }
+
+    public List<Obj_ConvInfo> fetchConvIdWithProfilePicId(String acc_Id){
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        List<Obj_ConvInfo> returnList = new ArrayList<>();
+
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + ", " + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+
+        while (result.moveToNext()){
+            returnList.add(new Obj_ConvInfo(result.getString(0), null, null, null, null, result.getString(1), null, null, null));
+        }
+
+        return returnList;
     }
 
     //End of conv_Table functions

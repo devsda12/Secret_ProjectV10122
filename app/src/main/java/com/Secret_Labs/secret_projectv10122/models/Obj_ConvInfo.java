@@ -7,16 +7,20 @@ public class Obj_ConvInfo {
     private String convAcc_Id;
     private String convPartner_Id;
     private String convPartner_Username;
+    private byte[] convPartner_ProfilePic;
+    private String convPartner_ProfilePicId;
     private String convLast_Message;
     private String convLast_MessageSender;
     private String convLast_MessageDate;
 
 
-    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, String convLast_Message, String convLast_MessageSender, String convLast_MessageDate) {
+    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, byte[] convPartner_ProfilePic, String convPartner_ProfilePicId, String convLast_Message, String convLast_MessageSender, String convLast_MessageDate) {
         this.conv_Id = conv_Id;
         this.convAcc_Id = convAcc_Id;
         this.convPartner_Id = convPartner_Id;
         this.convPartner_Username = convPartner_Username;
+        this.convPartner_ProfilePic = convPartner_ProfilePic;
+        this.convPartner_ProfilePicId = convPartner_ProfilePicId;
         this.convLast_Message = convLast_Message;
         this.convLast_MessageSender = convLast_MessageSender;
         this.convLast_MessageDate = convLast_MessageDate;
@@ -52,6 +56,22 @@ public class Obj_ConvInfo {
 
     public void setConvPartner_Username(String convPartner_Username) {
         this.convPartner_Username = convPartner_Username;
+    }
+
+    public byte[] getConvPartner_ProfilePic() {
+        return convPartner_ProfilePic;
+    }
+
+    public void setConvPartner_ProfilePic(byte[] convPartner_ProfilePic) {
+        this.convPartner_ProfilePic = convPartner_ProfilePic;
+    }
+
+    public String getConvPartner_ProfilePicId() {
+        return convPartner_ProfilePicId;
+    }
+
+    public void setConvPartner_ProfilePicId(String convPartner_ProfilePicId) {
+        this.convPartner_ProfilePicId = convPartner_ProfilePicId;
     }
 
     public String getConvLast_Message() {

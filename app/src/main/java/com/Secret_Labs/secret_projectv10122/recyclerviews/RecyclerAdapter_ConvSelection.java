@@ -1,6 +1,7 @@
 package com.Secret_Labs.secret_projectv10122.recyclerviews;
 
 import android.content.Context;
+import android.graphics.BitmapFactory;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -42,6 +43,11 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
 
         holder.convsel_partner_name.setText(conv_item.getConvPartner_Username());
 
+        //If the user has a custom picture now placing this image there
+        if(conv_item.getConvPartner_ProfilePic() != null){
+            holder.convsel_profilePicture.setImageBitmap(BitmapFactory.decodeByteArray(conv_item.getConvPartner_ProfilePic(), 0, conv_item.getConvPartner_ProfilePic().length));
+        }
+
         //Formatting the text to put in the last message with sender
         String tempLastMessage = conv_item.getConvLast_Message();
         if(tempLastMessage.length() > 30){
@@ -67,12 +73,14 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
 
         //Put the to fill layout items over here
         TextView convsel_partner_name, convsel_last_message;
+        ImageView convsel_profilePicture;
 
         public RecyclerviewHolder(View itemView){
             super(itemView);
 
             convsel_partner_name = itemView.findViewById(R.id.convsel_partner_name);
             convsel_last_message = itemView.findViewById(R.id.convsel_last_message);
+            convsel_profilePicture = itemView.findViewById(R.id.convSel_PartnerProfilePic);
         }
     }
 
