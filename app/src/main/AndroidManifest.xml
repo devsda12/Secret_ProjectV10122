@@ -12,26 +12,29 @@
         android:roundIcon="@mipmap/sapp_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfilePicActivity"></activity>
-        <activity android:name=".aboutActivity" />
-        <activity android:name=".ChangePass" />
-        <activity android:name=".SettingsActivity" />
-        <activity android:name=".StatisticsActivity" />
-        <activity android:name=".Messenger" />
-        <activity android:name=".NewConvSelection" />
-        <activity android:name=".ConvSelection" />
-        <activity android:name=".CreateAccActivity" />
-        <activity android:name=".LoginActivity" />
+        <activity android:name=".ProfilePicActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".aboutActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".ChangePass"  android:screenOrientation="portrait"/>
+        <activity android:name=".SettingsActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".StatisticsActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".Messenger"  android:screenOrientation="portrait"/>
+        <activity android:name=".NewConvSelection"  android:screenOrientation="portrait"/>
+        <activity android:name=".ConvSelection"  android:screenOrientation="portrait"/>
+        <activity android:name=".CreateAccActivity"  android:screenOrientation="portrait"/>
+        <activity android:name=".LoginActivity"  android:screenOrientation="portrait"/>
         <activity
             android:name=".SplashActivity"
-            android:theme="@style/SplashTheme">
+            android:theme="@style/SplashTheme"
+            android:screenOrientation="portrait">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".AccountSelection" /> <!-- Under here the firebase notification service -->
+        <activity android:name=".AccountSelection"  android:screenOrientation="portrait"/>
+
+        <!-- Under here the firebase notification service -->
         <service android:name=".firebase_messaging.SappFireBaseMessagingService">
             <intent-filter>
                 <action android:name="com.google.firebase.MESSAGING_EVENT" />

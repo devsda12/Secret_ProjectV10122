@@ -266,6 +266,18 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         }
     }
 
+    public byte[] getProfilePic(String acc_Id){
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?;", new String[]{acc_Id});
+        result.moveToFirst();
+
+        byte[] returnImage = result.getBlob(0);
+        result.close();
+        dbRead.close();
+        return returnImage;
+    }
+
     //End of acc_Table functions
 
     //Start of conv_Table functions

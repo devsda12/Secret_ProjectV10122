@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
@@ -55,6 +56,12 @@ public class ProfilePicActivity extends AppCompatActivity {
         Button selectButton = (Button) findViewById(R.id.buttonPicSelect);
         Button submitButton = (Button) findViewById(R.id.buttonPicSubmit);
         selectedProfilepic = (ImageView) findViewById(R.id.imagePicProfilePreview);
+
+        //Setting the stored profile pic as default
+        byte[] storedImage = new DatabaseHelper(this).getProfilePic(mainprefs.getString("activeAccId", "none"));
+        if(storedImage != null){
+            selectedProfilepic.setImageBitmap(BitmapFactory.decodeByteArray(storedImage, 0, storedImage.length));
+        }
 
         selectButton.setOnClickListener(new View.OnClickListener() {
             @Override
