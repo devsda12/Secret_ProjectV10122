@@ -63,6 +63,15 @@
     <!-- changeProfilePicture ACTIVITY ENDS HERE -->
 
 
+    <!-- About ACTIVITY STARTS HERE -->
+    <string name="aboutAppTitle">SecureApp Messenger</string>
+    <string name="aboutVersion">Version 1.01.22</string>
+    <string name="aboutCopyright">© 2019 SAPP Inc.</string>
+    <string name="aboutName1">Jasper Balster</string>
+    <string name="aboutName2">Remon Hoogendijk</string>
+    <!-- About ACTIVITY ENDS HERE -->
+
+
     <!-- TOOLBAR SECTION STARTS HERE -->
 
     <!-- Toolbar Titles under here -->
