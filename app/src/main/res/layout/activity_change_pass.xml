@@ -11,11 +11,11 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout3"
-        android:layout_width="259dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="173dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:hint="@string/changpass_oldPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -30,11 +30,11 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout4"
-        android:layout_width="263dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:hint="@string/changpass_newPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -49,11 +49,11 @@
 
     <android.support.design.widget.TextInputLayout
         android:id="@+id/textInputLayout5"
-        android:layout_width="268dp"
+        android:layout_width="0dp"
         android:layout_height="wrap_content"
-        android:layout_marginStart="20dp"
+        android:layout_marginStart="10dp"
         android:layout_marginTop="20dp"
-        android:layout_marginEnd="20dp"
+        android:layout_marginEnd="10dp"
         android:hint="@string/changpass_repeatNewPass"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

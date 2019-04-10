@@ -9,6 +9,7 @@ import android.net.Uri;
 import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
@@ -41,6 +42,14 @@ public class ProfilePicActivity extends AppCompatActivity {
         common = new Common();
         mainprefs = getSharedPreferences(common.mainPrefsName, 0);
 
+        //Setting the custom toolbar for the activity
+        Toolbar newConvSelToolbar = (Toolbar) findViewById(R.id.profileToolbar);
+        newConvSelToolbar.setTitle(R.string.toolbar_title_changeProfilePicture);
+        setSupportActionBar(newConvSelToolbar);
+
+        //Adding a back button to the toolbar
+        getSupportActionBar().setDisplayHomeAsUpEnabled(true);
+        getSupportActionBar().setDisplayShowHomeEnabled(true);
 
         //First defining the buttons and the imageview
         Button selectButton = (Button) findViewById(R.id.buttonPicSelect);
@@ -157,5 +166,11 @@ public class ProfilePicActivity extends AppCompatActivity {
         //The quality under here determines the quality of the compressed image. Set to 0 now. This will save data.
         bitmap.compress(Bitmap.CompressFormat.PNG, 0, outputStream);
         return outputStream.toByteArray();
+    }
+    //Method that runs when back button is pressed
+    @Override
+    public boolean onSupportNavigateUp() {
+        onBackPressed();
+        return true;
     }
 }
