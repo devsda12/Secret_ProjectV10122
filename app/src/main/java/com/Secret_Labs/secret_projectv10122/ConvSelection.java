@@ -222,7 +222,7 @@ public class ConvSelection extends AppCompatActivity {
                         String tempConvLastMessageDate = tempJsonObject.getString("message_Date");
 
                         //If the new profile picture ID is something else than null a new image will be requested
-                        if (!tempConvNewProfileId.equals("null")){
+                        if (!tempConvNewProfileId.equals("null") && !tempConvNewProfileId.equals("None")){
                             requestProfilePicture(queue, tempConvId, tempConvNewProfileId);
                         }
 
