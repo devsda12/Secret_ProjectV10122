@@ -42,5 +42,11 @@ dependencies {
     implementation 'com.android.support:support-media-compat:28.0.0'
     implementation 'androidx.constraintlayout:constraintlayout:1.1.3'
     implementation 'androidx.cardview:cardview:1.0.0'
+
+    //Using the 2.7.0 version because the newer versions only support androidx
+    implementation 'com.theartofdev.edmodo:android-image-cropper:2.7.0'
+
+    //Overriding the exifinterface. This is due to the use of older version 2.7.0 of imagecropper. The 2.8.0 version uses androidx library's and these conflict with the older android.support libraries
+    implementation 'com.android.support:exifinterface:28.0.0'
 }
 apply plugin: 'com.google.gms.google-services'

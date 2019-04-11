@@ -11,22 +11,16 @@
         android:layout_width="137dp"
         android:layout_height="50dp"
         android:layout_marginStart="56dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="25dp"
-        android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/profilePicSelect"
         android:textColor="@color/colorBackground"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toStartOf="@+id/buttonPicSelect2"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintBottom_toTopOf="@+id/buttonPicSubmit"
+        app:layout_constraintStart_toStartOf="parent" />
 
     <Button
         android:id="@+id/buttonPicSubmit"
         android:layout_width="137dp"
         android:layout_height="50dp"
-        android:layout_marginStart="25dp"
         android:layout_marginTop="10dp"
         android:layout_marginEnd="56dp"
         android:layout_marginBottom="10dp"
@@ -35,8 +29,18 @@
         android:textColor="@color/colorBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toEndOf="@+id/buttonPicSelect"
         app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+
+    <Button
+        android:id="@+id/buttonPicCrop"
+        android:layout_width="137dp"
+        android:layout_height="50dp"
+        android:layout_marginStart="56dp"
+        android:backgroundTint="@color/colorPrimary"
+        android:text="@string/profilePicCrop"
+        android:textColor="@color/colorWhite"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPicSubmit" />
 
     <include
         android:id="@+id/profileToolbar"

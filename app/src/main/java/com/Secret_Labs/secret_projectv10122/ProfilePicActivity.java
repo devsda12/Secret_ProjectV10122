@@ -23,6 +23,7 @@ import com.android.volley.Request;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.Volley;
+import com.theartofdev.edmodo.cropper.CropImage;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
@@ -34,6 +35,7 @@ public class ProfilePicActivity extends AppCompatActivity {
     Common common;
     SharedPreferences mainprefs;
     Bitmap pictureBitmap = null;
+    Uri selectedImageUri = null;
     ImageView selectedProfilepic;
 
     @Override
@@ -55,6 +57,7 @@ public class ProfilePicActivity extends AppCompatActivity {
         //First defining the buttons and the imageview
         Button selectButton = (Button) findViewById(R.id.buttonPicSelect);
         Button submitButton = (Button) findViewById(R.id.buttonPicSubmit);
+        Button cropButton = (Button) findViewById(R.id.buttonPicCrop);
         selectedProfilepic = (ImageView) findViewById(R.id.imagePicProfilePreview);
 
         //Setting the stored profile pic as default
@@ -75,6 +78,16 @@ public class ProfilePicActivity extends AppCompatActivity {
             public void onClick(View v) {
                 if (pictureBitmap != null){
                     sendImageToServer(pictureBitmap);
+                }
+            }
+        });
+
+        cropButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                if (selectedImageUri != null){
+                    CropImage.activity(selectedImageUri)
+                            .start(ProfilePicActivity.this);
                 }
             }
         });
@@ -100,10 +113,10 @@ public class ProfilePicActivity extends AppCompatActivity {
             switch (requestCode){
                 case 12:
                     //data.getData returns the content URI for the selected Image
-                    Uri selectedImage = data.getData();
+                    selectedImageUri = data.getData();
 
                     try {
-                        pictureBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImage);
+                        pictureBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
 
                         //Rescaling the image to fit inside the database and be displayed in the preview
                         pictureBitmap = Bitmap.createScaledBitmap(pictureBitmap, 512, 512, false);
@@ -113,6 +126,22 @@ public class ProfilePicActivity extends AppCompatActivity {
                         common.displayToast(ProfilePicActivity.this, "There was an error on the selected image");
                     }
                     break;
+                case CropImage.CROP_IMAGE_ACTIVITY_REQUEST_CODE:
+                    CropImage.ActivityResult result = CropImage.getActivityResult(data);
+
+                    //Getting the result uri
+                    selectedImageUri = result.getUri();
+
+                    try {
+                        pictureBitmap = MediaStore.Images.Media.getBitmap(this.getContentResolver(), selectedImageUri);
+
+                        //Rescaling the image to fit inside the database and be displayed in the preview
+                        pictureBitmap = Bitmap.createScaledBitmap(pictureBitmap, 512, 512, false);
+
+                        selectedProfilepic.setImageBitmap(pictureBitmap);
+                    } catch (IOException e) {
+                        common.displayToast(ProfilePicActivity.this, "There was an error on the selected image");
+                    }
             }
     }
 

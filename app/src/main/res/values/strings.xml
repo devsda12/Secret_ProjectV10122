@@ -60,6 +60,7 @@
     <!-- changeProfilePicture ACTIVITY STARTS HERE -->
     <string name="profilePicSelect">Select image</string>
     <string name="profilePicSubmit">Submit image</string>
+    <string name="profilePicCrop">Crop image</string>
     <!-- changeProfilePicture ACTIVITY ENDS HERE -->
 
 

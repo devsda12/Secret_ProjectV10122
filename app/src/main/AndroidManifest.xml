@@ -12,7 +12,9 @@
         android:roundIcon="@mipmap/sapp_launcher_round"
         android:supportsRtl="true"
         android:theme="@style/AppTheme">
-        <activity android:name=".ProfilePicActivity" android:screenOrientation="portrait"></activity>
+        <activity android:name=".ProfilePicActivity" android:screenOrientation="portrait"/>
+        <activity android:name="com.theartofdev.edmodo.cropper.CropImageActivity"
+            android:theme="@style/AppThemeWithActionBar"/>
         <activity android:name=".aboutActivity"  android:screenOrientation="portrait"/>
         <activity android:name=".ChangePass"  android:screenOrientation="portrait"/>
         <activity android:name=".SettingsActivity"  android:screenOrientation="portrait"/>
