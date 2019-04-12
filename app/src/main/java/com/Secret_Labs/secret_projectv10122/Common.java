@@ -21,6 +21,7 @@ import com.android.volley.Request;
 import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
+import com.android.volley.toolbox.ImageRequest;
 import com.android.volley.toolbox.JsonObjectRequest;
 import com.android.volley.toolbox.JsonRequest;
 import com.android.volley.toolbox.StringRequest;
@@ -175,80 +176,9 @@ public class Common {
                 loginAfterTokenRetrieval(context, queue, username, password, idToken, fromWhereRemember, finish);
             }
         });
-
-        /*
-        //If not empty making a JSON object with the values
-        JSONObject tempAuthJson = new JSONObject();
-        try{
-            tempAuthJson.put("device_Id", mainPrefs.getString("device_Id", "0"));
-            tempAuthJson.put("acc_Username", username);
-            tempAuthJson.put("acc_Password", password);
-        } catch (JSONException e) {
-            displayToast(context, "Login Failed: JSON Exception occurred");
-            return;
-        }
-
-        //Creating the request
-        JsonObjectRequest authRequest = new JsonObjectRequest(Request.Method.POST, apiUrl + "/sapp_login", tempAuthJson,
-                new Response.Listener<JSONObject>() {
-                    @Override
-                    public void onResponse(JSONObject response) {
-                        try {
-                            String responseAccId = response.getString("acc_Id");
-                            displayToast(context, responseAccId);
-
-                            // 0 means login is invoked from acc selection or from startup, 1 means to remember the psswd and 2 means don't from login activity
-                            if(fromWhereRemember == 1 || fromWhereRemember == 2) {
-                                //Adding account details to the database after getting the current time
-                                boolean insertResult = false;
-                                SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
-                                String currentDT = sdf.format(new Date());
-                                if (fromWhereRemember == 1) {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, true, currentDT));
-                                } else {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, false, currentDT));
-                                }
-
-                                //Checking if the insert was successful
-                                if (!insertResult) {
-                                    displayToast(context, "Login Failed: Account already exists");
-                                    return;
-                                }
-                            }
-
-                            //Setting in the sharedpreferences which acc_Id is now active
-                            SharedPreferences.Editor tempEditor = mainPrefs.edit();
-                            tempEditor.putString("activeAccId", responseAccId);
-                            tempEditor.commit();
-
-                            //Making Intent for the conv activity
-                            Intent goToConvSelection = new Intent(context, ConvSelection.class);
-                            context.startActivity(goToConvSelection);
-                            if(finish) {
-                                ((Activity) context).finish();
-                            }
-                        } catch (JSONException e){
-                            displayToast(context, "Login Failed: JSON Exception occurred");
-                        }
-                    }
-                }, new Response.ErrorListener() {
-                    @Override
-                    public void onErrorResponse(VolleyError error) {
-                        displayToast(context, "Login Failed: Username or Password is incorrect");
-
-                        //If username or password is incorrect from acc selection or app startup the login activity should be started
-                        if(fromWhereRemember == 0){
-                            Intent goToLogin = new Intent(context, LoginActivity.class);
-                            context.startActivity(goToLogin);
-                        }
-                    }
-        });
-        //Adding request to queue
-        queue.add(authRequest);
-        */
     }
 
-    private void loginAfterTokenRetrieval(final Context context, RequestQueue queue, final String username, final String password, final String idToken, final int fromWhereRemember, final boolean finish){
+    private void loginAfterTokenRetrieval(final Context context, final RequestQueue queue, final String username, final String password, final String idToken, final int fromWhereRemember, final boolean finish){
         Log.d("LoginNotice", "Firebase ID being send: " + idToken);
         //Continuing with making a JSON object with the values
         JSONObject tempAuthJson = new JSONObject();
@@ -257,6 +187,12 @@ public class Common {
             tempAuthJson.put("device_FirebaseToken", idToken);
             tempAuthJson.put("acc_Username", username);
             tempAuthJson.put("acc_Password", password);
+
+            //If the account is present, also send the profile pic id with
+            String tempProfilePicId = dbHelper.fetchProfilePicIdFromUsername(username);
+            if(tempProfilePicId != null){
+                tempAuthJson.put("profilePicId", tempProfilePicId);
+            }
         } catch (JSONException e) {
             displayToast(context, "Login Failed: JSON Exception occurred");
             return;
@@ -269,6 +205,11 @@ public class Common {
                     public void onResponse(JSONObject response) {
                         try {
                             String responseAccId = response.getString("acc_Id");
+
+                            String responseProfilePicId = response.getString("profilePicId");
+                            if(responseProfilePicId.equals("null"))
+                                responseProfilePicId = null;
+
                             displayToast(context, responseAccId);
 
                             // 0 means login is invoked from acc selection or from startup, 1 means to remember the psswd and 2 means don't from login activity
@@ -278,9 +219,9 @@ public class Common {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String currentDT = sdf.format(new Date());
                                 if (fromWhereRemember == 1) {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, null, true, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, null, responseProfilePicId, true, currentDT));
                                 } else {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, null, false, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, null, responseProfilePicId, false, currentDT));
                                 }
 
                                 //Checking if the insert was successful
@@ -294,6 +235,11 @@ public class Common {
                             SharedPreferences.Editor tempEditor = mainPrefs.edit();
                             tempEditor.putString("activeAccId", responseAccId);
                             tempEditor.commit();
+
+                            //Fetching profile picture if needed
+                            if(responseProfilePicId != null){
+                                requestProfilePicture(queue, responseProfilePicId, responseAccId);
+                            }
 
                             //Making Intent for the conv activity
                             Intent goToConvSelection = new Intent(context, ConvSelection.class);
@@ -320,6 +266,26 @@ public class Common {
         //Adding request to queue
         queue.add(authRequest);
     }
+
+    //Function to request the profile pictures
+    private void requestProfilePicture(RequestQueue queue, final String profilePicId, final String acc_Id){
+        //Making the request
+        ImageRequest profilePicRequest = new ImageRequest(apiUrl + "/sapp_getProfilePic/" + profilePicId, new Response.Listener<Bitmap>() {
+            @Override
+            public void onResponse(Bitmap response) {
+                Log.d("Common", "Storing image on response of imagerequest for the profile picture of the active acc");
+                dbHelper.storeProfilePic(getBitmapAsByteArray(response), acc_Id);
+            }
+        }, 0, 0, null, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                Log.d("Common", "Error on response of the imagerequest for storing the profile picture of the logged in account");
+            }
+        });
+
+        queue.add(profilePicRequest);
+    }
+
 
     //Method to logout with the api
     public void logout(final Context context, RequestQueue queue, final boolean finish){

@@ -40,6 +40,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN + " BLOB,"
+                + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN + " INTEGER,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN + " TEXT" + ")";
 
@@ -91,6 +92,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN, accountInfo.getAcc_Id());
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN, accountInfo.getAcc_Username());
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_PASSWORD_COLUMN, accountInfo.getAcc_Password());
+        addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_ID_COLUMN, accountInfo.getAcc_ProfilePicId());
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN, tempRememberLogin);
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN, accountInfo.getAcc_Last_Login());
 
@@ -144,10 +146,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         while(result.moveToNext()){
             //Converting int to boolean
             boolean tempRememberlogin = false;
-            if(result.getInt(4) == 1){
+            if(result.getInt(5) == 1){
                 tempRememberlogin = true;
             }
-            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), result.getBlob(3), tempRememberlogin, result.getString(5)));
+            accList.add(new Obj_AccountInfo(result.getString(0), result.getString(1), result.getString(2), result.getBlob(3), result.getString(4), tempRememberlogin, result.getString(6)));
         }
 
         //Closing and returning
@@ -195,6 +197,26 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         String[] returnString = new String[]{result.getString(0), result.getString(1)};
         result.close();
         return returnString;
+    }
+
+    //Method to check if a given username is present in the current database and then fetching the currentProfilepicId
+    public String fetchProfilePicIdFromUsername(String username){
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_USERNAME_COLUMN + " = ?", new String[]{username});
+        result.moveToFirst();
+
+        if(result.getCount() == 0){
+            result.close();
+            dbRead.close();
+            return null;
+        }
+
+        //If there is an result returning the result
+        String returnPPId = result.getString(0);
+        result.close();
+        dbRead.close();
+        return returnPPId;
     }
 
     //Method to return the username from a given acc_Id

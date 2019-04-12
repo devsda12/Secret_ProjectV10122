@@ -16,6 +16,7 @@ public class DatabaseInfo {
         public static final String ACC_USERNAME_COLUMN = "acc_Username";
         public static final String ACC_PASSWORD_COLUMN = "acc_Password";
         public static final String ACC_PROFILE_PICTURE_COLUMN = "acc_Profile_Picture";
+        public static final String ACC_PROFILE_PICTURE_ID_COLUMN = "acc_Profile_Picture_Id";
         public static final String ACC_REMEMBERLOGIN_COLUMN = "acc_Rememberlogin";
         public static final String ACC_LASTLOGIN_COLUMN = "acc_Lastlogin";
     }
