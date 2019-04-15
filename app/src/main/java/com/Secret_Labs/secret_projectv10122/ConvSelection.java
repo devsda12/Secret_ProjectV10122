@@ -252,7 +252,9 @@ public class ConvSelection extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(ConvSelection.this, "Refresh Failed: No conversations started yet");
+                if(common.serverDebugToasts) {
+                    common.displayToast(ConvSelection.this, "Refresh Failed: No conversations started yet");
+                }
                 reloadPb.setVisibility(View.INVISIBLE);
             }
         });

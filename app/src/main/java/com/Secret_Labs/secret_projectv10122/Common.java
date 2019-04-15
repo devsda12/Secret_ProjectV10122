@@ -43,9 +43,10 @@ import java.util.Random;
 public class Common {
 
     //Common variables
-    String apiUrl = "http://54.36.98.223:5000";
+    public String apiUrl = "http://54.36.98.223:5000";
+    public boolean serverDebugToasts = false;
 
-    String mainPrefsName = "mainPrefs";
+    public String mainPrefsName = "mainPrefs";
     SharedPreferences mainPrefs;
     DatabaseHelper dbHelper;
 
@@ -90,7 +91,9 @@ public class Common {
                         // Here the response String is handled
                         tempEditor.putBoolean("apiConnection", true);
                         tempEditor.apply();
-                        displayToast(context, "Connected to API");
+                        if(serverDebugToasts) {
+                            displayToast(context, "Connected to API");
+                        }
                     }
                 }, new Response.ErrorListener() {
                     @Override
@@ -125,7 +128,9 @@ public class Common {
                     public void onResponse(JSONObject response) {
                         try {
                             String responseId = response.getString("device_Id");
-                            displayToast(context, response.getString("device_Id"));
+                            if(serverDebugToasts) {
+                                displayToast(context, response.getString("device_Id"));
+                            }
                             tempEditor.putString("device_Id", responseId);
                             tempEditor.apply();
                         } catch (JSONException e){
@@ -135,7 +140,9 @@ public class Common {
                 }, new Response.ErrorListener() {
                     @Override
                     public void onErrorResponse(VolleyError error) {
-                        displayToast(context, "Unsuccesful ID Exchange");
+                        if(serverDebugToasts) {
+                            displayToast(context, "Unsuccesful ID Exchange");
+                        }
                     }
         });
 
@@ -170,7 +177,9 @@ public class Common {
 
                 //Retrieving the token
                 String idToken = task.getResult().getToken();
-                displayToast(context, idToken);
+                if(serverDebugToasts) {
+                    displayToast(context, idToken);
+                }
 
                 //Continuing the login process
                 loginAfterTokenRetrieval(context, queue, username, password, idToken, fromWhereRemember, finish);
@@ -210,7 +219,9 @@ public class Common {
                             if(responseProfilePicId.equals("null"))
                                 responseProfilePicId = null;
 
-                            displayToast(context, responseAccId);
+                            if(serverDebugToasts) {
+                                displayToast(context, responseAccId);
+                            }
 
                             // 0 means login is invoked from acc selection or from startup, 1 means to remember the psswd and 2 means don't from login activity
                             if(fromWhereRemember == 1 || fromWhereRemember == 2) {

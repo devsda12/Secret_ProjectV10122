@@ -294,7 +294,9 @@ public class Messenger extends AppCompatActivity {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(Messenger.this, "Message retrieval failed: Server returned error");
+                if(common.serverDebugToasts) {
+                    common.displayToast(Messenger.this, "Message retrieval failed: Server returned error");
+                }
                 if(beforeMessageSend){
                     userAddMessage(currentConvId, dbHelper.returnUsernameFromAccId(mainPrefs.getString("activeAccId", "none")), currentPartnerUsername, messageText.getText().toString());
                     messageText.setText("");

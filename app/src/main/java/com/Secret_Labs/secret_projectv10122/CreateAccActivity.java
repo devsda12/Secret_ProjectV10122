@@ -96,7 +96,9 @@ public class CreateAccActivity extends AppCompatActivity {
                     public void onResponse(JSONObject response) {
                         try {
                             String responseAccId = response.getString("acc_Id");
-                            common.displayToast(CreateAccActivity.this, responseAccId);
+                            if(common.serverDebugToasts) {
+                                common.displayToast(CreateAccActivity.this, responseAccId);
+                            }
                             common.login(CreateAccActivity.this, queue, username.getText().toString(), password.getText().toString(), 2, true);
                         } catch (JSONException e){
                             common.displayToast(CreateAccActivity.this, "Account Creation Failed: JSON Exception occurred");

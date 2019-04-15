@@ -60,7 +60,7 @@ public class MessageVolleys {
         }
 
         //Making the request
-        JsonArrayRequest fetchCompleteConversationRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_getCompleteChat", tempRequestArray, new Response.Listener<JSONArray>() {
+        JsonArrayRequest fetchCompleteConversationRequest = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getCompleteChat", tempRequestArray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 List<Obj_DatabaseMessage> tempMessageList = new ArrayList<>();
@@ -93,7 +93,9 @@ public class MessageVolleys {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(context, "Message retrieval failed: Server returned error");
+                if(common.serverDebugToasts) {
+                    common.displayToast(context, "Message retrieval failed: Server returned error");
+                }
 
                 //Giving the convId free for refresh
                 Set<String> tempSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
@@ -139,7 +141,7 @@ public class MessageVolleys {
         }
 
         //Making the request itself
-        JsonArrayRequest fetchPartialConversationRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
+        JsonArrayRequest fetchPartialConversationRequest = new JsonArrayRequest(Request.Method.POST, common.apiUrl + "/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 List<Obj_DatabaseMessage> tempMessageList = new ArrayList<>();
@@ -172,7 +174,9 @@ public class MessageVolleys {
         }, new Response.ErrorListener() {
             @Override
             public void onErrorResponse(VolleyError error) {
-                common.displayToast(context, "Message retrieval failed: Server returned error");
+                if(common.serverDebugToasts) {
+                    common.displayToast(context, "Message retrieval failed: Server returned error");
+                }
 
                 //Giving the convId free for refresh
                 Set<String> tempSet = context.getSharedPreferences("mainPrefs", 0).getStringSet("wideSpreadUpdate", new HashSet<String>());
