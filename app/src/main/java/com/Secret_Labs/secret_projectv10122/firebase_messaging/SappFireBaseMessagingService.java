@@ -10,16 +10,12 @@ import android.graphics.BitmapFactory;
 import android.os.Build;
 import android.support.v4.app.NotificationCompat;
 import android.util.Log;
-import android.view.textclassifier.TextLinks;
 
-import com.Secret_Labs.secret_projectv10122.Common;
 import com.Secret_Labs.secret_projectv10122.Messenger;
 import com.Secret_Labs.secret_projectv10122.R;
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
-import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_DatabaseMessage;
 import com.android.volley.Request;
-import com.android.volley.RequestQueue;
 import com.android.volley.Response;
 import com.android.volley.VolleyError;
 import com.android.volley.toolbox.JsonArrayRequest;
@@ -234,7 +230,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         //First creating the notification builder
         NotificationCompat.Builder nBuilder = new NotificationCompat.Builder(this, "SAPP_Channel")
                 .setLargeIcon(BitmapFactory.decodeResource(getResources(), R.mipmap.sapp_launcher_v2))
-                .setSmallIcon(R.mipmap.sapp_launcher_v2)
+                .setSmallIcon(R.drawable.sapp_notif_icon_v2)
                 .setVibrate(new long[]{300, 500, 200, 150, 200, 150})
                 .setContentTitle("SAPP")
                 .setContentIntent(pendingIntent);
