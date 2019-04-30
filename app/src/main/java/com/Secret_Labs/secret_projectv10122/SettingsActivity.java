@@ -1,18 +1,12 @@
 package com.Secret_Labs.secret_projectv10122;
 
-import android.app.Activity;
-import android.app.ProgressDialog;
 import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.Bitmap;
-import android.net.Uri;
-import android.provider.MediaStore;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
-import android.widget.Toast;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -35,21 +29,21 @@ public class SettingsActivity extends AppCompatActivity {
         getSupportActionBar().setDisplayHomeAsUpEnabled(true);
         getSupportActionBar().setDisplayShowHomeEnabled(true);
 
-        CardView viewPass = (CardView) findViewById(R.id.cardViewPass);
-        CardView viewProfilePicture =  (CardView) findViewById(R.id.cardViewProfilePic);
+        CardView viewEditAccount = (CardView) findViewById(R.id.cardViewEditAccount);
+        CardView viewPass =  (CardView) findViewById(R.id.cardViewProfilePic);
         CardView viewStats = (CardView) findViewById(R.id.cardViewStats);
         CardView viewAbout = (CardView) findViewById(R.id.cardViewAbout);
 
+        viewEditAccount.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                startActivity(new Intent(SettingsActivity.this, Account.class));
+            }
+        });
         viewPass.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, ChangePass.class));
-            }
-        });
-        viewProfilePicture.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, ProfilePicActivity.class));
             }
         });
         viewStats.setOnClickListener(new View.OnClickListener() {

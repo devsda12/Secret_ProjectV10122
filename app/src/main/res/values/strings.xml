@@ -41,8 +41,8 @@
     <!-- SETTINGS ACTIVITY STARTS HERE -->
     <string name="statisticsButton">Statistics</string>
     <string name="aboutButton">About</string>
-    <string name="passButton">Change Password</string>
-    <string name="profilePicButton">Change Profile Picture</string>
+    <string name="notificationsButton">Enable Notifications</string>
+    <string name="editAccountButton">Edit Account</string>
     <!-- SETTINGS ACTIVITY ENDS HERE -->
 
     <!-- STATISTICS ACTIVITY STARTS HERE -->
