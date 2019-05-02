@@ -9,14 +9,18 @@ import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangePasswordDialog;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangeQuoteDialog;
+import com.Secret_Labs.secret_projectv10122.dialog_popups.myAccountDialogListener;
 
-public class Account extends AppCompatActivity {
+import java.util.ArrayList;
+
+public class Account extends AppCompatActivity implements myAccountDialogListener{
 
     FloatingActionButton profilePicButton;
     ImageView profilePicPreview;
@@ -85,6 +89,11 @@ public class Account extends AppCompatActivity {
         if(storedImage != null){
             profilePicPreview.setImageBitmap(BitmapFactory.decodeByteArray(storedImage, 0, storedImage.length));
         }
+    }
+
+    @Override
+    public void applyNewVariables(ArrayList<String> newVariables) {
+        Log.d("ApplyNewVariables", newVariables.toString());
     }
 
     //Method that runs when back button is pressed
