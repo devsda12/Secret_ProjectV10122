@@ -5,9 +5,11 @@ import android.app.Dialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
+import android.support.v4.app.FragmentManager;
 import android.support.v7.app.AppCompatDialogFragment;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
 
@@ -42,9 +44,18 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
 
                     }
                 })
-                .setPositiveButton(R.string.dialogPositiveButton, new DialogInterface.OnClickListener() {
+                .setPositiveButton(R.string.dialogPositiveButton, null);
+
+        final Dialog returnDialog = builder.create();
+
+        //Show listener for the custom submit button
+        returnDialog.setOnShowListener(new DialogInterface.OnShowListener() {
+            @Override
+            public void onShow(DialogInterface dialog) {
+                Button customSubmitButton = ((AlertDialog) returnDialog).getButton(AlertDialog.BUTTON_POSITIVE);
+                customSubmitButton.setOnClickListener(new View.OnClickListener() {
                     @Override
-                    public void onClick(DialogInterface dialog, int which) {
+                    public void onClick(View v) {
                         // perform password checks
                         if(checkPass()){
                             ArrayList<String> returnList = new ArrayList<>();
@@ -52,16 +63,19 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
                             returnList.add(newPassword1.getText().toString());
                             returnList.add(newPassword2.getText().toString());
                             listener.applyNewVariables(returnList);
+                            returnDialog.dismiss();
                         }
                     }
                 });
+            }
+        });
 
         oldPassword = customLayoutView.findViewById(R.id.oldPasswordEditText);
         newPassword1 = customLayoutView.findViewById(R.id.newPasswordEditText);
         newPassword2 = customLayoutView.findViewById(R.id.newPassword2EditText);
         errorMessageText = customLayoutView.findViewById(R.id.changePassTextView);
 
-        return builder.create();
+        return returnDialog;
     }
 
     public boolean checkPass(){
@@ -80,6 +94,7 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
             errorMessageText.setText("New Password is the same as old password");
             return false;
         }
+        errorMessageText.setText("");
         return true;
     }
 

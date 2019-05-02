@@ -59,7 +59,7 @@ public class ChangeQuoteDialog extends AppCompatDialogFragment {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-                quoteLengthCounter.setText(count + "/140");
+                quoteLengthCounter.setText(s.length() + "/140");
             }
 
             @Override
