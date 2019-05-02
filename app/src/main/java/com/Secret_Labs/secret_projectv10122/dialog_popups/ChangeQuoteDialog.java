@@ -6,9 +6,12 @@ import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
+import android.text.Editable;
+import android.text.TextWatcher;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.EditText;
+import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.R;
 
@@ -17,6 +20,7 @@ import java.util.ArrayList;
 public class ChangeQuoteDialog extends AppCompatDialogFragment {
 
     private EditText newQuote;
+    private TextView quoteLengthCounter;
     private myAccountDialogListener listener;
 
     @Override
@@ -44,6 +48,25 @@ public class ChangeQuoteDialog extends AppCompatDialogFragment {
                 });
 
         newQuote = customLayoutView.findViewById(R.id.changeQuoteEditText);
+        quoteLengthCounter = customLayoutView.findViewById(R.id.quoteLengthCounterTextView);
+
+        //Adding listener to detect char changes in the edittext
+        newQuote.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {
+                //Dont need
+            }
+
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                quoteLengthCounter.setText(count + "/140");
+            }
+
+            @Override
+            public void afterTextChanged(Editable s) {
+                //Dont need
+            }
+        });
 
         return builder.create();
     }
