@@ -2,6 +2,7 @@ package com.Secret_Labs.secret_projectv10122.dialog_popups;
 
 import android.app.AlertDialog;
 import android.app.Dialog;
+import android.content.Context;
 import android.content.DialogInterface;
 import android.os.Bundle;
 import android.support.v7.app.AppCompatDialogFragment;
@@ -14,12 +15,16 @@ import com.Secret_Labs.secret_projectv10122.Account;
 import com.Secret_Labs.secret_projectv10122.Common;
 import com.Secret_Labs.secret_projectv10122.R;
 
+import java.util.ArrayList;
+
 public class ChangePasswordDialog extends AppCompatDialogFragment {
 
     private EditText oldPassword;
     private EditText newPassword1;
     private EditText newPassword2;
     TextView errorMessageText;
+
+    private myAccountDialogListener listener;
 
 
     @Override
@@ -42,7 +47,11 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
                     public void onClick(DialogInterface dialog, int which) {
                         // perform password checks
                         if(checkPass()){
-                            // do stuff
+                            ArrayList<String> returnList = new ArrayList<>();
+                            returnList.add(oldPassword.getText().toString());
+                            returnList.add(newPassword1.getText().toString());
+                            returnList.add(newPassword2.getText().toString());
+                            listener.applyNewVariables(returnList);
                         }
                     }
                 });
@@ -63,7 +72,7 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
         }
         //Checking whether the password fields match
         if(!newPassword1.getText().toString().equals(newPassword2.getText().toString())){
-           errorMessageText.setText("Passwords do not match");
+            errorMessageText.setText("Passwords do not match");
             return false;
         }
         //Check if old password is the same as new password
@@ -72,5 +81,16 @@ public class ChangePasswordDialog extends AppCompatDialogFragment {
             return false;
         }
         return true;
+    }
+
+    @Override
+    public void onAttach(Context context) {
+        super.onAttach(context);
+
+        try {
+            listener = (myAccountDialogListener) context;
+        } catch (ClassCastException e) {
+            e.printStackTrace();
+        }
     }
 }
