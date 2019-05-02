@@ -21,8 +21,7 @@
         <EditText
             android:id="@+id/changeQuoteEditText"
             android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:inputType="textPassword" />/>
+            android:layout_height="match_parent" />
     </android.support.design.widget.TextInputLayout>
 
     <TextView
