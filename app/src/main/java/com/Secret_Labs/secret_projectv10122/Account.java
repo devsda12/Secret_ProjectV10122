@@ -4,6 +4,7 @@ import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
+import android.media.Image;
 import android.support.design.widget.FloatingActionButton;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
@@ -12,6 +13,8 @@ import android.view.View;
 import android.widget.ImageView;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
+import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangePasswordDialog;
+import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangeQuoteDialog;
 
 public class Account extends AppCompatActivity {
 
@@ -54,6 +57,26 @@ public class Account extends AppCompatActivity {
 
         //Setting the stored profile pic as preview
         refreshProfilePicture();
+
+        //Setting the button for changeQuote
+        ImageView changeQuotePencil = findViewById(R.id.changeQuotePencil);
+        changeQuotePencil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangeQuoteDialog changeQuoteDialog = new ChangeQuoteDialog();
+                changeQuoteDialog.show(getSupportFragmentManager(), "changeQuoteDialog");
+            }
+        });
+
+        //Setting the button for changePassword
+        ImageView changePasswordPencil = findViewById(R.id.changePasswordPencil);
+        changePasswordPencil.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                ChangePasswordDialog changePasswordDialog = new ChangePasswordDialog();
+                changePasswordDialog.show(getSupportFragmentManager(), "changePasswordDialog");
+            }
+        });
     }
 
     //Method to refresh the profile picture preview

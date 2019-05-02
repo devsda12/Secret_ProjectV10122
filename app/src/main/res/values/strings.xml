@@ -73,6 +73,13 @@
 
     <!-- Account ACTIVITY STARTS HERE -->
     <string name="changeQuoteHint">New Quote</string>
+    <string name="changeQuoteDialogTitle">Change Quote</string>
+    <string name="changePasswordHintOldPass">Old Password</string>
+    <string name="changePasswordHintNewPass1">New Password</string>
+    <string name="changePasswordHintNewPass2">Repeat Password</string>
+    <string name="changePasswordDialogTitle">Change Password</string>
+    <string name="dialogPositiveButton">Submit</string>
+    <string name="dialogNegativeButton">Cancel</string>
     <!-- Account ACTIVITY ENDS HERE -->
 
 

@@ -23,14 +23,14 @@ public class ChangeQuoteDialog extends AppCompatDialogFragment {
         View customLayoutView = inflater.inflate(R.layout.changequote_dialog_layout, null);
 
         builder.setView(customLayoutView)
-                .setTitle()
-                .setNegativeButton(, new DialogInterface.OnClickListener() {
+                .setTitle(getString(R.string.changeQuoteDialogTitle))
+                .setNegativeButton(getString(R.string.dialogNegativeButton), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
                     }
                 })
-                .setPositiveButton(, new DialogInterface.OnClickListener() {
+                .setPositiveButton(getString(R.string.dialogPositiveButton), new DialogInterface.OnClickListener() {
                     @Override
                     public void onClick(DialogInterface dialog, int which) {
 
