@@ -217,6 +217,12 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
     //Method to make notifications if the updated conversation is not active
     private void notificationer(List<Obj_DatabaseMessage> messageList, SharedPreferences mainprefs){
+        //Checking if notifications are enabled
+        if(!mainprefs.getBoolean("enableNotifications", true)){
+            return;
+        }
+
+
         //Getting the notification preferences
         SharedPreferences tempNotificationPreferences = getSharedPreferences("notificationIdsShown", 0);
 

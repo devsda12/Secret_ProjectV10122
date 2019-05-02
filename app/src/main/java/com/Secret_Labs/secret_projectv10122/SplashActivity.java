@@ -22,6 +22,10 @@ public class SplashActivity extends AppCompatActivity {
         //Requestqueue for login
         RequestQueue queue = Volley.newRequestQueue(this);
 
+        if(!mainPrefs.contains("enableNotifications")) {
+            mainPrefs.edit().putBoolean("enableNotifications", true).apply();
+        }
+
         if(mainPrefs.getString("activeAccId", "none").equals("none")) {
             Intent intent = new Intent(this, AccountSelection.class);
             startActivity(intent);

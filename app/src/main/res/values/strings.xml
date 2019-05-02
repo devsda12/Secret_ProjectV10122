@@ -41,7 +41,7 @@
     <!-- SETTINGS ACTIVITY STARTS HERE -->
     <string name="statisticsButton">Statistics</string>
     <string name="aboutButton">About</string>
-    <string name="notificationsButton">Enable Notifications</string>
+    <string name="notificationsButton">Notifications</string>
     <string name="editAccountButton">My Account</string>
     <!-- SETTINGS ACTIVITY ENDS HERE -->
 

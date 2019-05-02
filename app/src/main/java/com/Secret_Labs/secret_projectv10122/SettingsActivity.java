@@ -7,6 +7,9 @@ import android.os.Bundle;
 import android.support.v7.widget.CardView;
 import android.support.v7.widget.Toolbar;
 import android.view.View;
+import android.widget.CompoundButton;
+import android.widget.ImageView;
+import android.widget.Switch;
 
 public class SettingsActivity extends AppCompatActivity {
 
@@ -33,17 +36,36 @@ public class SettingsActivity extends AppCompatActivity {
         CardView viewPass =  (CardView) findViewById(R.id.cardViewProfilePic);
         CardView viewStats = (CardView) findViewById(R.id.cardViewStats);
         CardView viewAbout = (CardView) findViewById(R.id.cardViewAbout);
+        Switch notificationSwitch = (Switch) findViewById(R.id.switchNotifications);
+        final ImageView notificationImage = (ImageView) findViewById(R.id.imageViewNotification) ;
 
+
+        Boolean notificationsState = mainprefs.getBoolean("enableNotifications", true);
+        notificationSwitch.setChecked(notificationsState);
+
+        if(notificationsState){
+            notificationImage.setImageResource(R.drawable.action_notifications_active);
+        } else{
+            notificationImage.setImageResource(R.drawable.action_notifications_off);
+        }
+
+
+        notificationSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+                mainprefs.edit().putBoolean("enableNotifications", isChecked).apply();
+
+                if(isChecked){
+                    notificationImage.setImageResource(R.drawable.action_notifications_active);
+                } else{
+                    notificationImage.setImageResource(R.drawable.action_notifications_off);
+                }
+            }
+        });
         viewEditAccount.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
                 startActivity(new Intent(SettingsActivity.this, Account.class));
-            }
-        });
-        viewPass.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                startActivity(new Intent(SettingsActivity.this, ChangePass.class));
             }
         });
         viewStats.setOnClickListener(new View.OnClickListener() {
