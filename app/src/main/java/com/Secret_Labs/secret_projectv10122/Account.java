@@ -94,6 +94,12 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
     @Override
     public void applyNewVariables(ArrayList<String> newVariables) {
         Log.d("ApplyNewVariables", newVariables.toString());
+
+        if(newVariables.size() == 3){
+            //Do password stuff
+        } else if(newVariables.size() == 1){
+            //Do quote stuff
+        }
     }
 
     //Method that runs when back button is pressed
