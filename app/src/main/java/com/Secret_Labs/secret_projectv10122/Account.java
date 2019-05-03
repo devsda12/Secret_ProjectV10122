@@ -17,6 +17,13 @@ import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangePasswordDialog;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangeQuoteDialog;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.myAccountDialogListener;
+import com.android.volley.Request;
+import com.android.volley.Response;
+import com.android.volley.VolleyError;
+import com.android.volley.toolbox.JsonObjectRequest;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -92,11 +99,42 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
     }
 
     @Override
-    public void applyNewVariables(ArrayList<String> newVariables) {
+    public void applyNewVariables(final ArrayList<String> newVariables) {
         Log.d("ApplyNewVariables", newVariables.toString());
+        //Checking whether the connection is true
+        if(!mainprefs.getBoolean("apiConnection", false)){
+            common.displayToast(Account.this, "Change failed: No connection to API");
+            return;
+        }
 
         if(newVariables.size() == 3){
-            //Do password stuff
+            //If code reaches here making a new JSONObject with the given values
+            JSONObject tempChangePassJson = new JSONObject();
+            try{
+                tempChangePassJson.put("acc_NewPassword", newVariables.get(1));
+                tempChangePassJson.put("acc_Password", newVariables.get(0));
+                tempChangePassJson.put("acc_Id", mainprefs.getString("activeAccId", "0"));
+                tempChangePassJson.put("device_Id", mainprefs.getString("device_Id", "none"));
+            } catch(JSONException e){
+                common.displayToast(Account.this, "Password change Failed: JSON Exception occurred");
+                return;
+            }
+            //Creating the JSONObject request itself
+            JsonObjectRequest changePassRequest = new JsonObjectRequest(Request.Method.POST, common.apiUrl + "/sapp_changePass", tempChangePassJson,
+                    new Response.Listener<JSONObject>() {
+                        @Override
+                        public void onResponse(JSONObject response) {
+                            new DatabaseHelper(Account.this).changePassword(newVariables.get(1), mainprefs.getString("activeAccId", "0"));
+                            common.displayToast(Account.this, "Password changed successfully");
+                            finish();
+                        }
+                    }, new Response.ErrorListener() {
+                @Override
+                public void onErrorResponse(VolleyError error) {
+                    common.displayToast(Account.this, "Password Change Failed Password incorrect");
+                }
+            });
+
         } else if(newVariables.size() == 1){
             //Do quote stuff
         }
