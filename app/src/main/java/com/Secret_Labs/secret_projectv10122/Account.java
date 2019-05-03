@@ -17,6 +17,10 @@ import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangePasswordDialog;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangeQuoteDialog;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.myAccountDialogListener;
+import com.android.volley.RequestQueue;
+
+import org.json.JSONException;
+import org.json.JSONObject;
 
 import java.util.ArrayList;
 
@@ -26,6 +30,7 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
     ImageView profilePicPreview;
     Common common;
     SharedPreferences mainprefs;
+    RequestQueue myAccountQueue;
 
     @Override
     protected void onResume(){
@@ -98,7 +103,24 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
         if(newVariables.size() == 3){
             //Do password stuff
         } else if(newVariables.size() == 1){
-            //Do quote stuff
+            changeQuote(newVariables);
+        }
+    }
+
+    private void changeQuote(ArrayList<String> newVariables){
+        //Now checking whether a value is present as acc_Id in sharedpreferences
+        if(mainprefs.getString("activeAccId", "none").equals("none")){
+            common.displayToast(Account.this, "Refresh Failed! No account logged in");
+            return;
+        }
+
+        //Making the JSON object
+        JSONObject newQuoteJson = new JSONObject();
+        try {
+            newQuoteJson.put("device_Id", mainprefs.getString("device_Id", "0"));
+            newQuoteJson.put("acc_Id", mainprefs.getString("activeAccId", "none"));
+        } catch (JSONException e) {
+            e.printStackTrace();
         }
     }
 
