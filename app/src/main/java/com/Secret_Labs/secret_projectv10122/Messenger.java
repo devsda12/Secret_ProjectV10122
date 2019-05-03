@@ -1,17 +1,16 @@
 package com.Secret_Labs.secret_projectv10122;
 
-import android.app.DownloadManager;
 import android.app.NotificationManager;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
-import android.support.v7.widget.LinearLayoutManager;
-import android.support.v7.widget.RecyclerView;
-import android.support.v7.widget.Toolbar;
+import androidx.recyclerview.widget.LinearLayoutManager;
+import androidx.recyclerview.widget.RecyclerView;
+import androidx.appcompat.widget.Toolbar;
 import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
@@ -20,8 +19,6 @@ import android.widget.Button;
 import android.widget.EditText;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
-import com.Secret_Labs.secret_projectv10122.databases.DatabaseInfo;
-import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_DatabaseMessage;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
 import com.Secret_Labs.secret_projectv10122.recyclerviews.RecyclerAdapter_Messenger;

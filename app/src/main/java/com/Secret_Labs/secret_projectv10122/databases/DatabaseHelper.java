@@ -2,26 +2,18 @@ package com.Secret_Labs.secret_projectv10122.databases;
 
 import android.content.ContentValues;
 import android.content.Context;
-import android.content.Intent;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
-import android.os.strictmode.SqliteObjectLeakedViolation;
-import android.provider.ContactsContract;
-import android.support.annotation.Nullable;
-import android.util.Log;
 
-import com.Secret_Labs.secret_projectv10122.LoginActivity;
-import com.Secret_Labs.secret_projectv10122.message_volley.MessageVolleys;
+import androidx.annotation.Nullable;
+
 import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_DatabaseMessage;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Message;
-import com.android.volley.RequestQueue;
-import com.android.volley.toolbox.StringRequest;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 
 public class DatabaseHelper extends SQLiteOpenHelper {

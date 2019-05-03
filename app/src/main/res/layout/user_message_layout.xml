@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -72,5 +72,5 @@
             android:textColor="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="@+id/userMessageBox"
             app:layout_constraintTop_toTopOf="@+id/userMessageBox" />
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>

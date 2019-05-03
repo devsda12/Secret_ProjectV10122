@@ -2,7 +2,7 @@ package com.Secret_Labs.secret_projectv10122.recyclerviews;
 
 import android.content.Context;
 import android.graphics.BitmapFactory;
-import android.support.v7.widget.RecyclerView;
+import androidx.recyclerview.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -10,7 +10,6 @@ import android.widget.ImageView;
 import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.R;
-import com.Secret_Labs.secret_projectv10122.models.Obj_AccountInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 
 import java.util.List;

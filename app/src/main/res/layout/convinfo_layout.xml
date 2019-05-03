@@ -6,7 +6,7 @@
     android:layout_height="wrap_content"
     android:orientation="vertical">
 
-    <android.support.constraint.ConstraintLayout
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
         android:layout_height="70dp"
         android:foreground="?attr/selectableItemBackgroundBorderless">
@@ -71,5 +71,5 @@
             app:layout_constraintTop_toTopOf="parent"
             app:srcCompat="@drawable/grey_arrow_right" />
 
-    </android.support.constraint.ConstraintLayout>
+    </androidx.constraintlayout.widget.ConstraintLayout>
 </LinearLayout>
