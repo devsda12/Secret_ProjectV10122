@@ -99,7 +99,7 @@
                 app:srcCompat="@drawable/ic_action_info" />
 
             <TextView
-                android:id="@+id/textView9"
+                android:id="@+id/quotePreviewTextview"
                 android:layout_width="0dp"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="15dp"

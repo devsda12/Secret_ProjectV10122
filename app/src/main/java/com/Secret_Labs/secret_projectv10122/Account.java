@@ -12,6 +12,7 @@ import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.ImageView;
+import android.widget.TextView;
 
 import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.dialog_popups.ChangePasswordDialog;
@@ -25,6 +26,7 @@ import com.android.volley.toolbox.JsonObjectRequest;
 import org.json.JSONException;
 import org.json.JSONObject;
 import com.android.volley.RequestQueue;
+import com.android.volley.toolbox.Volley;
 
 import org.json.JSONException;
 import org.json.JSONObject;
@@ -37,7 +39,9 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
     ImageView profilePicPreview;
     Common common;
     SharedPreferences mainprefs;
+    DatabaseHelper dbHelper;
     RequestQueue myAccountQueue;
+    TextView quotePreviewTextview;
 
     @Override
     protected void onResume(){
@@ -51,6 +55,8 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
         setContentView(R.layout.activity_account);
         common = new Common();
         mainprefs = getSharedPreferences(common.mainPrefsName, 0);
+        dbHelper = new DatabaseHelper(this);
+        myAccountQueue = Volley.newRequestQueue(this);
 
         //Setting the custom toolbar for the activity
         Toolbar accEditToolbar = (Toolbar) findViewById(R.id.accEditToolbar);
@@ -73,6 +79,10 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
 
         //Setting the stored profile pic as preview
         refreshProfilePicture();
+
+        //Setting the quote for change quote
+        quotePreviewTextview = (TextView) findViewById(R.id.quotePreviewTextview);
+        quotePreviewTextview.setText(dbHelper.getUserQuote(mainprefs.getString("activeAccId", "none")));
 
         //Setting the button for changeQuote
         ImageView changeQuotePencil = findViewById(R.id.changeQuotePencil);
@@ -97,7 +107,7 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
 
     //Method to refresh the profile picture preview
     private void refreshProfilePicture(){
-        byte[] storedImage = new DatabaseHelper(this).getProfilePic(mainprefs.getString("activeAccId", "none"));
+        byte[] storedImage = dbHelper.getProfilePic(mainprefs.getString("activeAccId", "none"));
         if(storedImage != null){
             profilePicPreview.setImageBitmap(BitmapFactory.decodeByteArray(storedImage, 0, storedImage.length));
         }
@@ -129,9 +139,8 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
                     new Response.Listener<JSONObject>() {
                         @Override
                         public void onResponse(JSONObject response) {
-                            new DatabaseHelper(Account.this).changePassword(newVariables.get(1), mainprefs.getString("activeAccId", "0"));
+                            dbHelper.changePassword(newVariables.get(1), mainprefs.getString("activeAccId", "0"));
                             common.displayToast(Account.this, "Password changed successfully");
-                            finish();
                         }
                     }, new Response.ErrorListener() {
                 @Override
@@ -140,12 +149,14 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
                 }
             });
 
+            myAccountQueue.add(changePassRequest);
+
         } else if(newVariables.size() == 1){
             changeQuote(newVariables);
         }
     }
 
-    private void changeQuote(ArrayList<String> newVariables){
+    private void changeQuote(final ArrayList<String> newVariables){
         //Now checking whether a value is present as acc_Id in sharedpreferences
         if(mainprefs.getString("activeAccId", "none").equals("none")){
             common.displayToast(Account.this, "Refresh Failed! No account logged in");
@@ -157,9 +168,25 @@ public class Account extends AppCompatActivity implements myAccountDialogListene
         try {
             newQuoteJson.put("device_Id", mainprefs.getString("device_Id", "0"));
             newQuoteJson.put("acc_Id", mainprefs.getString("activeAccId", "none"));
+            newQuoteJson.put("acc_Quote", newVariables.get(0));
         } catch (JSONException e) {
             e.printStackTrace();
         }
+
+        JsonObjectRequest newQuoteRequest = new JsonObjectRequest(Request.Method.POST, common.apiUrl + "/sapp_changeQuote", newQuoteJson, new Response.Listener<JSONObject>() {
+            @Override
+            public void onResponse(JSONObject response) {
+                dbHelper.setUserQuote(mainprefs.getString("activeAccId", "none"), newVariables.get(0));
+                quotePreviewTextview.setText(newVariables.get(0));
+            }
+        }, new Response.ErrorListener() {
+            @Override
+            public void onErrorResponse(VolleyError error) {
+                common.displayToast(Account.this, "Quote change failed");
+            }
+        });
+
+        myAccountQueue.add(newQuoteRequest);
     }
 
     //Method that runs when back button is pressed

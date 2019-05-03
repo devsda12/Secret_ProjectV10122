@@ -19,6 +19,7 @@ public class DatabaseInfo {
         public static final String ACC_PROFILE_PICTURE_ID_COLUMN = "acc_Profile_Picture_Id";
         public static final String ACC_REMEMBERLOGIN_COLUMN = "acc_Rememberlogin";
         public static final String ACC_LASTLOGIN_COLUMN = "acc_Lastlogin";
+        public static final String ACC_QUOTE_COLUMN = "accQuote";
     }
 
     //Secondary table properties for the conversation overview table

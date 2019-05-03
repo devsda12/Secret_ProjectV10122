@@ -42,7 +42,8 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_COLUMN + " BLOB,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN + " INTEGER,"
-                + DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN + " TEXT" + ")";
+                + DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Acc.ACC_QUOTE_COLUMN + " TEXT" + ")";
 
         db.execSQL(createAccTable);
 
@@ -73,7 +74,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
     //Start of acc_Table functions
 
     //Method to add a singular account to the database
-    public boolean addAccount(Obj_AccountInfo accountInfo){
+    public boolean addAccount(Obj_AccountInfo accountInfo, String userQuote){
         //First checking if the account is already present in the database
         boolean accInDB = checkIfAccInDB(accountInfo.getAcc_Id());
 
@@ -95,6 +96,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_PROFILE_PICTURE_ID_COLUMN, accountInfo.getAcc_ProfilePicId());
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_REMEMBERLOGIN_COLUMN, tempRememberLogin);
         addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_LASTLOGIN_COLUMN, accountInfo.getAcc_Last_Login());
+        addableValues.put(DatabaseInfo.Sapp_Table_Acc.ACC_QUOTE_COLUMN, userQuote);
 
         //If the data is already in the database update the given data
         long result;
@@ -298,6 +300,35 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         result.close();
         dbRead.close();
         return returnImage;
+    }
+
+    public String getUserQuote(String acc_Id){
+        SQLiteDatabase dbRead = this.getReadableDatabase();
+
+        Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Acc.ACC_QUOTE_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?;", new String[]{acc_Id});
+        result.moveToFirst();
+
+        String userQuote = result.getString(0);
+        result.close();
+        dbRead.close();
+        return userQuote;
+    }
+
+    public boolean setUserQuote(String acc_Id, String newQuote){
+        SQLiteDatabase dbWrite = this.getWritableDatabase();
+
+        ContentValues newQuoteCV = new ContentValues();
+        newQuoteCV.put(DatabaseInfo.Sapp_Table_Acc.ACC_QUOTE_COLUMN, newQuote);
+
+        long result = dbWrite.update(DatabaseInfo.Sapp_Table_Acc.ACC_TABLE_NAME, newQuoteCV, DatabaseInfo.Sapp_Table_Acc.ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
+
+        dbWrite.close();
+
+        if (result == -1){
+            return false;
+        } else {
+            return true;
+        }
     }
 
     //End of acc_Table functions

@@ -214,6 +214,7 @@ public class Common {
                     public void onResponse(JSONObject response) {
                         try {
                             String responseAccId = response.getString("acc_Id");
+                            String responseQuote = response.getString("acc_Quote");
 
                             String responseProfilePicId = response.getString("profilePicId");
                             if(responseProfilePicId.equals("null"))
@@ -230,9 +231,9 @@ public class Common {
                                 SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd HH:mm:ss");
                                 String currentDT = sdf.format(new Date());
                                 if (fromWhereRemember == 1) {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, null, responseProfilePicId, true, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, password, null, responseProfilePicId, true, currentDT), responseQuote);
                                 } else {
-                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, null, responseProfilePicId, false, currentDT));
+                                    insertResult = dbHelper.addAccount(new Obj_AccountInfo(responseAccId, username, null, null, responseProfilePicId, false, currentDT), responseQuote);
                                 }
 
                                 //Checking if the insert was successful
