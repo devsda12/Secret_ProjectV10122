@@ -15,6 +15,7 @@ import android.widget.ListView;
 import android.widget.ProgressBar;
 import android.widget.TextView;
 
+import com.Secret_Labs.secret_projectv10122.databases.DatabaseHelper;
 import com.Secret_Labs.secret_projectv10122.listview_adapters.UsernameSelectionAdapter;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
 import com.Secret_Labs.secret_projectv10122.models.Obj_Usersearch;
@@ -46,6 +47,7 @@ public class NewConvSelection extends AppCompatActivity {
 
     Common common;
     SharedPreferences mainPrefs;
+    DatabaseHelper dbHelper;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -53,6 +55,7 @@ public class NewConvSelection extends AppCompatActivity {
         setContentView(R.layout.activity_new_conv_selection);
         common = new Common();
         mainPrefs = getSharedPreferences(common.mainPrefsName, 0);
+        dbHelper = new DatabaseHelper(this);
 
         //Setting the custom toolbar for the activity
         Toolbar newConvSelToolbar = (Toolbar) findViewById(R.id.newConvSelToolbar);
@@ -145,9 +148,9 @@ public class NewConvSelection extends AppCompatActivity {
                     try {
                         JSONObject tempJsonObject = response.getJSONObject(i);
                         String tempUsername = tempJsonObject.getString("acc_Username");
-                        String tempUserQuote = "This is the default quote! Hi!";
+                        String tempUserQuote = tempJsonObject.getString("acc_Quote");
                         String tempAccId = tempJsonObject.getString("acc_Id");
-                        if(!tempAccId.equals(mainPrefs.getString("activeAccId", "none"))) {
+                        if(!tempAccId.equals(mainPrefs.getString("activeAccId", "none")) && !dbHelper.checkIfAccInDB(tempAccId)) {
                             usernameList.add(new Obj_Usersearch(tempUsername, tempUserQuote, tempAccId));
                         }
                     } catch (JSONException e){
