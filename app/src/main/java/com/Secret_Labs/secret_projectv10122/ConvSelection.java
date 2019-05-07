@@ -1,6 +1,9 @@
 package com.Secret_Labs.secret_projectv10122;
 
+import android.content.BroadcastReceiver;
+import android.content.Context;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import com.google.android.material.floatingactionbutton.FloatingActionButton;
@@ -57,6 +60,8 @@ public class ConvSelection extends AppCompatActivity {
     @Override
     protected void onResume(){
         super.onResume();
+        mainPrefs.edit().putBoolean("convSelActive", true).commit();
+        registerReceiver(notificationReceiver, new IntentFilter("convSelBroadcast"));
         Log.d("ConvSelection", "On resume called");
         updateConvList(requestQueue);
     }
@@ -339,5 +344,28 @@ public class ConvSelection extends AppCompatActivity {
     @Override
     public void onBackPressed(){
         //Do nothing
+    }
+
+    //Broadcast receiver under here
+    public BroadcastReceiver notificationReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            Log.d("ConvSelection", "Broadcast received from service, now refreshing");
+            updateConvList(requestQueue);
+        }
+    };
+
+    //Methods under here are to change the sharedpreferences when the activity is no more active
+    @Override
+    protected void onPause(){
+        super.onPause();
+        mainPrefs.edit().putBoolean("convSelActive", false).commit();
+        unregisterReceiver(notificationReceiver);
+    }
+
+    @Override
+    protected void onDestroy(){
+        super.onDestroy();
+        mainPrefs.edit().putBoolean("convSelActive", false).commit();
     }
 }

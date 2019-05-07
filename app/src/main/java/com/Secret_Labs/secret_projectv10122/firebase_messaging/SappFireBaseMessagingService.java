@@ -195,6 +195,9 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
                     //If the insertion was successful a notification has to be made. Calling this method under here
                     if(insertResult){
                         notificationer(tempMessageList, mainPrefs);
+                        if(mainPrefs.getBoolean("convSelActive", false)){
+                            convSelBroadcast();
+                        }
                     } else {
                         Log.d("ServiceError", "Error on inserting messages into database");
                     }
@@ -309,6 +312,11 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
 
         NotificationManager mNotificationManager = (NotificationManager) getSystemService(Context.NOTIFICATION_SERVICE);
         mNotificationManager.notify(randomId, nBuilder.build());
+    }
+
+    private void convSelBroadcast(){
+        Intent broadcastIntent = new Intent("convSelBroadcast");
+        this.sendBroadcast(broadcastIntent);
     }
 
 }
