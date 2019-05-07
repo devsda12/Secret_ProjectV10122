@@ -1,5 +1,6 @@
 package com.Secret_Labs.secret_projectv10122.recyclerviews;
 
+import android.app.Dialog;
 import android.content.Context;
 import android.graphics.BitmapFactory;
 import androidx.recyclerview.widget.RecyclerView;
@@ -8,6 +9,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.Secret_Labs.secret_projectv10122.R;
 import com.Secret_Labs.secret_projectv10122.models.Obj_ConvInfo;
@@ -19,6 +21,9 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
     //Defining the list and the context
     private Context mCtx;
     private List<Obj_ConvInfo> conv_List;
+
+    //Defining dialog
+    Dialog picture_Popup;
 
     //Defining the interface for the onclicklistener
     public OnclickListener_ConvSelection mListener;
@@ -33,11 +38,13 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
     public RecyclerviewHolder onCreateViewHolder(ViewGroup parent, int viewType){
         LayoutInflater inflater = LayoutInflater.from(mCtx);
         View view = inflater.inflate(R.layout.convinfo_layout, parent, false);
-        return new RecyclerviewHolder(view);
+        final RecyclerviewHolder vHolder = new RecyclerviewHolder(view);
+
+        return vHolder;
     }
 
     @Override
-    public void onBindViewHolder(RecyclerviewHolder holder, final int position){
+    public void onBindViewHolder(final RecyclerviewHolder holder, final int position){
         Obj_ConvInfo conv_item = conv_List.get(position);
 
         holder.convsel_partner_name.setText(conv_item.getConvPartner_Username());
@@ -53,6 +60,34 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
             tempLastMessage = tempLastMessage.substring(0, 31) + "...";
         }
         holder.convsel_last_message.setText(conv_item.getConvLast_MessageSender() + ": " + tempLastMessage);
+
+        //dialog ini
+        picture_Popup = new Dialog(mCtx);
+        picture_Popup.setContentView(R.layout.profilepicpopup);
+
+        holder.convsel_profilePicture.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                TextView xButton = (TextView) picture_Popup.findViewById(R.id.txtClose);
+                TextView popupQoute = (TextView) picture_Popup.findViewById(R.id.popupQuote);
+                TextView popupUsername = (TextView) picture_Popup.findViewById(R.id.popupUsername);
+                ImageView popupPicture = (ImageView) picture_Popup.findViewById(R.id.editpopupProfilePic);
+                popupUsername.setText(conv_List.get(holder.getAdapterPosition()).getConvPartner_Username());
+                if(conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic() != null){
+                    popupPicture.setImageBitmap(BitmapFactory.decodeByteArray(conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic(), 0, conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic().length));
+                }
+                // popupQoute.setText("");
+
+                xButton.setOnClickListener(new View.OnClickListener() {
+                    @Override
+                    public void onClick(View v) {
+                        picture_Popup.dismiss();
+                    }
+                });
+                picture_Popup.show();
+
+            }
+        });
 
         //Setting the onclicklistener for the entire conv entry
         holder.itemView.setOnClickListener(new View.OnClickListener() {
