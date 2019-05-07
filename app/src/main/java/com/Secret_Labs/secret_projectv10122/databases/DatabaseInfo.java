@@ -4,7 +4,7 @@ public class DatabaseInfo {
 
     //Main variables of the database
     public static final String DBNAME = "Sapp_Acc_DB";
-    public static final int DBVERSION = 2;
+    public static final int DBVERSION = 3;
 
     //Main table properties for stored accounts on the device
     public class Sapp_Table_Acc{
@@ -32,6 +32,7 @@ public class DatabaseInfo {
         public static final String CONV_ACC_ID_COLUMN = "conv_Acc_Id";
         public static final String CONV_PARTNER_ID_COLUMN = "conv_Partner_Id";
         public static final String CONV_PARTNER_USERNAME_COLUMN = "conv_Partner_Username";
+        public static final String CONV_PARTNER_QUOTE_COLUMN = "conv_Partner_Quote";
         public static final String CONV_PARTNER_PROFILE_PICTURE_COLUMN = "conv_Partner_Profile_Picture";
         public static final String CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN = "conv_Partner_Profile_Picture_Id";
         public static final String CONV_LAST_MESSAGE_COLUMN = "conv_Last_Message";

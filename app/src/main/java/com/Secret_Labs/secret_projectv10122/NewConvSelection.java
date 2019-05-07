@@ -228,7 +228,7 @@ public class NewConvSelection extends AppCompatActivity {
 
                         //Now creating the local table
                         List<Obj_ConvInfo> tempInsertlist = new ArrayList<>();
-                        Obj_ConvInfo tempConvInfoObj = new Obj_ConvInfo(mainPrefs.getString("activeAccId", "none") + partnerId, null, null, null, null, null, null, null, null);
+                        Obj_ConvInfo tempConvInfoObj = new Obj_ConvInfo(mainPrefs.getString("activeAccId", "none") + partnerId, null, null, null, null, null, null, null, null, null);
                         tempInsertlist.add(tempConvInfoObj);
 
                         //Inserting the local table

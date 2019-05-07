@@ -213,6 +213,7 @@ public class ConvSelection extends AppCompatActivity {
                         String tempConvAccId = mainPrefs.getString("activeAccId", "none");
                         String tempConvPartnerId = tempJsonObject.getString("partner_Id");
                         String tempConvPartnerUsername = tempJsonObject.getString("partner_Username");
+                        String tempConvPartnerQuote = tempJsonObject.getString("partner_Quote");
                         String tempConvNewProfileId = tempJsonObject.getString("newProfilePictureId");
                         String tempConvLastMessage = tempJsonObject.getString("last_Message");
                         String tempConvLastMessageSender = tempJsonObject.getString("message_Sender");
@@ -223,7 +224,7 @@ public class ConvSelection extends AppCompatActivity {
                             requestProfilePicture(queue, tempConvId, tempConvNewProfileId);
                         }
 
-                        updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, null, tempConvNewProfileId, tempConvLastMessage, tempConvLastMessageSender, tempConvLastMessageDate));
+                        updateConvSelList.add(new Obj_ConvInfo(tempConvId, tempConvAccId, tempConvPartnerId, tempConvPartnerUsername, tempConvPartnerQuote, null, tempConvNewProfileId, tempConvLastMessage, tempConvLastMessageSender, tempConvLastMessageDate));
                     } catch (JSONException e){
                         common.displayToast(ConvSelection.this, "Refresh Failed: JSON Exception occurred");
                         reloadPb.setVisibility(View.INVISIBLE);

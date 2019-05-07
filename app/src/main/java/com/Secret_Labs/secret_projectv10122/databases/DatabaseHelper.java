@@ -5,6 +5,7 @@ import android.content.Context;
 import android.database.Cursor;
 import android.database.sqlite.SQLiteDatabase;
 import android.database.sqlite.SQLiteOpenHelper;
+import android.util.Log;
 
 import androidx.annotation.Nullable;
 
@@ -44,6 +45,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
                 + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_USERNAME_COLUMN + " TEXT,"
+                + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_QUOTE_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_COLUMN + " BLOB,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN + " TEXT,"
                 + DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN + " TEXT,"
@@ -339,6 +341,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             Cursor tempSelectResult = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + " = ?", new String[]{convInfoList.get(j).getConv_Id()});
             if(tempSelectResult.getCount() > 0){
                 ContentValues tempContentValues = new ContentValues();
+                tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_QUOTE_COLUMN, convInfoList.get(j).getConvPartner_Quote());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_COLUMN, convInfoList.get(j).getConvLast_Message());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_SENDER_COLUMN, convInfoList.get(j).getConvLast_MessageSender());
                 tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_LAST_MESSAGE_DATE_COLUMN, convInfoList.get(j).getConvLast_MessageDate());
@@ -373,6 +376,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN, convInfoList.get(i).getConvAcc_Id());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_ID_COLUMN, convInfoList.get(i).getConvPartner_Id());
             tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_USERNAME_COLUMN, convInfoList.get(i).getConvPartner_Username());
+            tempContentValues.put(DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_QUOTE_COLUMN, convInfoList.get(i).getConvPartner_Quote());
 
             //If the profile picture ID is updated it needs to be stored as well
             if(!convInfoList.get(i).getConvPartner_ProfilePicId().equals("null")){
@@ -424,7 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Putting results in new list
         List<Obj_ConvInfo> convInfoList = new ArrayList<>();
         while(result.moveToNext()){
-            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getBlob(4), result.getString(5), result.getString(6), result.getString(7), result.getString(8)));
+            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), null, result.getBlob(5), result.getString(6), result.getString(7), result.getString(8), result.getString(9)));
         }
 
         //Closing and returning
@@ -441,7 +445,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         Cursor result = dbRead.rawQuery("SELECT " + DatabaseInfo.Sapp_Table_Conv.CONV_ID_COLUMN + ", " + DatabaseInfo.Sapp_Table_Conv.CONV_PARTNER_PROFILE_PICTURE_ID_COLUMN + " FROM " + DatabaseInfo.Sapp_Table_Conv.CONV_TABLE_NAME + " WHERE " + DatabaseInfo.Sapp_Table_Conv.CONV_ACC_ID_COLUMN + " = ?", new String[]{acc_Id});
 
         while (result.moveToNext()){
-            returnList.add(new Obj_ConvInfo(result.getString(0), null, null, null, null, result.getString(1), null, null, null));
+            returnList.add(new Obj_ConvInfo(result.getString(0), null, null, null, null, null, result.getString(1), null, null, null));
         }
 
         return returnList;

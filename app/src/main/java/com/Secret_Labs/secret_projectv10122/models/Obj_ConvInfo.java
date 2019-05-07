@@ -7,6 +7,7 @@ public class Obj_ConvInfo {
     private String convAcc_Id;
     private String convPartner_Id;
     private String convPartner_Username;
+    private String convPartner_Quote;
     private byte[] convPartner_ProfilePic;
     private String convPartner_ProfilePicId;
     private String convLast_Message;
@@ -14,11 +15,12 @@ public class Obj_ConvInfo {
     private String convLast_MessageDate;
 
 
-    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, byte[] convPartner_ProfilePic, String convPartner_ProfilePicId, String convLast_Message, String convLast_MessageSender, String convLast_MessageDate) {
+    public Obj_ConvInfo(String conv_Id, String convAcc_Id, String convPartner_Id, String convPartner_Username, String convPartner_Quote, byte[] convPartner_ProfilePic, String convPartner_ProfilePicId, String convLast_Message, String convLast_MessageSender, String convLast_MessageDate) {
         this.conv_Id = conv_Id;
         this.convAcc_Id = convAcc_Id;
         this.convPartner_Id = convPartner_Id;
         this.convPartner_Username = convPartner_Username;
+        this.convPartner_Quote = convPartner_Quote;
         this.convPartner_ProfilePic = convPartner_ProfilePic;
         this.convPartner_ProfilePicId = convPartner_ProfilePicId;
         this.convLast_Message = convLast_Message;
@@ -56,6 +58,14 @@ public class Obj_ConvInfo {
 
     public void setConvPartner_Username(String convPartner_Username) {
         this.convPartner_Username = convPartner_Username;
+    }
+
+    public String getConvPartner_Quote() {
+        return convPartner_Quote;
+    }
+
+    public void setConvPartner_Quote(String convPartner_Quote) {
+        this.convPartner_Quote = convPartner_Quote;
     }
 
     public byte[] getConvPartner_ProfilePic() {
