@@ -10,37 +10,42 @@
         android:id="@+id/buttonPicSelect"
         android:layout_width="137dp"
         android:layout_height="50dp"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/profilePicSelect"
         android:textColor="@color/colorBackground"
-        app:layout_constraintBottom_toTopOf="@+id/buttonPicSubmit"
-        app:layout_constraintStart_toStartOf="parent" />
+        app:layout_constraintEnd_toStartOf="@+id/buttonPicCrop"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
     <Button
         android:id="@+id/buttonPicSubmit"
-        android:layout_width="137dp"
-        android:layout_height="50dp"
-        android:layout_marginTop="10dp"
-        android:layout_marginEnd="56dp"
+        android:layout_width="141dp"
+        android:layout_height="51dp"
         android:layout_marginBottom="10dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/profilePicSubmit"
         android:textColor="@color/colorBackground"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/buttonPicSelect" />
 
     <Button
         android:id="@+id/buttonPicCrop"
         android:layout_width="137dp"
         android:layout_height="50dp"
-        android:layout_marginStart="56dp"
+        android:layout_marginStart="8dp"
+        android:layout_marginTop="24dp"
+        android:layout_marginEnd="8dp"
         android:backgroundTint="@color/colorPrimary"
         android:text="@string/profilePicCrop"
         android:textColor="@color/colorWhite"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/buttonPicSubmit" />
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/buttonPicSelect"
+        app:layout_constraintTop_toBottomOf="@+id/cardView2" />
 
     <include
         android:id="@+id/profileToolbar"
