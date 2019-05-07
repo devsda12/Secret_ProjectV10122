@@ -5,6 +5,8 @@ import android.content.Context;
 import android.graphics.BitmapFactory;
 import androidx.recyclerview.widget.RecyclerView;
 
+import android.graphics.Color;
+import android.graphics.drawable.ColorDrawable;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -70,6 +72,7 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
         holder.convsel_profilePicture.setOnClickListener(new View.OnClickListener() {
             @Override
             public void onClick(View v) {
+                picture_Popup.getWindow().setBackgroundDrawable(new ColorDrawable(Color.TRANSPARENT));
                 TextView xButton = (TextView) picture_Popup.findViewById(R.id.txtClose);
                 TextView popupQoute = (TextView) picture_Popup.findViewById(R.id.popupQuote);
                 TextView popupUsername = (TextView) picture_Popup.findViewById(R.id.popupUsername);
@@ -77,8 +80,10 @@ public class RecyclerAdapter_ConvSelection extends RecyclerView.Adapter<Recycler
                 popupUsername.setText(conv_List.get(holder.getAdapterPosition()).getConvPartner_Username());
                 if(conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic() != null){
                     popupPicture.setImageBitmap(BitmapFactory.decodeByteArray(conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic(), 0, conv_List.get(holder.getAdapterPosition()).getConvPartner_ProfilePic().length));
+                }else{
+                    popupPicture.setImageResource(R.drawable.default_profile);
                 }
-                // popupQoute.setText("");
+                popupQoute.setText(conv_List.get(holder.getAdapterPosition()).getConvPartner_Quote());
 
                 xButton.setOnClickListener(new View.OnClickListener() {
                     @Override

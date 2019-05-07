@@ -428,7 +428,7 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         //Putting results in new list
         List<Obj_ConvInfo> convInfoList = new ArrayList<>();
         while(result.moveToNext()){
-            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), null, result.getBlob(5), result.getString(6), result.getString(7), result.getString(8), result.getString(9)));
+            convInfoList.add(new Obj_ConvInfo(result.getString(0), result.getString(1), result.getString(2), result.getString(3), result.getString(4), result.getBlob(5), result.getString(6), result.getString(7), result.getString(8), result.getString(9)));
         }
 
         //Closing and returning
