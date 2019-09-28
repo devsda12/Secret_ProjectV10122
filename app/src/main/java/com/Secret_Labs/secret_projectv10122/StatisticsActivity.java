@@ -267,7 +267,7 @@ public class StatisticsActivity extends AppCompatActivity {
             return;
         }
 
-        JsonArrayRequest tempTokenUpdateRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_requestStats", tempTokenUpdateArr, new Response.Listener<JSONArray>() {
+        JsonArrayRequest tempTokenUpdateRequest = new JsonArrayRequest(Request.Method.POST, "http://77.250.54.162:5000/sapp_requestStats", tempTokenUpdateArr, new Response.Listener<JSONArray>() {
             @Override
             public void onResponse(JSONArray response) {
                 //Data staat in response

@@ -39,7 +39,7 @@ import java.util.Random;
 public class Common {
 
     //Common variables
-    public String apiUrl = "http://54.36.98.223:5000";
+    public String apiUrl = "http://77.250.54.162:5000";
     public boolean serverDebugToasts = false;
 
     public String mainPrefsName = "mainPrefs";

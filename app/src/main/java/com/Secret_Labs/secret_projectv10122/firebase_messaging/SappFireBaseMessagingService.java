@@ -60,7 +60,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
         }
 
         //Making the actual request
-        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_updateFirebaseToken", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
+        JsonObjectRequest tempTokenUpdateRequest = new JsonObjectRequest(Request.Method.POST, "http://77.250.54.162:5000/sapp_updateFirebaseToken", tempTokenUpdateObj, new Response.Listener<JSONObject>() {
             @Override
             public void onResponse(JSONObject response) {
                 try {
@@ -161,7 +161,7 @@ public class SappFireBaseMessagingService extends FirebaseMessagingService {
             }
 
             //Making the actual request
-            JsonArrayRequest storeRequest = new JsonArrayRequest(Request.Method.POST, "http://54.36.98.223:5000/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
+            JsonArrayRequest storeRequest = new JsonArrayRequest(Request.Method.POST, "http://77.250.54.162:5000/sapp_getPartialChat", tempRequestArray, new Response.Listener<JSONArray>() {
                 @Override
                 public void onResponse(JSONArray response) {
                     Log.d("ServiceUpdate", "Table update response");
